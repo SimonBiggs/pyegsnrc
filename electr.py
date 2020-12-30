@@ -287,7 +287,9 @@ $start_new_particle
 
                     tvstep = tustep; is_ch_step = .true.
 
-                    IF (transport_algorithm = $PRESTA-II)
+                    if transport_algorithm = $PRESTA-II:
+
+                        
                     [
                       call msdist_pII
                       (
@@ -316,7 +318,8 @@ $start_new_particle
                     # one of the various boundary-crossing algorithms
                     callmsdist = .false.
                          # Remember that msdist has not been called
-                    IF (exact_bca)
+                    if exact_bca:
+                        
                     [
                         # Cross the boundary in a single scattering mode
                         domultiple = .false. # Do not do multiple scattering
@@ -337,7 +340,8 @@ $start_new_particle
                             ELSE [
                               tuss = 0.5 * lambda * ssmfp
                             ]
-                            IF (tuss < tustep) [
+                            if tuss < tustep:
+                                 [
                                 tustep = tuss
                                 dosingle = .true.
                             ]
@@ -488,7 +492,8 @@ $start_new_particle
                # callhowfar=.false. => step has not been reduced due to
                #                       boundaries
                tvstep = tustep
-               IF ( ~callmsdist )
+               if  ~callmsdist :
+                   
                [
                   # Second order technique for dedx
                   # Already done in a normal CH step with call to msdist
@@ -519,9 +524,11 @@ $start_new_particle
             enew = eold - de # energy at end of transport
 
             # Now do multiple scattering
-            IF ( ~callmsdist )   # everything done if callmsdist = .true.
+            if  ~callmsdist :
+                   # everything done if callmsdist = .true.
             [
-                IF ( domultiple )
+                if  domultiple :
+                    
                 [
                     # Approximated CH step => do multiple scattering
                     # 
@@ -610,7 +617,9 @@ $start_new_particle
                     z_final = z(np) + w(np)*vstep
                 ]
 
-                IF ( domultiple | dosingle )
+                if  domultiple | dosingle :
+
+                    
                 [
                     u_tmp = u(np); v_tmp = v(np); w_tmp = w(np)
                     call uphi(2,1) # Apply the deflection, save call to uphi if
