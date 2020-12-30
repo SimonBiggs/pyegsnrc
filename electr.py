@@ -76,7 +76,7 @@ $start_new_particle
     # medium = med(irl) # (This renders the above assignment redundant!)
     # The above assignment is unnecessary, IK, June 2003
 
-    if WT(NP) = 0.0:
+    if WT(NP) == 0.0:
 
         go to :USER-ELECTRON-DISCARD: # added May 01
 
@@ -121,7 +121,7 @@ $start_new_particle
             # Here for each check with user geometry.
             # Compute size of maximum acceptable step, which is limited
             # by multiple scattering or other approximations.
-            if medium = 0:
+            if medium == 0:
                 
             [
                     # vacuum
@@ -240,10 +240,10 @@ $start_new_particle
                 #                          callmsdist = .true.
                 #        ==> everything has been done in msdist
                 #   - domultiple = .true. and dosingle = .false.
-                #        ==> should happen only if exact_bca = .false.
+                #        ==> should happen only if exact_bca == .false.
                 #            indicates that MS remains to be done
                 #   - domultiple = .false. and dosingle = .true.
-                #        ==> should happen only if exact_bca = .true.
+                #        ==> should happen only if exact_bca == .true.
                 #            sampled distance to a single scattering event is
                 #            shorter than tperp ==> do single scattering at the
                 #            end of the step
@@ -287,7 +287,7 @@ $start_new_particle
 
                     tvstep = tustep; is_ch_step = .true.
 
-                    if transport_algorithm = $PRESTA-II:
+                    if transport_algorithm == $PRESTA-II:
 
                         
                     [
@@ -399,7 +399,7 @@ $start_new_particle
 
             $CHECK-NEGATIVE-USTEP
 
-            if ustep = 0 | medium = 0:
+            if ustep == 0 | medium = 0:
 
                 
             [
@@ -525,7 +525,7 @@ $start_new_particle
 
             # Now do multiple scattering
             if  ~callmsdist :
-                   # everything done if callmsdist = .true.
+                   # everything done if callmsdist == .true.
             [
                 if  domultiple :
                     
@@ -661,7 +661,7 @@ $start_new_particle
             #     resulting annihilation photons will have the new position 
             #     but the old region => confusion in the geometry routine 
             #     is very likely.      Jan 27 2004 
-            if  irnew = irl & eie <= ecut(irl):
+            if  irnew == irl & eie <= ecut(irl):
                  [
                go to :ECUT-DISCARD:
             ]
@@ -740,7 +740,7 @@ $start_new_particle
             # However, if EII is on, we should still permit an interaction
             # even if E<moller threshold as EII interactions go down to
             # the ionization threshold which may be less than thmoll.
-            if e(np) <= thmoll(medium) & eii_flag = 0:
+            if e(np) <= thmoll(medium) & eii_flag == 0:
                 
                  # (thmoll = lower Moller threshold)
             [
@@ -760,7 +760,7 @@ $start_new_particle
             # which in turn has the 'null' replacement ';')
             $PARTICLE-SELECTION-MOLLER
             $AUSCALL($MOLLAUSA)
-            if  iq(np) = 0 :
+            if  iq(np) == 0 :
                  return
         ]
 
@@ -790,7 +790,7 @@ $start_new_particle
         # has the 'null' replacement ';')
         $PARTICLE-SELECTION-BHABHA
         $AUSCALL($BHABAUSA)
-        if  iq(np) = 0 :
+        if  iq(np) == 0 :
              return
     ]
     ELSE
@@ -825,7 +825,7 @@ call brems
 # '$PARTICLE-SELECTION-ELECTR' which in turn has the 'null' replacement ';')
 $PARTICLE-SELECTION-BREMS
 $AUSCALL($BREMAUSA)
-if iq(np) = 0:
+if iq(np) == 0:
     
 [
     # Photon was selected.
@@ -891,7 +891,7 @@ return # i.e., return to shower
 
 idisc = abs(idisc)
 
-if (lelec < 0) | (idisc = 99):
+if (lelec < 0) | (idisc == 99):
 
     edep = e(np) - prm
 else:
@@ -899,7 +899,7 @@ else:
 
 $AUSCALL($USERDAUS)
 
-if idisc = 99:
+if idisc == 99:
 
      goto :POSITRON-ANNIHILATION:
 
