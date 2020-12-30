@@ -90,7 +90,7 @@ $start_new_particle
                                 # interaction in the USTEP loop
         eke = eie - rm # moved here so that kinetic energy will be known
                         # to user even for a vacuum step, IK January 2000
-        if medium ~= 0:
+        if medium != 0:
             
         [
             # Not vacuum. Must sample to see how far to next interaction.
@@ -400,7 +400,7 @@ $start_new_particle
                 
             [
                 # Do fast step in vacuum
-                if ustep ~= 0:
+                if ustep != 0:
                     
                 [
                     IF $EM_MACROS_ACTIVE
@@ -437,16 +437,16 @@ $start_new_particle
                     ] # end of EM_MACROS_ACTIVE block
                 ] # end of vacuum step
 
-                if irnew ~= irold:
+                if irnew != irold:
 
                      $electron_region_change; 
 
-                if ustep ~= 0:
+                if ustep != 0:
 
                     $AUSCALL($TRANAUSA)
                 if eie <= ecut(irl):
                     go to :ECUT-DISCARD:
-                if ustep ~= 0 & idisc < 0:
+                if ustep != 0 & idisc < 0:
                     go to :USER-ELECTRON-DISCARD:
                 NEXT :TSTEP:  # (Start again at :TSTEP:)
 
@@ -463,7 +463,7 @@ $start_new_particle
                     # If callhowfar=.true. and exact_bca=.true. we are
                     # in a single scattering mode
                     tvstep = vstep
-                    if tvstep ~= tustep:
+                    if tvstep != tustep:
                         
                     [
                        # Boundary was crossed. Shut off single scattering
@@ -658,7 +658,7 @@ $start_new_particle
             ]
 
             medold = medium
-            if medium ~= 0:
+            if medium != 0:
                 
             [
                 ekeold = eke; eke = eie - rm # update kinetic energy
@@ -666,7 +666,7 @@ $start_new_particle
                 $SET INTERVAL elke,eke # Get updated interval
             ]
 
-            if irnew ~= irold:
+            if irnew != irold:
 
                  $electron_region_change; 
 
@@ -686,7 +686,7 @@ $start_new_particle
               go to :USER-ELECTRON-DISCARD:
             ]
 
-            if medium ~= medold:
+            if medium != medold:
 
                  NEXT :TSTEP:
 
