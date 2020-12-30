@@ -19,6 +19,8 @@ subs = {
     r"if(.*?) = ": r"if\1 == ", # = to ==
     r"if(.*?) = ": r"if\1 == ", # = to == again if there multiple times
     r"if(.*?) = ": r"if\1 == ", # = to == again
+    r" \| ": r" or ",
+    r" \& ": r" and ",
 }
 
 if __name__ == "__main__":

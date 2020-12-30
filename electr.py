@@ -268,11 +268,11 @@ $start_new_particle
                 #   - domultiple = .true. and dosingle = .true.
                 #        ==> error condition, something with the logic is wrong!
 
-                # IF(tustep <= tperp & tustep > skindepth)
+                # IF(tustep <= tperp and tustep > skindepth)
                 # This statement changed to be consistent with PRESTA-I
                 count_all_steps = count_all_steps + 1
                 is_ch_step = .false.
-                if (tustep <= tperp) & ((~exact_bca) | (tustep > skindepth)):
+                if (tustep <= tperp) and ((~exact_bca) or (tustep > skindepth)):
                     
                 [
                     # We are further way from a boundary than a skindepth, so
@@ -331,7 +331,7 @@ $start_new_particle
                         ]
                         lambda = - Log(1 - rnnoss)
                         lambda_max = 0.5*blccl*rm/dedx*(eke/rm+1)**3
-                        if  lambda >= 0 & lambda_max > 0 :
+                        if  lambda >= 0 and lambda_max > 0 :
                              [
                             if  lambda < lambda_max :
                                  [
@@ -399,7 +399,7 @@ $start_new_particle
 
             $CHECK-NEGATIVE-USTEP
 
-            if ustep == 0 | medium = 0:
+            if ustep == 0 or medium = 0:
 
                 
             [
@@ -450,7 +450,7 @@ $start_new_particle
                     $AUSCALL($TRANAUSA)
                 if eie <= ecut(irl):
                     go to :ECUT-DISCARD:
-                if ustep != 0 & idisc < 0:
+                if ustep != 0 and idisc < 0:
                     go to :USER-ELECTRON-DISCARD:
                 NEXT :TSTEP:  # (Start again at :TSTEP:)
 
@@ -617,7 +617,7 @@ $start_new_particle
                     z_final = z(np) + w(np)*vstep
                 ]
 
-                if  domultiple | dosingle :
+                if  domultiple or dosingle :
 
                     
                 [
@@ -653,7 +653,7 @@ $start_new_particle
             eie   = peie
             e(np) = peie
 
-            # IF( irnew ~= irl & eie <= ecut(irl)) [
+            # IF( irnew ~= irl and eie <= ecut(irl)) [
             # IK: the above is clearly a bug. If the particle energy falls 
             #     below ecut, but the particle is actually entering a new 
             #     region, the discard will happen in the current region 
@@ -661,7 +661,7 @@ $start_new_particle
             #     resulting annihilation photons will have the new position 
             #     but the old region => confusion in the geometry routine 
             #     is very likely.      Jan 27 2004 
-            if  irnew == irl & eie <= ecut(irl):
+            if  irnew == irl and eie <= ecut(irl):
                  [
                go to :ECUT-DISCARD:
             ]
@@ -740,7 +740,7 @@ $start_new_particle
             # However, if EII is on, we should still permit an interaction
             # even if E<moller threshold as EII interactions go down to
             # the ionization threshold which may be less than thmoll.
-            if e(np) <= thmoll(medium) & eii_flag == 0:
+            if e(np) <= thmoll(medium) and eii_flag == 0:
                 
                  # (thmoll = lower Moller threshold)
             [
@@ -891,7 +891,7 @@ return # i.e., return to shower
 
 idisc = abs(idisc)
 
-if (lelec < 0) | (idisc == 99):
+if (lelec < 0) or (idisc == 99):
 
     edep = e(np) - prm
 else:
