@@ -24,6 +24,12 @@ subs = {
     r" \& ": r" and ",
     r"^\s*\[\s*$": r"",  # line with only [
     r"^\s*\]\s*$": r"",  # line with only ]
+    r"\$start_new_particle": r"medium = med(irl)",
+    r"\$electron_region_change|\$photon_region_change": r"ir(np) = irnew; irl = irnew; medium = med(irl)",
+    r"\$declare_max_medium": r"",
+    r"\$default_nmed": "1",
+    r"\$INIT-PEGS4-VARIABLES": "",
+    r"\$DECLARE-PEGS4-COMMON-BLOCKS": ""
 }
 
 if __name__ == "__main__":

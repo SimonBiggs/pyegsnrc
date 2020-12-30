@@ -52,7 +52,7 @@ irold = ir(np) # Initialize previous region
 irl    = irold # region number in local variable
 
 
-$start_new_particle
+medium = med(irl)
 #  Default replacement for the above is medium = med(irl) 
 #  This is made a macro so that it can be replaced with a call to a 
 #  user provided function start_new_particle(); for the C/C++ interface 
@@ -429,7 +429,7 @@ $start_new_particle
 
                 if irnew != irold:
 
-                     $electron_region_change; 
+                     ir(np) = irnew; irl = irnew; medium = med(irl); 
 
                 if ustep != 0:
 
@@ -648,7 +648,7 @@ $start_new_particle
 
             if irnew != irold:
 
-                 $electron_region_change; 
+                 ir(np) = irnew; irl = irnew; medium = med(irl); 
 
             # After transport call to user scoring routine
             $AUSCALL($TRANAUSA)
