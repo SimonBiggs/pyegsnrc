@@ -22,6 +22,8 @@ subs = {
     r"if(.*?) = ": r"if\1 == ", # = to == again
     r" \| ": r" or ",
     r" \& ": r" and ",
+    r"^\s*\[\s*$": r"",  # line with only [
+    r"^\s*\]\s*$": r"",  # line with only ]
 }
 
 if __name__ == "__main__":

@@ -58,7 +58,7 @@ $start_new_particle
 #  user provided function start_new_particle(); for the C/C++ interface 
 
 :NEWELECTRON:LOOP
-[
+
     # Go once through this loop for each 'new' electron whose charge and
     # energy has not been checked
 
@@ -81,7 +81,7 @@ $start_new_particle
         go to :USER-ELECTRON-DISCARD: # added May 01
 
     :TSTEP:LOOP
-    [
+
         # Go through this loop each time we recompute distance to an interaction
         /******* trying to save evaluation of range.
         do_range = .true. # compute the range in $COMPUTE-RANGE below
@@ -91,8 +91,7 @@ $start_new_particle
         eke = eie - rm # moved here so that kinetic energy will be known
                         # to user even for a vacuum step, IK January 2000
         if medium != 0:
-            
-        [
+
             # Not vacuum. Must sample to see how far to next interaction.
 
             $SELECT-ELECTRON-MFP
@@ -117,13 +116,12 @@ $start_new_particle
         ] # end non-vacuum test
 
         :USTEP:LOOP
-        [
+
             # Here for each check with user geometry.
             # Compute size of maximum acceptable step, which is limited
             # by multiple scattering or other approximations.
             if medium == 0:
-                
-            [
+
                     # vacuum
                     $EMFIELD_INITIATE_SET_TUSTEP
                     tstep = vacdst; ustep = tstep; tustep = ustep
@@ -141,9 +139,9 @@ $start_new_particle
                     #  EM field step size restriction in vacuum
                     $SET-TUSTEP-EM-FIELD
                     ustep = tustep
-            ]
+
             else:
-            [
+
                 # non-vacuum
                 $SET-RHOF # density ratio scaling template
                               # EGS allows the density to vary
@@ -151,8 +149,7 @@ $start_new_particle
 
                 $SCALE-SIG0
                 if sig <= 0:
-                    
-                [
+
                     # This can happen if the threshold for brems,
                     # (ap + rm), is greater than ae.  Moller threshold is
                     # 2*ae - rm. If sig is zero, we are below the
@@ -167,9 +164,9 @@ $start_new_particle
                     #        threshold for creation of a brem.)
                     tstep = vacdst
                     sig0 = 1.E-15
-                ]
+
                 else:
-                [
+
                     $CALCULATE-TSTEP-FROM-DEMFP
                 ] # end sig if-else
 
@@ -197,15 +194,14 @@ $start_new_particle
                 # Moved here and changed by IK Oct 22 1997
                 random_tustep = $RANDOMIZE-TUSTEP
                 if random_tustep:
-                    
-                [
+
                     $RANDOMSET rnnotu
                     tmxs = rnnotu*min(tmxs,smaxir(irl))
-                ]
+
                 else:
-                [
+
                     tmxs = min(tmxs,smaxir(irl))
-                ]
+
                 tustep = min(tstep,tmxs,range)
                 $SET-TUSTEP-EM-FIELD # optional tustep restriction in EM field
 
@@ -273,8 +269,7 @@ $start_new_particle
                 count_all_steps = count_all_steps + 1
                 is_ch_step = .false.
                 if (tustep <= tperp) and ((~exact_bca) or (tustep > skindepth)):
-                    
-                [
+
                     # We are further way from a boundary than a skindepth, so
                     # perform a normal condensed-history step
                     callhowfar = .false. # Do not call HAWFAR
@@ -289,8 +284,6 @@ $start_new_particle
 
                     if transport_algorithm == $PRESTA-II:
 
-                        
-                    [
                       call msdist_pII
                       (
                         # Inputs
@@ -299,9 +292,9 @@ $start_new_particle
                         # Outputs
                         uscat,vscat,wscat,xtrans,ytrans,ztrans,ustep
                       )
-                    ]
+
                     else:
-                    [
+
                       call msdist_pI
                       (
                         # Inputs
@@ -310,45 +303,44 @@ $start_new_particle
                         # Outputs
                         uscat,vscat,wscat,xtrans,ytrans,ztrans,ustep
                       )
-                    ]
-                ]
+
+
                 else:
-                [
+
                     # We are within a skindepth from a boundary, invoke
                     # one of the various boundary-crossing algorithms
                     callmsdist = .false.
                          # Remember that msdist has not been called
                     if exact_bca:
-                        
-                    [
+
                         # Cross the boundary in a single scattering mode
                         domultiple = .false. # Do not do multiple scattering
                         # Sample the distance to a single scattering event
                         $RANDOMSET rnnoss
                         if  rnnoss < 1.e-30 :
-                             [
+
                             rnnoss = 1.e-30
-                        ]
+
                         lambda = - Log(1 - rnnoss)
                         lambda_max = 0.5*blccl*rm/dedx*(eke/rm+1)**3
                         if  lambda >= 0 and lambda_max > 0 :
-                             [
+
                             if  lambda < lambda_max :
-                                 [
+
                                 tuss=lambda*ssmfp*(1-0.5*lambda/lambda_max)
-                            ]
+
                             ELSE [
                               tuss = 0.5 * lambda * ssmfp
-                            ]
+
                             if tuss < tustep:
-                                 [
+
                                 tustep = tuss
                                 dosingle = .true.
-                            ]
+
                             ELSE [
                                 dosingle = .false.
-                            ]
-                        ]
+
+
                         ELSE [
                           $egs_warning(*,' lambda > lambda_max: ',
                              lambda,lambda_max,' eke dedx: ',eke,dedx,
@@ -356,27 +348,26 @@ $start_new_particle
                              ' position = ',x(np),y(np),z(np))
                           dosingle = .false.
                           np=np-1; return
-                        ]
+
                         ustep = tustep
-                    ]
+
                     else:
-                    [
+
                         # Boundary crossing a la EGS4/PRESTA-I but using
                         # exact PLC
                         dosingle = .false.
                         domultiple = .true.
                         $SET-USTEP
-                    ]
+
                     if ustep < tperp:
-                        
-                    [
+
                         callhowfar = .false.
-                    ]
+
                     else:
-                    [
+
                         callhowfar = .true.
-                    ]
-                ]
+
+
             ] # end non-vacuum test
 
             $SET-USTEP-EM-FIELD # additional ustep restriction in em field
@@ -391,32 +382,27 @@ $start_new_particle
 
             # Now see if user requested discard
             if idisc > 0) # (idisc is returned by howfar:
-                
-            [
+
                 # User requested immediate discard
                 go to :USER-ELECTRON-DISCARD:
-            ]
 
             $CHECK-NEGATIVE-USTEP
 
             if ustep == 0 or medium = 0:
 
-                
-            [
                 # Do fast step in vacuum
                 if ustep != 0:
-                    
-                [
+
                     IF $EM_MACROS_ACTIVE
-                    [
+
                         edep = pzero # no energy loss in vacuum
                         # transport in EMF in vacuum:
                         # only a B or and E field can be active
                         # (not both at the same time)
                         $EMFieldInVacuum
-                    ]
+
                     else:
-                    [
+
                         # Step in vacuum
                         vstep  = ustep
                         tvstep = vstep
@@ -459,47 +445,42 @@ $start_new_particle
             vstep = ustep
             $EM_FIELD_SS
             if callhowfar:
-                
-            [
+
                 if exact_bca:
-                    
-                [
+
                     # If callhowfar=.true. and exact_bca=.true. we are
                     # in a single scattering mode
                     tvstep = vstep
                     if tvstep != tustep:
-                        
-                    [
+
                        # Boundary was crossed. Shut off single scattering
                         dosingle = .false.
-                    ]
-                ]
+
+
                 else:
-                [
+
                     # callhowfar=.true. and exact_bca=.false.
                     # =>we are doing an approximate CH step
                     # calculate the average curved path-length corresponding
                     # to vstep
                     $SET-TVSTEP
-                ]
+
                 # Fourth order technique for dedx
                 # Must be done for an approx. CH step or a
                 # single scattering step.
                 $COMPUTE-ELOSS-G(tvstep,eke,elke,lelke,de)
-            ]
+
             else:
-            [
+
                # callhowfar=.false. => step has not been reduced due to
                #                       boundaries
                tvstep = tustep
                if  ~callmsdist :
-                   
-               [
+
                   # Second order technique for dedx
                   # Already done in a normal CH step with call to msdist
                   $COMPUTE-ELOSS-G(tvstep,eke,elke,lelke,de)
-               ]
-            ]
+
 
             $SET-TVSTEP-EM-FIELD # additional path length correction in em field
                 # ( Calculates tvstep given vstep
@@ -526,10 +507,9 @@ $start_new_particle
             # Now do multiple scattering
             if  ~callmsdist :
                    # everything done if callmsdist == .true.
-            [
+
                 if  domultiple :
-                    
-                [
+
                     # Approximated CH step => do multiple scattering
                     # 
                     # ekems, elkems, beta2 have been set in either $SET-TUSTEP
@@ -547,12 +527,11 @@ $start_new_particle
                     call mscat(lambda,chia2,xi,elkems,beta2,qel,medium,
                                spin_effects,findindex,spin_index,
                                costhe,sinthe)
-                ]
+
                 else:
-                [
+
                     if dosingle:
-                        
-                    [
+
                        # Single scattering
 
                        ekems = Max(ekef,ecut(irl)-rm)
@@ -560,7 +539,7 @@ $start_new_particle
                        beta2 = p2/(p2 + rmsq)
                        chia2 = xcc(medium)/(4*blcc(medium)*p2)
                        if  spin_effects :
-                            [
+
                          elkems = Log(ekems)
                          $SET INTERVAL elkems,eke
                          if lelec < 0:
@@ -568,18 +547,17 @@ $start_new_particle
                          else:
                              $EVALUATE etap USING etap_ms(elkems);
                          chia2 = chia2*etap
-                       ]
+
                        call sscat(chia2,elkems,beta2,qel,medium,
                                   spin_effects,costhe,sinthe)
-                    ]
+
                     else:
-                    [
+
                        theta  = 0 # No deflection in single scattering model
                        sinthe = 0
                        costhe = 1
-                    ]
-                ]
-            ]
+
+
 
             # We now know distance and amount of energy loss for this step,
             # and the angle by which the electron will be scattered. Hence,
@@ -599,7 +577,7 @@ $start_new_particle
                different from the geometry grid
             */
             if  callmsdist :
-                 [
+
                # Deflection and scattering have been calculated/sampled in msdist
                 u_final = uscat
                 v_final = vscat
@@ -607,29 +585,25 @@ $start_new_particle
                 x_final = xtrans
                 y_final = ytrans
                 z_final = ztrans
-            ]
+
             else:
-            [
+
                 IF ~($EM_MACROS_ACTIVE)
-                [
+
                     x_final = x(np) + u(np)*vstep
                     y_final = y(np) + v(np)*vstep
                     z_final = z(np) + w(np)*vstep
-                ]
 
                 if  domultiple or dosingle :
 
-                    
-                [
                     u_tmp = u(np); v_tmp = v(np); w_tmp = w(np)
                     call uphi(2,1) # Apply the deflection, save call to uphi if
                                     # no deflection in a single scattering mode
                     u_final = u(np); v_final = v(np); w_final = w(np)
                     u(np) = u_tmp; v(np) = v_tmp; w(np) = w_tmp
-                ]
+
                 else:
                      u_final = u(np); v_final = v(np); w_final = w(np); 
-            ]
 
             $AUSCALL($TRANAUSB)
 
@@ -662,18 +636,15 @@ $start_new_particle
             #     but the old region => confusion in the geometry routine 
             #     is very likely.      Jan 27 2004 
             if  irnew == irl and eie <= ecut(irl):
-                 [
+
                go to :ECUT-DISCARD:
-            ]
 
             medold = medium
             if medium != 0:
-                
-            [
+
                 ekeold = eke; eke = eie - rm # update kinetic energy
                 elke   = log(eke)
                 $SET INTERVAL elke,eke # Get updated interval
-            ]
 
             if irnew != irold:
 
@@ -684,16 +655,13 @@ $start_new_particle
 
             if eie <= ecut(irl):
 
-                 [
                go to :ECUT-DISCARD:
-            ]
 
             # Now check for deferred discard request.  May have been set
             # by either howfar, or one of the transport ausgab calls
             if idisc < 0:
-                 [
+
               go to :USER-ELECTRON-DISCARD:
-            ]
 
             if medium != medold:
 
@@ -722,20 +690,17 @@ $start_new_particle
 
     if lelec < 0:
 
-        
-    [
         # e-,check branching ratio
         $EVALUATE-EBREM-FRACTION
           # Default is $EVALUATE ebr1 USING ebr1(elke)
         $RANDOMSET rnno24
         if rnno24 <= ebr1:
-            
-        [
+
             # It was bremsstrahlung
             go to :EBREMS:
-        ]
+
         else:
-        [
+
             # It was Moller, but first check the kinematics.
             # However, if EII is on, we should still permit an interaction
             # even if E<moller threshold as EII interactions go down to
@@ -743,14 +708,14 @@ $start_new_particle
             if e(np) <= thmoll(medium) and eii_flag == 0:
                 
                  # (thmoll = lower Moller threshold)
-            [
+
                 # Not enough energy for Moller, so
                 # force it to be a bremsstrahlung---provided ok kinematically.
                 if ebr1 <= 0:
                     go to :NEWELECTRON:
                     # Brems not allowed either.
                 go to :EBREMS:
-            ]
+
             $AUSCALL($MOLLAUSB)
             call moller
             # The following macro template allows the user to change the
@@ -762,10 +727,8 @@ $start_new_particle
             $AUSCALL($MOLLAUSA)
             if  iq(np) == 0 :
                  return
-        ]
 
         go to :NEWELECTRON: # Electron is lowest energy-follow it
-    ]
 
     # e+ interaction. pbr1 = brems/(brems + bhabha + annih
     $EVALUATE-PBREM-FRACTION
@@ -778,8 +741,7 @@ $start_new_particle
     $EVALUATE-BHABHA-FRACTION
        # Default is $EVALUATE pbr2 USING pbr2(elke)
     if rnno25 < pbr2:
-        
-    [
+
         # It is bhabha
         $AUSCALL($BHABAUSB)
         call bhabha
@@ -792,9 +754,9 @@ $start_new_particle
         $AUSCALL($BHABAUSA)
         if  iq(np) == 0 :
              return
-    ]
+
     else:
-    [
+
         # It is in-flight annihilation
         $AUSCALL($ANNIHFAUSB)
         call annih
@@ -826,30 +788,28 @@ call brems
 $PARTICLE-SELECTION-BREMS
 $AUSCALL($BREMAUSA)
 if iq(np) == 0:
-    
-[
+
     # Photon was selected.
     return
     # i.e., return to shower
-]
+
 else:
-[
+
     # Electron was selected
     go to :NEWELECTRON:
-]
 
 # ---------------------------------------------
 # Electron cutoff energy discard section
 # ---------------------------------------------
 :ECUT-DISCARD:
 if  medium > 0 :
-     [
+
     if eie > ae(medium):
-         [
+
         idr = $EGSCUTAUS
         if lelec < 0:
             edep = e(np) - prm ELSE[$POSITRON-ECUT-DISCARD;]
-    ]
+
     else:
          idr = $PEGSCUTAUS; edep = e(np) - prm; 
 ] ELSE [idr = $EGSCUTAUS; edep = e(np) - prm; ]
@@ -864,10 +824,9 @@ $ELECTRON-TRACK-END # The default replacement for this macros is
 
 if lelec > 0:
 
-     [
     # It's a positron. Produce annihilation gammas if edep < peie
     if edep < peie:
-         [
+
         $AUSCALL($ANNIHRAUSB)
         call annih_at_rest
         $PARTICLE-SELECTION-ANNIHREST
@@ -875,7 +834,7 @@ if lelec > 0:
         # Now discard the positron and take normal return to follow
         # the annihilation gammas.
         return # i.e., return to shower
-    ]
+
 ] # end of positron block
 
 np = np - 1
