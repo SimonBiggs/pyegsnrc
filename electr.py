@@ -1,6 +1,6 @@
 # ******************************************************************
 #                                NATIONAL RESEARCH COUNCIL OF CANADA
-SUBROUTINE ELECTR(IRCODE)
+def ELECTR(IRCODE):
 # ******************************************************************
 #    This subroutine has been almost completely recoded to include  
 #    the EGSnrc enhancements.                                       
@@ -139,7 +139,6 @@ medium = med(irl)
                     #  EM field step size restriction in vacuum
                     $SET-TUSTEP-EM-FIELD
                     ustep = tustep
-
             else:
 
                 # non-vacuum
@@ -164,7 +163,6 @@ medium = med(irl)
                     #        threshold for creation of a brem.)
                     tstep = vacdst
                     sig0 = 1.E-15
-
                 else:
 
                     $CALCULATE-TSTEP-FROM-DEMFP
@@ -197,7 +195,6 @@ medium = med(irl)
 
                     $RANDOMSET rnnotu
                     tmxs = rnnotu*min(tmxs,smaxir(irl))
-
                 else:
 
                     tmxs = min(tmxs,smaxir(irl))
@@ -292,7 +289,6 @@ medium = med(irl)
                         # Outputs
                         uscat,vscat,wscat,xtrans,ytrans,ztrans,ustep
                       )
-
                     else:
 
                       call msdist_pI
@@ -303,7 +299,6 @@ medium = med(irl)
                         # Outputs
                         uscat,vscat,wscat,xtrans,ytrans,ztrans,ustep
                       )
-
 
                 else:
 
@@ -350,7 +345,6 @@ medium = med(irl)
                           np=np-1; return
 
                         ustep = tustep
-
                     else:
 
                         # Boundary crossing a la EGS4/PRESTA-I but using
@@ -362,7 +356,6 @@ medium = med(irl)
                     if ustep < tperp:
 
                         callhowfar = .false.
-
                     else:
 
                         callhowfar = .true.
@@ -400,7 +393,6 @@ medium = med(irl)
                         # only a B or and E field can be active
                         # (not both at the same time)
                         $EMFieldInVacuum
-
                     else:
 
                         # Step in vacuum
@@ -456,7 +448,6 @@ medium = med(irl)
                        # Boundary was crossed. Shut off single scattering
                         dosingle = .false.
 
-
                 else:
 
                     # callhowfar=.true. and exact_bca=.false.
@@ -469,7 +460,6 @@ medium = med(irl)
                 # Must be done for an approx. CH step or a
                 # single scattering step.
                 $COMPUTE-ELOSS-G(tvstep,eke,elke,lelke,de)
-
             else:
 
                # callhowfar=.false. => step has not been reduced due to
@@ -527,7 +517,6 @@ medium = med(irl)
                     call mscat(lambda,chia2,xi,elkems,beta2,qel,medium,
                                spin_effects,findindex,spin_index,
                                costhe,sinthe)
-
                 else:
 
                     if dosingle:
@@ -550,7 +539,6 @@ medium = med(irl)
 
                        call sscat(chia2,elkems,beta2,qel,medium,
                                   spin_effects,costhe,sinthe)
-
                     else:
 
                        theta  = 0 # No deflection in single scattering model
@@ -585,7 +573,6 @@ medium = med(irl)
                 x_final = xtrans
                 y_final = ytrans
                 z_final = ztrans
-
             else:
 
                 IF ~($EM_MACROS_ACTIVE)
@@ -601,7 +588,6 @@ medium = med(irl)
                                     # no deflection in a single scattering mode
                     u_final = u(np); v_final = v(np); w_final = w(np)
                     u(np) = u_tmp; v(np) = v_tmp; w(np) = w_tmp
-
                 else:
                      u_final = u(np); v_final = v(np); w_final = w(np); 
 
@@ -698,7 +684,6 @@ medium = med(irl)
 
             # It was bremsstrahlung
             go to :EBREMS:
-
         else:
 
             # It was Moller, but first check the kinematics.
@@ -754,7 +739,6 @@ medium = med(irl)
         $AUSCALL($BHABAUSA)
         if  iq(np) == 0 :
              return
-
     else:
 
         # It is in-flight annihilation
@@ -792,7 +776,6 @@ if iq(np) == 0:
     # Photon was selected.
     return
     # i.e., return to shower
-
 else:
 
     # Electron was selected
@@ -809,10 +792,10 @@ if  medium > 0 :
         idr = $EGSCUTAUS
         if lelec < 0:
             edep = e(np) - prm ELSE[$POSITRON-ECUT-DISCARD;]
-
     else:
          idr = $PEGSCUTAUS; edep = e(np) - prm; 
-] ELSE [idr = $EGSCUTAUS; edep = e(np) - prm; ]
+else:
+    idr = $EGSCUTAUS; edep = e(np) - prm; 
 
 
 $ELECTRON-TRACK-END # The default replacement for this macros is 
