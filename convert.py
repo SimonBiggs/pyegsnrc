@@ -14,6 +14,7 @@ subs = {
     r";(\s*)(?P<comment>#(.*?))?$": r" \g<comment>",
     r"^(\s*)IF\((.*)\)\s*\[(.*?)[;]?\](.*)$": r"\1if \2:\n\1    \3\4", # basic IF
     r"^(\s*)ELSE(.*)\[(.*)\](.*)$": r"\1else:\n\1    \3\4", # basic ELSE
+    r"^(\s*)IF\((.*)\)(.*)$": r"\1if \2:\n\1    \3", # IF on one line
 }
 
 if __name__ == "__main__":
