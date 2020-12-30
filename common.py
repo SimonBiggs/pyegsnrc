@@ -76,8 +76,8 @@ REPLACE {$SHORT_INT} WITH {integer*2} # change this to integer*4 for compilers
 # Note that the HP compiler does not support *8 integers so the above
 #  should be changed for HP
 
-REPLACE {$IMPLICIT-NONE} WITH {}
-REPLACE {$IMPLICIT-NONE} WITH {implicit none}
+REPLACE {$IMPLICIT_NONE} WITH {}
+REPLACE {$IMPLICIT_NONE} WITH {implicit none}
 
 # ==================================================================
 # SELECT THE FORTRAN STANDARD TO BE USED (1966 OR 1977)             
@@ -350,12 +350,12 @@ MXBREL: int = 100
 MXGAUSS: int = 64
 MXBRES: int = 100
 MXBRXS: int = 50
-REPLACE {$NIST-ENERGY-SCALE} WITH {1.0}
+REPLACE {$NIST_ENERGY_SCALE} WITH {1.0}
 
-REPLACE {$NIST-DATA-UNIT} WITH {i_nist_data}
+REPLACE {$NIST_DATA_UNIT} WITH {i_nist_data}
 
 
-REPLACE {$COMIN-INIT-NIST-BREMS} WITH {
+REPLACE {$COMIN_INIT_NIST_BREMS} WITH {
     COMIN/MEDIA,BREMPR,ELECIN,THRESH,USEFUL,NIST-BREMS,Spin-Data,EGS-IO/
 }
 
@@ -407,16 +407,16 @@ REPLACE {COMIN/NIST-BREMS/} WITH {
   $INTEGER nb_idata
 }
 
-REPLACE {$NRC-PAIR-NXX} WITH {65}
-REPLACE {$NRC-PAIR-NEE} WITH {84}
-REPLACE {$NRC-PAIR-NX-1} WITH {64}
-REPLACE {$NRC-PAIR-NE-1} WITH {83}
+NRC_PAIR_NXX: int = 65
+NRC_PAIR_NEE: int = 84
+NRC_PAIR_NX_1: int = 64
+NRC_PAIR_NE_1: int = 83
 
 REPLACE {COMIN/NRC-PAIR-DATA/} WITH {
-    common/nrc_pair/ nrcp_fdata($NRC-PAIR-NXX,$NRC-PAIR-NEE,$MXMED),
-                     nrcp_wdata($NRC-PAIR-NXX,$NRC-PAIR-NEE,$MXMED),
-                     nrcp_idata($NRC-PAIR-NXX,$NRC-PAIR-NEE,$MXMED),
-                     nrcp_xdata($NRC-PAIR-NXX),
+    common/nrc_pair/ nrcp_fdata($NRC_PAIR_NXX,$NRC_PAIR_NEE,$MXMED),
+                     nrcp_wdata($NRC_PAIR_NXX,$NRC_PAIR_NEE,$MXMED),
+                     nrcp_idata($NRC_PAIR_NXX,$NRC_PAIR_NEE,$MXMED),
+                     nrcp_xdata($NRC_PAIR_NXX),
                      nrcp_emin, nrcp_emax, nrcp_dle, nrcp_dlei
     $REAL            nrcp_fdata,nrcp_wdata,nrcp_xdata,
                      nrcp_emin, nrcp_emax, nrcp_dle, nrcp_dlei
@@ -487,7 +487,7 @@ REPLACE {COMIN/COMPTON-DATA/} WITH
 MXELEMENT: int = 100  #  Number of elements               
 MXSHXSEC: int = 30   #  Number of shells available       
 MXSHELL: int = 6    #  Number of shells treated         
-MXINTER: int = 5    #  $MXSHELL-1                       
+MXINTER: int = 5    #  $MXSHELL_1                       
 MXTRANS: int = 39   #  Number of possible transitions   
 MXEDGE: int = 16   #  max. number of edges above 1 keV 
 REPLACE {$PHOTOUNIT} WITH {i_photo_relax} #  unit number for photo_relax.data 
@@ -621,11 +621,11 @@ REPLACE {COMIN/EII-DATA/} WITH {
     $INTEGER  eii_elements,eii_flag,eii_nsh
 }
 
-REPLACE {$COMIN-EII-SAMPLE} WITH {
+REPLACE {$COMIN_EII_SAMPLE} WITH {
     COMIN/EPCONT,EII-DATA,EGS-VARIANCE-REDUCTION,RANDOM,STACK,THRESH,
            UPHIOT,USEFUL,EGS-IO,RELAX-DATA/
 }
-REPLACE {$COMIN-EII-INIT} WITH {
+REPLACE {$COMIN_EII_INIT} WITH {
     COMIN/BREMPR,EDGE,EGS-IO,EII-DATA,ELECIN,MEDIA,THRESH,USEFUL/
 }
 
@@ -688,7 +688,7 @@ MAXTRANS: int = 300   # max. number of transitions per element
 #       EII                K,L1..L3            K,L1..L3
 #       Photoeffect        K,L1..L3,<M>,<N>    K,L1..L3
 #       Shellwise
-#       Photoeffect             N/A      All shells > $RELAX-CUTOFF
+#       Photoeffect             N/A      All shells > $RELAX_CUTOFF
 #       Relaxation
 #         initial vacancy  K,L1..L3,<M>        K,L1..L3
 #         (for new photoeffect)                K, L1..L3, M1..M5, N1..N4
@@ -741,13 +741,13 @@ REPLACE {COMIN/RELAX-FOR-USER/} WITH {
 }
 # ---------- BUFFER FLUSH SEMICOLON ----------
 
-REPLACE {$COMIN-RELAX-INIT} WITH {
+REPLACE {$COMIN_RELAX_INIT} WITH {
 COMIN/BREMPR,EDGE,EGS-IO,MEDIA,PHOTIN,THRESH,X-OPTIONS,USEFUL,
 RELAX-DATA,SHELL-DATA/
 }
 # ---------- BUFFER FLUSH SEMICOLON ----------
 
-REPLACE {$COMIN-RELAX-EADL} WITH {
+REPLACE {$COMIN_RELAX_EADL} WITH {
 COMIN/RELAX-DATA,RELAX-FOR-USER,SHELL-DATA,
 STACK,THRESH,EPCONT,USEFUL,UPHIOT,RANDOM,BOUNDS,EGS-IO,MISC,MEDIA,
 X-OPTIONS/
@@ -771,7 +771,7 @@ X-OPTIONS/
 #  use the a lower threshold.
 # ***************************************************************************
 # ============================================================
-REPLACE {$RELAX-CUTOFF} WITH {0.001# threshold energy for outer shells}
+REPLACE {$RELAX_CUTOFF} WITH {0.001# threshold energy for outer shells}
 MXPESHELL: int = 16 # K,L1..L3,M1..M5,N1..N7 + outer shell
 MXNE: int = 500     # number of energy points per shell 
 # ============================================================
@@ -793,7 +793,7 @@ REPLACE {COMIN/PE-SHELL-DATA/} WITH {
 }
 # ---------- BUFFER FLUSH SEMICOLON ----------
 
-REPLACE {$COMIN-SHELLWISE-PE-INIT} WITH {
+REPLACE {$COMIN_SHELLWISE_PE_INIT} WITH {
 COMIN/BREMPR,EDGE,EGS-IO,MEDIA,PHOTIN,THRESH,X-OPTIONS,USEFUL,
     PE-SHELL-DATA/
 }
@@ -831,7 +831,7 @@ REPLACE {COMIN/ET-Control/} WITH  # ET stands for Electron Transport
                                   # crossing in VMC mode
               skindepth_for_bca# distance from a boundary (in elastic MFP)
                                   # to switch to one of the BCAs 
-    $INTEGER  transport_algorithm,# =$PRESTA-II or $PRESTA--I
+    $INTEGER  transport_algorithm,# =$PRESTA_II or $PRESTA__I
               bca_algorithm# will be used if other inexact BCAs
                                   # implemented in the future
     $LOGICAL  exact_bca,          # if .true. => BCA in single scattering mode
@@ -848,9 +848,9 @@ REPLACE {COMIN/ET-Control/} WITH  # ET stands for Electron Transport
 MAXL_MS: int = 63
 MAXQ_MS: int = 7
 MAXU_MS: int = 31
-REPLACE {$0-MAXL_MS}  WITH {0:63}
-REPLACE {$0-MAXQ_MS}  WITH {0:7}
-REPLACE {$0-MAXU_MS}  WITH {0:31}
+REPLACE {$0_MAXL_MS}  WITH {0:63}
+REPLACE {$0_MAXQ_MS}  WITH {0:7}
+REPLACE {$0_MAXU_MS}  WITH {0:31}
 REPLACE {$LAMBMIN_MS} WITH {1.}
 REPLACE {$LAMBMAX_MS} WITH {1e5}
 REPLACE {$QMIN_MS}    WITH {1e-3}
@@ -858,10 +858,10 @@ REPLACE {$QMAX_MS}    WITH {0.5}
 
 REPLACE {COMIN/MS-Data/} WITH {
   common/ms_data/
-              ums_array($0-MAXL_MS,$0-MAXQ_MS,$0-MAXU_MS),
-              fms_array($0-MAXL_MS,$0-MAXQ_MS,$0-MAXU_MS),
-              wms_array($0-MAXL_MS,$0-MAXQ_MS,$0-MAXU_MS),
-              ims_array($0-MAXL_MS,$0-MAXQ_MS,$0-MAXU_MS),
+              ums_array($0_MAXL_MS,$0_MAXQ_MS,$0_MAXU_MS),
+              fms_array($0_MAXL_MS,$0_MAXQ_MS,$0_MAXU_MS),
+              wms_array($0_MAXL_MS,$0_MAXQ_MS,$0_MAXU_MS),
+              ims_array($0_MAXL_MS,$0_MAXQ_MS,$0_MAXU_MS),
               llammin,llammax,dllamb,dllambi,dqms,dqmsi
   real*4      ums_array,fms_array,wms_array,
               llammin,llammax,dllamb,dllambi,dqms,dqmsi
@@ -875,13 +875,13 @@ MAXE_SPIN: int = 15
 REPLACE {$MAXE_SPI1}   WITH {{COMPUTE 2*$MAXE_SPIN+1}}
 MAXQ_SPIN: int = 15
 MAXU_SPIN: int = 31
-REPLACE {$0-MAXE_SPI1} WITH {0:$MAXE_SPI1}
-REPLACE {$0-MAXQ_SPIN} WITH {0:$MAXQ_SPIN}
-REPLACE {$0-MAXU_SPIN} WITH {0:$MAXU_SPIN}
+REPLACE {$0_MAXE_SPI1} WITH {0:$MAXE_SPI1}
+REPLACE {$0_MAXQ_SPIN} WITH {0:$MAXQ_SPIN}
+REPLACE {$0_MAXU_SPIN} WITH {0:$MAXU_SPIN}
 
 REPLACE {COMIN/Spin-Data/} WITH {
   common/spin_data/
-              spin_rej($MXMED,0:1,$0-MAXE_SPI1,$0-MAXQ_SPIN,$0-MAXU_SPIN),
+              spin_rej($MXMED,0:1,$0_MAXE_SPI1,$0_MAXQ_SPIN,$0_MAXU_SPIN),
               espin_min,espin_max,espml,b2spin_min,b2spin_max,
               dbeta2,dbeta2i,dlener,dleneri,dqq1,dqq1i,
               fool_intel_optimizer
@@ -1154,66 +1154,66 @@ REPLACE {COMIN/X-OPTIONS/} WITH {
 # ------------------------------------------------------------------
 # *** MACROS TO DEFINE THE COMMONS USED IN EACH SUBPROGRAM.         
 # ------------------------------------------------------------------
-REPLACE {$COMIN-ANNIH} WITH {
+REPLACE {$COMIN_ANNIH} WITH {
      COMIN/DEBUG,STACK, UPHIOT,USEFUL,RANDOM,EGS-VARIANCE-REDUCTION,EGS-IO/}
-REPLACE {$COMIN-ANNIH-ATREST} WITH {
+REPLACE {$COMIN_ANNIH_ATREST} WITH {
     COMIN/DEBUG,STACK,RANDOM,USEFUL,EGS-VARIANCE-REDUCTION,EGS-IO/}
-REPLACE {$COMIN-BHABHA} WITH {
+REPLACE {$COMIN_BHABHA} WITH {
     COMIN/DEBUG,STACK, THRESH,UPHIOT,USEFUL,RANDOM,EGS-VARIANCE-REDUCTION,
            EGS-IO/}
-REPLACE {$COMIN-BREMS} WITH {
+REPLACE {$COMIN_BREMS} WITH {
     COMIN/DEBUG,BREMPR,EPCONT,NIST-BREMS,STACK,THRESH,UPHIOT,USEFUL,RANDOM,
            EGS-VARIANCE-REDUCTION,EGS-IO/}
-REPLACE {$COMIN-COMPT} WITH {
+REPLACE {$COMIN_COMPT} WITH {
    COMIN/COMPTON-DATA,DEBUG,EPCONT,STACK,THRESH,UPHIOT,USEFUL,RANDOM,
           EGS-VARIANCE-REDUCTION,EGS-IO,RELAX-DATA/}
-REPLACE {$COMIN-ELECTR} WITH {
+REPLACE {$COMIN_ELECTR} WITH {
 COMIN/DEBUG,BOUNDS,ELECIN,EPCONT,MEDIA,MISC,STACK,THRESH,
 UPHIIN,UPHIOT,USEFUL,USER,RANDOM,ET-Control,CH-Steps,EGS-IO,
           EGS-VARIANCE-REDUCTION,EMF-INPUTS/}
-REPLACE {$COMIN-HATCH} WITH {
+REPLACE {$COMIN_HATCH} WITH {
 COMIN/DEBUG,BOUNDS,BREMPR,ELECIN,MEDIA,MISC,PHOTIN,STACK,THRESH,
 UPHIIN,UPHIOT,USEFUL,USER,RANDOM,ET-Control,EGS-IO,X-OPTIONS,
           EGS-VARIANCE-REDUCTION/}
-REPLACE {$COMIN-MOLLER} WITH {
+REPLACE {$COMIN_MOLLER} WITH {
    COMIN/DEBUG,STACK,THRESH,UPHIOT,USEFUL,RANDOM,EGS-IO,
           EGS-VARIANCE-REDUCTION/}
-REPLACE {$COMIN-PAIR} WITH {
+REPLACE {$COMIN_PAIR} WITH {
    COMIN/DEBUG,BREMPR,NRC-PAIR-DATA,STACK,THRESH,UPHIOT,USEFUL,RANDOM,
           EPCONT,TRIPLET-DATA,EGS-VARIANCE-REDUCTION,EGS-IO/}
-REPLACE {$COMIN-PHOTO} WITH {
+REPLACE {$COMIN_PHOTO} WITH {
    COMIN/BOUNDS,BREMPR,DEBUG,EDGE,EPCONT,MEDIA,PHOTIN,RANDOM,
           STACK,UPHIOT,USEFUL,EGS-IO,X-OPTIONS,
           EGS-VARIANCE-REDUCTION,RELAX-DATA/}
-REPLACE {$COMIN-PHOTON} WITH {
+REPLACE {$COMIN_PHOTON} WITH {
 COMIN/DEBUG,BOUNDS,MEDIA,MISC,EPCONT,PHOTIN,STACK,THRESH,UPHIOT,
 USEFUL,USER,RANDOM,EGS-VARIANCE-REDUCTION,EGS-IO/}
-REPLACE {$COMIN-SHOWER} WITH {
+REPLACE {$COMIN_SHOWER} WITH {
   COMIN/DEBUG,STACK,UPHIOT,RANDOM,EGS-IO/}
-REPLACE {$COMIN-UPHI} WITH {
+REPLACE {$COMIN_UPHI} WITH {
   COMIN/DEBUG,EPCONT,STACK,UPHIIN,UPHIOT,RANDOM,EGS-IO/}
-REPLACE {$COMIN-BLOCK} WITH {
+REPLACE {$COMIN_BLOCK} WITH {
   COMIN/BOUNDS,BREMPR,COMPTON-DATA,EDGE,ELECIN,
   EPCONT,CH-Steps,ET-Control,MEDIA,MISC,PHOTIN,RANDOM,STACK,
   THRESH, UPHIIN,UPHIOT,USEFUL,EGS-VARIANCE-REDUCTION/}
-REPLACE {$COMIN-RELAX} WITH {
+REPLACE {$COMIN_RELAX} WITH {
   COMIN/EPCONT,STACK,BOUNDS,USEFUL,RANDOM,EDGE,EGS-IO,RELAX-DATA,X-OPTIONS/}
-REPLACE {$COMIN-SET-DEFAULTS} WITH {
+REPLACE {$COMIN_SET_DEFAULTS} WITH {
   COMIN/BOUNDS,BREMPR,COMPTON-DATA,EDGE,ELECIN,EPCONT,CH-Steps,ET-Control,
        MEDIA,MISC,PHOTIN,RANDOM,STACK,THRESH, UPHIIN,UPHIOT,USEFUL,
        EGS-VARIANCE-REDUCTION,EGS-IO,Spin-Data,EII-DATA,rayleigh_inputs,
        EMF-INPUTS,X-OPTIONS/}
-REPLACE {$COMIN-INIT-COMPT} WITH {
+REPLACE {$COMIN_INIT_COMPT} WITH {
   COMIN/COMPTON-DATA,BREMPR,EDGE,MEDIA,MISC,USEFUL,EGS-IO,X-OPTIONS/}
-REPLACE {$COMIN-MSCATI} WITH {
+REPLACE {$COMIN_MSCATI} WITH {
   COMIN/BOUNDS,ELECIN,MEDIA,MISC,RANDOM,ET-Control,USEFUL,EGS-IO/}
-REPLACE {$COMIN-INIT-TRIPLET} WITH {
+REPLACE {$COMIN_INIT_TRIPLET} WITH {
   COMIN/BREMPR,EGS-IO,MEDIA,TRIPLET-DATA,USEFUL/}
-REPLACE {$COMIN-GET-TRANSPORTP} WITH {
+REPLACE {$COMIN_GET_TRANSPORTP} WITH {
   COMIN/GetInput,BOUNDS,ET-Control,EDGE,COMPTON-DATA,MEDIA,MISC,
          BREMPR,EII-DATA,EGS-IO,rayleigh_inputs,EMF-INPUTS,X-OPTIONS/}
 # Ali:photonuc, 1 block
-REPLACE {$COMIN-PHOTONUC} WITH {COMIN/STACK,EPCONT,USEFUL/}
+REPLACE {$COMIN_PHOTONUC} WITH {COMIN/STACK,EPCONT,USEFUL/}
 
 # ---------- BUFFER FLUSH SEMICOLON ----------
 
@@ -1275,7 +1275,7 @@ REPLACE {$TRANSFERPROPERTIESTO#FROM#} WITH {
    # DATA STATEMENTS IN SHOWER.
 
 # Macro to check that the stack size is not exceeded
-REPLACE {$CHECK-STACK(#,#)} WITH {
+REPLACE {$CHECK_STACK(#,#)} WITH {
   IF( {P1} > $MXSTACK ) [
 # ---------- BUFFER FLUSH SEMICOLON ----------
       $egs_fatal('(//,3a,/,2(a,i9),/,a)',' In subroutine ',{P2},
@@ -1288,7 +1288,7 @@ REPLACE {$CHECK-STACK(#,#)} WITH {
    Redefined to be able to use huge stack in C++ application after
    implementing new relaxation.
  */
-REPLACE {$CHECK-STACK(#,#)} WITH {
+REPLACE {$CHECK_STACK(#,#)} WITH {
   IF( {P1} > $MXSTACK ) [
       $egs_fatal('(//,3a,/,2(a,i9))',' In subroutine ',{P2},
           ' stack size exceeded! ',' $MAXSTACK = ',$MXSTACK,' np = ',{P1})
@@ -1296,17 +1296,17 @@ REPLACE {$CHECK-STACK(#,#)} WITH {
 }
 
 # MACRO FOR RE-EVALUATING DEDX IN SUBROUTINE ELECTR
-REPLACE {$DEDX-RE-EVALUATION} WITH {
+REPLACE {$DEDX_RE_EVALUATION} WITH {
 }
 # ---------- BUFFER FLUSH SEMICOLON ----------
 
 # THE FOLLOWING MACROS ARE USED IN SUBROUTINE ELECTR IN ORDER TO MAKE
 # PATH LENGTH CORRECTIONS AND RESTRICTIONS:
-REPLACE {$SET-USTEP} WITH
+REPLACE {$SET_USTEP} WITH
 {
   ekems = eke - 0.5*tustep*dedx# Use mid-point energy to calculate
                                   # energy dependent quantities
-  $CALCULATE-XI(tustep)
+  $CALCULATE_XI(tustep)
   IF ( xi < 0.1 )
     [
       ustep = tustep*(1 - xi*(0.5 - xi*0.166667))
@@ -1318,7 +1318,7 @@ REPLACE {$SET-USTEP} WITH
 }
 
 
-REPLACE {$CALCULATE-XI(#)} WITH
+REPLACE {$CALCULATE_XI(#)} WITH
 {
   p2 = ekems*(ekems+rmt2)beta2 = p2/(p2 + rmsq)
   chia2 = xccl/(4*blccl*p2)
@@ -1344,7 +1344,7 @@ REPLACE {$CALCULATE-XI(#)} WITH
   xi = xi*(Log(1+1./chia2)-1/(1+chia2))
 }
 
-REPLACE {$SET-TVSTEP} WITH
+REPLACE {$SET_TVSTEP} WITH
 #         ===========                 
 {
     IF ( vstep < ustep0 )
@@ -1356,7 +1356,7 @@ REPLACE {$SET-TVSTEP} WITH
          #        resulting from tustep
          # vstep = ustep is the reduced average transport distance in the 
          #               initial direction due to boundary crossing
-      $CALCULATE-XI(vstep)
+      $CALCULATE_XI(vstep)
       IF ( xi < 0.1 )
       [
         tvstep = vstep*(1 + xi*(0.5 + xi*0.333333))
@@ -1415,24 +1415,24 @@ REPLACE {COMIN/NTALY1/} WITH {
 # ---------- BUFFER FLUSH SEMICOLON ----------
 
 # MACRO TO ALLOW USER TO INITIALIZE IN SUBROUTINE HATCH
-REPLACE {$HATCH-USER-INPUT-INIT} WITH {
-#  $RNG-INITIALIZATION 
+REPLACE {$HATCH_USER_INPUT_INIT} WITH {
+#  $RNG_INITIALIZATION 
 #  Have taken this out, (IK, Jan 2000). If the user does not initilize the
 #  rng before the first call to shower, the rng will initialize itself    
 #  using the default seed and the default luxury level (which is defined  
-#  via $DEFAULT-LL).                                                      
+#  via $DEFAULT_LL).                                                      
 
 DO J=1,$MXREG [
   IF(SMAXIR(J)<=0.0) [SMAXIR(J)=1E10]
 ]
 }
 
-REPLACE {$KERMA-INSERT} WITH {}
+REPLACE {$KERMA_INSERT} WITH {}
             # USED IN KERMA CALCULATIONS---DEFAULT IS NULL
 # ---------- BUFFER FLUSH SEMICOLON ----------
 
 # MACRO FOR CONTROLLING NEGATIVE USTEP
-REPLACE {$USER-CONTROLS-NEGATIVE-USTEP} WITH {
+REPLACE {$USER_CONTROLS_NEGATIVE_USTEP} WITH {
 #          ============================
    IF(USTEP<-1.E-4)[ IERUST=IERUST+1OUTPUT IERUST,USTEP,IR(NP),IRNEW,
    IROLD,X(NP),Y(NP),Z(NP),SQRT(X(NP)**2+Y(NP)**2)
@@ -1442,7 +1442,7 @@ REPLACE {$USER-CONTROLS-NEGATIVE-USTEP} WITH {
    USTEP=0.0}
 # ---------- BUFFER FLUSH SEMICOLON ----------
 
-REPLACE {$CHECK-NEGATIVE-USTEP} WITH {
+REPLACE {$CHECK_NEGATIVE_USTEP} WITH {
     IF(ustep <= 0) [
         # Negative ustep---probable truncation problem at a
         # boundary, which means we are not in the region we think
@@ -1466,14 +1466,14 @@ REPLACE {$CHECK-NEGATIVE-USTEP} WITH {
 
 # MACRO FOR INTRODUCING FLUCTUATIONS IN THE ENERGY LOSS BY
 # CHARGED PARTICLES (E.G., 'LANDAU FLUCTUATIONS')---DEFAULT IS NULL
-REPLACE {$DE-FLUCTUATION} WITH {}
+REPLACE {$DE_FLUCTUATION} WITH {}
 # ---------- BUFFER FLUSH SEMICOLON ----------
 
 # Macro for production of annihilation quanta whenever
 # the energy is greater than AE but less than or equal to ECUT.
 # photons are always produced in EGSnrc.
 
-REPLACE {$POSITRON-ECUT-DISCARD} WITH {EDEP=PEIE-PRM}
+REPLACE {$POSITRON_ECUT_DISCARD} WITH {EDEP=PEIE-PRM}
 # NOTE: TO GET THE EGS3 VERSION SIMPLY USE EDEP=PEIE+PRM
 #       AS THE REPLACEMENT PART OF THE MACRO.
 # ---------- BUFFER FLUSH SEMICOLON ----------
@@ -1481,40 +1481,40 @@ REPLACE {$POSITRON-ECUT-DISCARD} WITH {EDEP=PEIE-PRM}
 # MACROS FOR PARTICLE SELECTION (E.G., LEADING PARTICLE,
 # SPLITTING, ETC.).  DEFAULT IS ULTIMATELY 'NULL'
 #      -----IN SUBROUTINE ELECTR-----                 
-REPLACE {$PARTICLE-SELECTION-ELECTR} WITH {}
-REPLACE {$PARTICLE-SELECTION-ANNIH} WITH {
-         $PARTICLE-SELECTION-ELECTR}
-REPLACE {$PARTICLE-SELECTION-ANNIHREST} WITH {
-        $PARTICLE-SELECTION-ELECTR}
-REPLACE {$PARTICLE-SELECTION-BHABHA} WITH {
-        $PARTICLE-SELECTION-ELECTR}
-REPLACE {$PARTICLE-SELECTION-BREMS} WITH {
-        $PARTICLE-SELECTION-ELECTR}
-REPLACE {$PARTICLE-SELECTION-MOLLER}
-   WITH {$PARTICLE-SELECTION-ELECTR}
+REPLACE {$PARTICLE_SELECTION_ELECTR} WITH {}
+REPLACE {$PARTICLE_SELECTION_ANNIH} WITH {
+         $PARTICLE_SELECTION_ELECTR}
+REPLACE {$PARTICLE_SELECTION_ANNIHREST} WITH {
+        $PARTICLE_SELECTION_ELECTR}
+REPLACE {$PARTICLE_SELECTION_BHABHA} WITH {
+        $PARTICLE_SELECTION_ELECTR}
+REPLACE {$PARTICLE_SELECTION_BREMS} WITH {
+        $PARTICLE_SELECTION_ELECTR}
+REPLACE {$PARTICLE_SELECTION_MOLLER}
+   WITH {$PARTICLE_SELECTION_ELECTR}
 #      -----IN SUBROUTINE PHOTON-----                 
-REPLACE {$PARTICLE-SELECTION-PHOTON} WITH {}
-REPLACE {$PARTICLE-SELECTION-COMPT} WITH {
-        $PARTICLE-SELECTION-PHOTON}
-REPLACE {$PARTICLE-SELECTION-PAIR} WITH {
-        $PARTICLE-SELECTION-PHOTON}
-REPLACE {$PARTICLE-SELECTION-PHOTO} WITH {
-        $PARTICLE-SELECTION-PHOTON}
+REPLACE {$PARTICLE_SELECTION_PHOTON} WITH {}
+REPLACE {$PARTICLE_SELECTION_COMPT} WITH {
+        $PARTICLE_SELECTION_PHOTON}
+REPLACE {$PARTICLE_SELECTION_PAIR} WITH {
+        $PARTICLE_SELECTION_PHOTON}
+REPLACE {$PARTICLE_SELECTION_PHOTO} WITH {
+        $PARTICLE_SELECTION_PHOTON}
 
 # MACRO FOR SELECTION OF THE ELECTRON MEAN-FREE-PATH
-REPLACE {$SELECT-ELECTRON-MFP} WITH {
+REPLACE {$SELECT_ELECTRON_MFP} WITH {
         $RANDOMSET RNNE1IF(RNNE1.EQ.0.0) [RNNE1=1.E-30]
          DEMFP=MAX(-LOG(RNNE1),$EPSEMFP)}
 
 # MACRO FOR SELECTION OF THE PHOTON MEAN-FREE-PATH
-REPLACE {$SELECT-PHOTON-MFP} WITH {
+REPLACE {$SELECT_PHOTON_MFP} WITH {
        $RANDOMSET RNNO35IF(RNNO35.EQ.0.0) [RNNO35=1.E-30]
          DPMFP=-LOG(RNNO35)}
 
 # MACRO to do range rejection on a region by region basis
 #       if the user requests it.  The variables e_max_rr and i_do_rr
 #       are in COMIN ET-CONTROL.  This macro is called immediately
-#       after $USER-RANGE-DISCARD in ELECTR and everytime called
+#       after $USER_RANGE_DISCARD in ELECTR and everytime called
 #       the electrons current range has been computed and stored in
 #       range and the distance to the nearest boundary has just been
 #       computed and is in tperp.  e_max_rr and i_do_rr are initialized
@@ -1526,7 +1526,7 @@ REPLACE {$SELECT-PHOTON-MFP} WITH {
 #       the region.  This is why  e_max_rr is used, to allow high
 #       energy electrons to be tracked in case they give off brem.
 
-REPLACE {$RANGE-DISCARD} WITH {
+REPLACE {$RANGE_DISCARD} WITH {
   IF( i_do_rr(irl) = 1 & e(np) < e_max_rr(irl) ) [
       IF(tperp >= range) [# particle cannot escape local region
           idisc = 50 + 49*iq(np)# 1 for electrons, 99 for positrons
@@ -1537,7 +1537,7 @@ REPLACE {$RANGE-DISCARD} WITH {
 
 
 # MACRO TO ALLOW USER TO DISCARD IF AT OR NEAR END OF RANGE
-REPLACE {$USER-RANGE-DISCARD} WITH {}
+REPLACE {$USER_RANGE_DISCARD} WITH {}
 # ---------- BUFFER FLUSH SEMICOLON ----------
 
 # RAYLEIGH (COHERENT) SCATTERING MACROS
@@ -1577,11 +1577,11 @@ $REAL xgrid, fcum, b_array, c_array,pmax0, pmax1
 $INTEGER i_array
 }
 
-REPLACE {$RAYLEIGH-CORRECTION} WITH {
+REPLACE {$RAYLEIGH_CORRECTION} WITH {
      IF(IRAYLR(IRL).EQ.1) [$EVALUATE COHFAC USING COHE(GLE)
     GMFP=GMFP*COHFAC]}
 
-REPLACE {$OLD_RAYLEIGH-SCATTERING} WITH {
+REPLACE {$OLD_RAYLEIGH_SCATTERING} WITH {
       IF(IRAYLR(IRL).EQ.1) [
    $RANDOMSET RNNO37
    IF (RNNO37.LE.(1.0-COHFAC)) [
@@ -1600,7 +1600,7 @@ REPLACE {$OLD_RAYLEIGH-SCATTERING} WITH {
    $AUSCALL($RAYLAUSA)
    GOTO :PNEWENERGY:]]
   }
-REPLACE {$RAYLEIGH-SCATTERING} WITH {
+REPLACE {$RAYLEIGH_SCATTERING} WITH {
    IF(IRAYLR(IRL).EQ.1) [
    $RANDOMSET RNNO37
    IF (RNNO37.LE.(1.0-COHFAC)) [
@@ -1613,7 +1613,7 @@ REPLACE {$RAYLEIGH-SCATTERING} WITH {
 }
 
 # Ali:photonuc, 2 blocks
-REPLACE {$PHOTONUC-CORRECTION} WITH {
+REPLACE {$PHOTONUC_CORRECTION} WITH {
      IF(IPHOTONUCR(IRL).EQ.1) [$EVALUATE PHOTONUCFAC USING PHOTONUC(GLE)
     GMFP=GMFP*PHOTONUCFAC]}
 
@@ -1632,15 +1632,15 @@ REPLACE {$PHOTONUCLEAR} WITH {
 # DENSITY RATIO SCALING MACRO (TO OVER-RIDE DENSITY IN A PARTICULAR
 # REGION)  NOTE: THIS MACRO REPLACES SUBROUTINE RHOSET OF EGS3
 
-REPLACE {$SET-RHOF} WITH {RHOF=RHOR(IRL)/RHO(MEDIUM)}  # DEFAULT
+REPLACE {$SET_RHOF} WITH {RHOF=RHOR(IRL)/RHO(MEDIUM)}  # DEFAULT
 
 # TEMPLATES FOR PERFORMING CHARGED PARTICLE TRANSPORT IN EM FIELD
-REPLACE {$SET-TUSTEP-EM-FIELD} WITH {}
-REPLACE {$SET-USTEP-EM-FIELD} WITH {}
-REPLACE {$VACUUM-ADD-WORK-EM-FIELD} WITH {}
-REPLACE {$SET-ANGLES-EM-FIELD} WITH {}
-REPLACE {$SET-TVSTEP-EM-FIELD} WITH {}
-REPLACE {$ADD-WORK-EM-FIELD} WITH {}
+REPLACE {$SET_TUSTEP_EM_FIELD} WITH {}
+REPLACE {$SET_USTEP_EM_FIELD} WITH {}
+REPLACE {$VACUUM_ADD_WORK_EM_FIELD} WITH {}
+REPLACE {$SET_ANGLES_EM_FIELD} WITH {}
+REPLACE {$SET_TVSTEP_EM_FIELD} WITH {}
+REPLACE {$ADD_WORK_EM_FIELD} WITH {}
 REPLACE {$EMFIELD_INITIATE_SET_TUSTEP} WITH {}
 REPLACE {COMIN/EM/} WITH {}
 REPLACE {$EMFIELD_PII} WITH {}
@@ -1683,7 +1683,7 @@ REPLACE {COMIN/PLADTA/} WITH {
       $REAL PCOORD, PNORM
 }
 
-# $PLANE1---MACRO REPLACEMENT FOR SUBROUTINE PLANE1
+# $PLANE1 --- MACRO REPLACEMENT FOR SUBROUTINE PLANE1
 REPLACE {$PLANE1(#,#,#,#)} WITH {
  UDOTA=PNORM(1,{P1})*U(NP)+PNORM(2,{P1})*
  V(NP)+PNORM(3,{P1})*W(NP)UDOTAP={P2}*UDOTA
@@ -1697,7 +1697,7 @@ REPLACE {$PLANE1(#,#,#,#)} WITH {
 
 # ------------------------------------------------------------------
 
-# $PLANE2---MACRO REPLACEMENT FOR SUBROUTINE PLANE2
+# $PLANE2 --- MACRO REPLACEMENT FOR SUBROUTINE PLANE2
 #           NOTE: $PLANE2 HAS BEEN SUPERCEDED BY $PLAN2P (BELOW),
 #                 WHICH IS AUTOMATICALLY TAKEN CARE OF BY THE
 #                 FOLLOWING MACRO STATEMENT.
@@ -1705,7 +1705,7 @@ REPLACE {$PLANE2} WITH {$PLAN2P}
 
 # ------------------------------------------------------------------
 
-# $PLAN2P---MACRO REPLACEMENT FOR SUBROUTINE PLAN2P (OR $PLANE2)
+# $PLAN2P --- MACRO REPLACEMENT FOR SUBROUTINE PLAN2P (OR $PLANE2)
 #           (I.E., TWO PARALLEL PLANES)
 REPLACE {$PLAN2P(#,#,#,#,#,#)} WITH {
   $PLANE1({P1},{P3},IHIT,TVAL)IF(IHIT.EQ.1)
@@ -1716,7 +1716,7 @@ REPLACE {$PLAN2P(#,#,#,#,#,#)} WITH {
 
 # ------------------------------------------------------------------
 
-# $PLAN2X---MACRO REPLACEMENT FOR SUBROUTINE PLAN2X
+# $PLAN2X --- MACRO REPLACEMENT FOR SUBROUTINE PLAN2X
 #           (I.E., TWO, NON-PARALLEL (CROSSING) PLANES)
 REPLACE {$PLAN2X(#,#,#,#,#,#)} WITH {
     $PLANE1({P1},{P3},IHIT,TVAL)IF(IHIT.EQ.1) [
@@ -1738,7 +1738,7 @@ REPLACE {COMIN/CYLDTA/} WITH {
    $REAL CYRAD2
 }
 
-# $CYLNDR---MACRO REPLACEMENT FOR SUB CYLNDR GRS VERSION 14 11 80
+# $CYLNDR --- MACRO REPLACEMENT FOR SUB CYLNDR GRS VERSION 14 11 80
 REPLACE {$CYLNDR(#,#,#,#)} WITH {
    {P3}=1{P4}=0.0ACYL=SQRT(U(NP)*U(NP)+V(NP)*V(NP))
    IF(ACYL.EQ.0.0)[{P3}=0]  ELSE [
@@ -1757,7 +1757,7 @@ REPLACE {$CYLNDR(#,#,#,#)} WITH {
 # NOTE:   EVERYWHERE $CYLNDR IS USED ONE MUST
 #          INCLUDE COMIN/CYLDTA,STACK/
 
-# $CYL2--MACRO EQUIVALENT FOR CYLNDR OF $PLANE2  GRS 17.11.80
+# $CYL2__MACRO EQUIVALENT FOR CYLNDR OF $PLANE2  GRS 17.11.80
 REPLACE {$CYL2(#,#,#,#)} WITH {
  $CYLNDR({P1},0,IHIT,TCYL)IF(IHIT.EQ.1)[
  $CHGTR(TCYL,{P2})]ELSE[$CYLNDR({P3},1,IHIT,TCYL)
@@ -1780,7 +1780,7 @@ REPLACE {COMIN/CONDTA/} WITH {
    $REAL COTAL2, SMALLL
 }
 
-# $CONE---MACRO REPLACEMENT FOR CERN VERSION SUBROUTINE CONE
+# $CONE --- MACRO REPLACEMENT FOR CERN VERSION SUBROUTINE CONE
 REPLACE {$CONE(#,#,#,#)} WITH {
    {P3}=0ITWOPR=0CPCON=COTAL2({P1})SGNCON=SIGN(1.0,CPCON)
    CPCON=ABS(CPCON)ZNP=SGNCON*(Z(NP)-SMALLL({P1}))
@@ -1819,13 +1819,13 @@ REPLACE {$CONE(#,#,#,#)} WITH {
 # NOTE:   EVERYWHERE $CONE IS USED ONE MUST
 #          INCLUDE COMIN/CONDTA,STACK/
 
-# $CON2--MACRO EQUIVALENT FOR CONE OF $PLANE2            
+# $CON2__MACRO EQUIVALENT FOR CONE OF $PLANE2            
 REPLACE {$CON2(#,#,#,#)} WITH {
    $CONE({P1},0,IHIT,TCON)IF(IHIT.EQ.1)[
    $CHGTR(TCON,{P2})]ELSE[$CONE({P3},1,IHIT,TCON)IF(IHIT.EQ.1)[
    $CHGTR(TCON,{P4})]]}
 
-# $CON21--MACRO EQUIVALENT FOR CONE OF $PLANE2 (IN THE CASE  
+# $CON21__MACRO EQUIVALENT FOR CONE OF $PLANE2 (IN THE CASE  
 # OF OUTSIDE TWO CONE SURFACE)                               
 REPLACE {$CON21(#,#,#,#)} WITH {
    $CONE({P1},0,IHIT,TCON)IF(IHIT.EQ.1)[
@@ -1847,7 +1847,7 @@ REPLACE {COMIN/SPHDTA/} WITH {
    $REAL SPRAD2
 }
 
-# $SPHERE---MACRO REPLACEMENT FOR SUB SPHERE GRS VERSION 08 12 80
+# $SPHERE --- MACRO REPLACEMENT FOR SUB SPHERE GRS VERSION 08 12 80
 REPLACE {$SPHERE(#,#,#,#)} WITH {
    {P3}=1{P4}=0.0ASPH=1.0
    BSPH=(X(NP)*U(NP)+Y(NP)*V(NP)+Z(NP)*W(NP))/ASPHCSPH=X(NP)*X(NP)
@@ -1864,7 +1864,7 @@ REPLACE {$SPHERE(#,#,#,#)} WITH {
 # NOTE:   EVERYWHERE $SPHERE IS USED ONE MUST
 #          INCLUDE COMIN/SPHDTA,STACK/
 
-# $SPH2--MACRO EQUIVALENT FOR SPHERE OF $PLANE2  GRS 08.12.80
+# $SPH2__MACRO EQUIVALENT FOR SPHERE OF $PLANE2  GRS 08.12.80
 REPLACE {$SPH2(#,#,#,#)} WITH {
  $SPHERE({P1},0,IHIT,TSPH)IF(IHIT.EQ.1)[
  $CHGTR(TSPH,{P2})]ELSE[$SPHERE({P3},1,IHIT,TSPH)
@@ -1878,7 +1878,7 @@ REPLACE {$SPH2(#,#,#,#)} WITH {
 #         MACRO-ROUTINE FOR CHANGING REGIONS  (SLAC VERSION)        
 # ------------------------------------------------------------------
 
-# $CHGTR---MACRO REPLACEMENT FOR SUBROUTINE CHGTR
+# $CHGTR --- MACRO REPLACEMENT FOR SUBROUTINE CHGTR
 REPLACE {$CHGTR(#,#)} WITH {
     IF({P1}.LE.USTEP) [USTEP={P1}IRNEW={P2}]}
 # NOTE:   EVERYWHERE $CHGTR IS USED ONE MUST
@@ -1888,7 +1888,7 @@ REPLACE {$CHGTR(#,#)} WITH {
 #      MACRO-ROUTINE TO OBTAIN FINAL COORDINATES (SLAC VERSION)     
 # ------------------------------------------------------------------
 
-# $FINVAL---MACRO REPLACEMENT FOR SUBROUTINE FINVAL
+# $FINVAL --- MACRO REPLACEMENT FOR SUBROUTINE FINVAL
 REPLACE {$FINVAL(#,#,#,#)} WITH {
    {P2}=X(NP)+{P1}*U(NP){P3}=Y(NP)+{P1}*V(NP)
    {P4}=Z(NP)+{P1}*W(NP)}
@@ -1914,7 +1914,7 @@ REPLACE {$FINVAL(#,#,#,#)} WITH {
 # --------------------------------------------------------------
 # This macro can be used to select the photoelectron direction  
 
-REPLACE {$SELECT-PHOTOELECTRON-DIRECTION} WITH {
+REPLACE {$SELECT_PHOTOELECTRON_DIRECTION} WITH {
 #         ================================
 IF(IPHTER(IR(NP)).EQ.1)[
   EELEC=E(NP)
@@ -1979,7 +1979,7 @@ REPLACE {$USER_CONTROLS_TSTEP_RECURSION} WITH {}
 # where Zeff is defined in equation (7) OF PIRS0203                    
 # This macro goes in SUBROUTINE HATCH                                  
 #                                                                      
-REPLACE {$INITIALIZE-BREMS-ANGLE} WITH {
+REPLACE {$INITIALIZE_BREMS_ANGLE} WITH {
 IF(IBRDST.EQ.1)[
         DO IM=1,NMED[
             ZBRANG(IM)=0.0PZNORM=0.0
@@ -2005,7 +2005,7 @@ IF(IBRDST.EQ.1)[
 # The result is returned in {P1} as a function of {P2}
 # i.e. {P1}=G({P2}) where {P2}=X                      
 #                                                     
-REPLACE {$SET-BREM-REJECTION-FUNCTION(#,#)} WITH {
+REPLACE {$SET_BREM_REJECTION_FUNCTION(#,#)} WITH {
 Y2TST1=(1.+{P2})**2
 {P1}= (4.+LOG(RJARG3+ZTARG/Y2TST1))*(4.*ESEDEI*{P2}/Y2TST1-RJARG1)+RJARG2
 }
@@ -2022,9 +2022,9 @@ Y2TST1=(1.+{P2})**2
 # THE QUANTITY ZBRANG IS ( (1/111)*Zeff**(1/3) )**2                    
 # WHERE Zeff IS DEFINED IN EQUATION (7) OF PIRS0287                    
 # THIS MACRO GOES IN SUBROUTINE HATCH                                  
-# THIS MACRO IS IDENTICAL TO THE $INITIALIZE-BREMS-ANGLE DEFINED ABOVE 
+# THIS MACRO IS IDENTICAL TO THE $INITIALIZE_BREMS_ANGLE DEFINED ABOVE 
 #                                                                      
-REPLACE {$INITIALIZE-PAIR-ANGLE} WITH {
+REPLACE {$INITIALIZE_PAIR_ANGLE} WITH {
 IF(IPRDST.GT.0)[
         DO IM=1,NMED[
             ZBRANG(IM)=0.0PZNORM=0.0
@@ -2049,12 +2049,12 @@ REPLACE {$BHPAIR} WITH {4.14}
 # ACCUMULATED. THE LIMIT OF 1.0E-10 BREAKS DOWN AROUND   
 # 50 GEV OR SO (THETA=RM/E, FOR BOTH PAIR AND BREM).     
 # THIS MACRO REPLACES CODE IN UPHI AND IN THE PRESTA     
-# MACROS FOR THE LATERAL CORRELATION PART $PRESTA-LCDV.  
+# MACROS FOR THE LATERAL CORRELATION PART $PRESTA_LCDV.  
 
 REPLACE {(SINPS2.LT.1.0E-10)} WITH {(SINPS2.LT.1.0E-20)}
 
-# THE FOLLOWING REPLACES THE EGS4 DEFAULT $SET-PAIR-ANGLE MACRO    
-# IT'S USE REQUIRES AN ASSOCIATE MACRO $SET-PAIR-REJECTION-FUNCTION
+# THE FOLLOWING REPLACES THE EGS4 DEFAULT $SET_PAIR_ANGLE MACRO    
+# IT'S USE REQUIRES AN ASSOCIATE MACRO $SET_PAIR_REJECTION_FUNCTION
 # DEFINED BELOW                                                    
 #                                                                  
 # USAGE: IPRDST=0 => EGS4 DEFAULT ANGLE SELECTION                  
@@ -2068,7 +2068,7 @@ REPLACE {(SINPS2.LT.1.0E-10)} WITH {(SINPS2.LT.1.0E-20)}
 #                    IF IPRDST IS NON-ZERO AND E_PHOTON < $BHPAIR  
 #                    THE IPRDST=1 DISTRIBUTION IS USED             
 #                                                                  
-REPLACE {$SET-PAIR-ANGLE} WITH {
+REPLACE {$SET_PAIR_ANGLE} WITH {
     IF( iprdst > 0 ) [
         IF( iprdst = 4 ) [
             $RANDOMSET rtest
@@ -2109,7 +2109,7 @@ REPLACE {$SET-PAIR-ANGLE} WITH {
                 ESEDER=1.0/ESEDEI
                 # DETERMINE THE NORMALIZATION 
                 XIMIN=1.0/(1.0+(3.141593*TTESE)**2)
-                $SET-PAIR-REJECTION-FUNCTION(REJMIN,XIMIN)
+                $SET_PAIR_REJECTION_FUNCTION(REJMIN,XIMIN)
                 YA=(2.0/TTEIG)**2
                 XITRY=MAX(0.01,MAX(XIMIN,MIN(0.5,SQRT(YA/ZTARG))))
                 GALPHA=1.0+0.25*LOG(YA+ZTARG*XITRY**2)
@@ -2123,13 +2123,13 @@ REPLACE {$SET-PAIR-ANGLE} WITH {
                     XIMID=0.5-XIMID-SQRT(XIMID**2+0.25)
                 ]
                 XIMID=MAX(0.01,MAX(XIMIN,MIN(0.5,XIMID)))
-                $SET-PAIR-REJECTION-FUNCTION(REJMID,XIMID)
+                $SET_PAIR_REJECTION_FUNCTION(REJMID,XIMID)
                 # ESTIMATE MAXIMUM OF THE REJECTION FUNCTION
                 # FOR LATER USE BY THE REJECTION TECHNIQUE  
                 REJTOP=1.02*MAX(REJMIN,REJMID)
                 LOOP[
                     $RANDOMSET XITST
-                    $SET-PAIR-REJECTION-FUNCTION(REJTST,XITST)
+                    $SET_PAIR_REJECTION_FUNCTION(REJTST,XITST)
                     $RANDOMSET RTEST
                     # CONVERT THE SUCCESSFUL CANDIDATE XITST TO AN ANGLE
                     THETA=SQRT(1.0/XITST-1.0)/TTESE
@@ -2166,7 +2166,7 @@ REPLACE {$SET-PAIR-ANGLE} WITH {
 # THE RESULT IS RETURNED IN {P1} AS A FUNCTION OF {P2}
 # I.E. {P1}=G({P2}) WHERE {P2}=XI                     
 #                                                     
-REPLACE {$SET-PAIR-REJECTION-FUNCTION(#,#)} WITH {
+REPLACE {$SET_PAIR_REJECTION_FUNCTION(#,#)} WITH {
 {P1} = 2.0+3.0*(ESEDEI+ESEDER) -
         4.00*(ESEDEI+ESEDER+1.0-4.0*({P2}-0.5)**2)*(
             1.0+0.25*LOG(
@@ -2177,7 +2177,7 @@ REPLACE {$SET-PAIR-REJECTION-FUNCTION(#,#)} WITH {
 }
 
 
-REPLACE {$SELECT-LOW-ENERGY-PAIR-PRODICTION} WITH
+REPLACE {$SELECT_LOW_ENERGY_PAIR_PRODICTION} WITH
 {
   $RANDOMSET RNNO30$RANDOMSET rnno34
   PESE2 = PRM + 0.5*RNNO30*(PEIG-2*PRM)PESE1 = PEIG - PESE2
@@ -2193,7 +2193,7 @@ REPLACE {$SELECT-LOW-ENERGY-PAIR-PRODICTION} WITH
 # NB: LATCH IS A NON-STANDARD STACK VARIABLE     
 #     REMOVE IT IF IT CAUSES PROBLEMS            
 #                                                
-REPLACE {$EXCHANGE-STACK(#,#)} WITH {
+REPLACE {$EXCHANGE_STACK(#,#)} WITH {
 
 FDUMMY = U({P2})U({P2})     = U({P1})U({P1})     = FDUMMY
 FDUMMY = V({P2})V({P2})     = V({P1})V({P1})     = FDUMMY
@@ -2215,7 +2215,7 @@ WRITE(6,{COPY A}){P1}WRITE(1,{COPY A}){P1}{COPY A}FORMAT{P2}}
 #  The following macro provides a second order evaluation of the   
 #  stopping power. The parameter is half of the initial estimate of
 #  the energy loss fraction. IK Oct 97                             
-REPLACE {$RE-EVALUATE-DEDX(#)} WITH
+REPLACE {$RE_EVALUATE_DEDX(#)} WITH
 {
 
   elktmp = elke + Log(1 - {P1})
@@ -2241,84 +2241,84 @@ REPLACE {$RE-EVALUATE-DEDX(#)} WITH
 # Macros to denote the various transport algorithms
 # These numbers just have to be distinct
 # Note that the distributed version of EGSnrc does not include the VMC option
-REPLACE {$PRESTA-II} WITH {0}
-REPLACE {$PRESTA--I} WITH {1}
+PRESTA_II: int = 0
+PRESTA__I: int = 1
 VMC: int = 2
 
-REPLACE {$CALL-USER-ELECTRON} WITH {}
+REPLACE {$CALL_USER_ELECTRON} WITH {}
 
 
-REPLACE {$MSCAT-DATAFILE} WITH {i_mscat}
+REPLACE {$MSCAT_DATAFILE} WITH {i_mscat}
   # Fortran unit number used to read in new MS
 
-REPLACE {$RANDOMIZE-TUSTEP} WITH {.false.}
+REPLACE {$RANDOMIZE_TUSTEP} WITH {.false.}
   # Switches tustep randomization off
 
-REPLACE {$SKIN-DEPTH-FOR-BCA} WITH {3}
+SKIN_DEPTH_FOR_BCA: int = 3
 
-REPLACE {$PRESTA-DEBUG} WITH {.false.}
+REPLACE {$PRESTA_DEBUG} WITH {.false.}
 
-REPLACE {$EXACT-BCA-XIMAX} WITH {0.5}
+REPLACE {$EXACT_BCA_XIMAX} WITH {0.5}
 
-REPLACE {$INEXACT-BCA-XIMAX} WITH {0.5} # this is not realy neccessary, 
+REPLACE {$INEXACT_BCA_XIMAX} WITH {0.5} # this is not realy neccessary, 
                                         # it remained from Alex's coding
 
-REPLACE {$MAX-ELOSS} WITH {0.25}
+REPLACE {$MAX_ELOSS} WITH {0.25}
 
-REPLACE {$SUBSTEP-ELOSS-EVALUATION} WITH {.false.}
+REPLACE {$SUBSTEP_ELOSS_EVALUATION} WITH {.false.}
 
-REPLACE {$MAX-SMAX} WITH {1e10}
+REPLACE {$MAX_SMAX} WITH {1e10}
 
-REPLACE {$GLOBAL-ECUT} WITH {0.}
+REPLACE {$GLOBAL_ECUT} WITH {0.}
 
-REPLACE {$GLOBAL-PCUT} WITH {0.}
+REPLACE {$GLOBAL_PCUT} WITH {0.}
 
-REPLACE {$IBRDST-DEFAULT} WITH {1}
+IBRDST_DEFAULT: int = 1
 
-REPLACE {$IBR-NIST-DEFAULT} WITH {0}
+IBR_NIST_DEFAULT: int = 0
 
-REPLACE {$PAIR-NRC-DEFAULT} WITH {0}
+PAIR_NRC_DEFAULT: int = 0
 
-REPLACE {$TRIPLET-DEFAULT} WITH {0}
+TRIPLET_DEFAULT: int = 0
 
-REPLACE {$IPRDST-DEFAULT} WITH {1}
+IPRDST_DEFAULT: int = 1
 
-REPLACE {$IBCMP-DEFAULT} WITH {3} # set to norej
+IBCMP_DEFAULT: int = 3 # set to norej
 
-REPLACE {$IEDGFL-DEFAULT} WITH {1}
+IEDGFL_DEFAULT: int = 1
 
-REPLACE {$IPHTER-DEFAULT} WITH {1}
+IPHTER_DEFAULT: int = 1
 
-REPLACE {$TRANSPORT-ALGORITHM-DEFAULT} WITH {$PRESTA-II}
+REPLACE {$TRANSPORT_ALGORITHM_DEFAULT} WITH {$PRESTA_II}
 
-REPLACE {$BCA-ALGORITHM-DEFAULT} WITH {0}
+BCA_ALGORITHM_DEFAULT: int = 0
 
-REPLACE {$EXACT-BCA-DEFAULT} WITH {.true.}
+REPLACE {$EXACT_BCA_DEFAULT} WITH {.true.}
 
-REPLACE {$SPIN-EFFECTS-DEFAULT} WITH {.true.}
+REPLACE {$SPIN_EFFECTS_DEFAULT} WITH {.true.}
 
-REPLACE {$IRAYLR-DEFAULT} WITH {1}
+IRAYLR_DEFAULT: int = 1
 
-REPLACE {$AP-DEFAULT} WITH {-1}
+REPLACE {$AP_DEFAULT} WITH {-1}
 
-REPLACE {$UP-DEFAULT} WITH {-1}
+REPLACE {$UP_DEFAULT} WITH {-1}
 
-REPLACE {$XSEC-DEFAULT} WITH {0}
+XSEC_DEFAULT: int = 0
 
-REPLACE {$XDATA-DEFAULT} WITH {'xcom'}
+REPLACE {$XDATA_DEFAULT} WITH {'xcom'}
 
-REPLACE {$COMP-XDATA-DEFAULT} WITH {'default'}
+REPLACE {$COMP_XDATA_DEFAULT} WITH {'default'}
 
 # EADL relaxation is now the default
-REPLACE {$EADL-RELAX-DEFAULT} WITH {.true.}
+REPLACE {$EADL_RELAX_DEFAULT} WITH {.true.}
 
 # Sabbatucci and Salvat PE xsections not the default yet
-REPLACE {$MCDF-PE-DEFAULT} WITH {.false.}
+REPLACE {$MCDF_PE_DEFAULT} WITH {.false.}
 
 # Ali:photonuc, 2 lines
-REPLACE {$IPHOTONUCR-DEFAULT} WITH {0}
+IPHOTONUCR_DEFAULT: int = 0
 
-REPLACE {$PHOTONUC-XDATA-DEFAULT} WITH {'default'}
+REPLACE {$PHOTONUC_XDATA_DEFAULT} WITH {'default'}
 
 # EMH:emf, 7 lines
 ExDEF: int = 0
@@ -2347,10 +2347,10 @@ REPLACE {$EMLMTDEF} WITH {0.02}
 
 # The parameters passed to the macro in ELECTR are  eke and elke 
 
-REPLACE {$SET-SKINDEPTH(#,#)} WITH
+REPLACE {$SET_SKINDEPTH(#,#)} WITH
 #         =================                  
 {
-   $CALCULATE-ELASTIC-SCATTERING-MFP(ssmfp,{P1},{P2})
+   $CALCULATE_ELASTIC_SCATTERING_MFP(ssmfp,{P1},{P2})
    skindepth = skindepth_for_bca*ssmfp
 }
 
@@ -2359,7 +2359,7 @@ REPLACE {$SET-SKINDEPTH(#,#)} WITH
 # If spin_effects is .false., the screened Rutherford cross section
 # is used, else the the elastic MFP is based on PWA cross sections
 
-REPLACE {$CALCULATE-ELASTIC-SCATTERING-MFP(#,#,#)} WITH
+REPLACE {$CALCULATE_ELASTIC_SCATTERING_MFP(#,#,#)} WITH
 #         =======================================           
 {
     blccl = rhof*blcc(medium)
@@ -2375,10 +2375,10 @@ REPLACE {$CALCULATE-ELASTIC-SCATTERING-MFP(#,#,#)} WITH
 }
 
 
-REPLACE {$SINGLE-SCATTERING(#)} WITH
+REPLACE {$SINGLE_SCATTERING(#)} WITH
 #         ======================                     
 {
-    $SET-SCREENING-ANGLE({P1})
+    $SET_SCREENING_ANGLE({P1})
     call sscat(chia2,costhe,sinthe)
 }
 
@@ -2387,14 +2387,14 @@ REPLACE {$SINGLE-SCATTERING(#)} WITH
 # cross sections (PWA) and/or to take into account double counting  
 # of the contribution of atomic electrons to the scattering power   
 
-REPLACE {$SET-SCREENING-ANGLE(#)} WITH
+REPLACE {$SET_SCREENING_ANGLE(#)} WITH
 #         ========================                   
 {
     chia2   = xcc(medium)/(4*{P1}*({P1} + rmt2)*blcc(medium))
 }
 
 
-REPLACE {$HARD-SCATTERING} WITH {}
+REPLACE {$HARD_SCATTERING} WITH {}
 
 
 REPLACE {$TURN_OFF_SCATTERING} WITH {}
@@ -2407,15 +2407,15 @@ REPLACE {$TURN_OFF_SCATTERING} WITH {}
 
 %E # egsnrc.macros
 
-REPLACE {$CALL-HOWFAR-IN-ELECTR} WITH {
+REPLACE {$CALL_HOWFAR_IN_ELECTR} WITH {
   IF(callhowfar | wt(np) <= 0) [ call howfar]
 }
 
-REPLACE {$CALL-HOWFAR-IN-PHOTON} WITH {
+REPLACE {$CALL_HOWFAR_IN_PHOTON} WITH {
   IF( ustep > dnear(np) | wt(np) <= 0 ) [ call howfar]
 }
 
-REPLACE {$CALL-HOWNEAR(#)} WITH
+REPLACE {$CALL_HOWNEAR(#)} WITH
 {
     OUTPUT 35# 35 in decimal is ascii code for the pound sign
     (
@@ -2433,7 +2433,7 @@ REPLACE {$CALL-HOWNEAR(#)} WITH
         ' '/
         ' If you include the following macro in your usercode:           '/
         ' '/
-        ' REPLACE {$CALL-HOWNEAR(',a,')} WITH {}                       '/
+        ' REPLACE {$CALL_HOWNEAR(',a,')} WITH {}                       '/
         ' '/
         ' you can choose between single scattering mode (very slow) and  '/
         ' standard EGS4 mode (no PRESTA enhancments) by the appropriate  '/
@@ -2449,8 +2449,8 @@ REPLACE {$CALL-HOWNEAR(#)} WITH
 }
 
 # For compability with user codes with PRESTA-I implemented
-REPLACE {$PRESTA-INPUT-SUMMARY} WITH {}
-REPLACE {$PRESTA-INPUTS}        WITH {}
+REPLACE {$PRESTA_INPUT_SUMMARY} WITH {}
+REPLACE {$PRESTA_INPUTS}        WITH {}
 
 # If you want to read P-II inputs using the get_input() routine by 
 # A. Merovitz and D.W.O.R. you need to either place the following  
@@ -2459,13 +2459,13 @@ REPLACE {$PRESTA-INPUTS}        WITH {}
 
 
 
-REPLACE {$USE-GET-INPUTS} WITH {.true.} # To not use get_input replace this 
+REPLACE {$USE_GET_INPUTS} WITH {.true.} # To not use get_input replace this 
                                         # with .false.                      
 
 # The following are the ones used by default
 
 
-REPLACE {$USE-GET-INPUTS} WITH {.false.}
+REPLACE {$USE_GET_INPUTS} WITH {.false.}
 
 
 
@@ -2480,7 +2480,7 @@ REPLACE {$USE-GET-INPUTS} WITH {.false.}
 # once out of the loop, use the trigonimetric relations (TeX notation)
 # \cos 2\phi = (x^2 - y^2)/(x^2 + y^2)
 # \sin 2\phi = 2xy/(x^2 + y^2)
-REPLACE {$SELECT-AZIMUTHAL-ANGLE(#,#)} WITH
+REPLACE {$SELECT_AZIMUTHAL_ANGLE(#,#)} WITH
 {
 
 LOOP
@@ -2498,7 +2498,7 @@ rhophi2 = 1/rhophi2
 }
 
 
-REPLACE {$DEFINE-VARIABLES-FOR-SELECT-AZIMUTHAL-ANGLE} WITH {
+REPLACE {$DEFINE_VARIABLES_FOR_SELECT_AZIMUTHAL_ANGLE} WITH {
   $REAL xphi,xphi2,yphi,yphi2,rhophi2
 }
 
@@ -2509,7 +2509,7 @@ REPLACE {$DEFINE-VARIABLES-FOR-SELECT-AZIMUTHAL-ANGLE} WITH {
 #                                                                         
 # ************************************************************************
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-ANNIH} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_ANNIH} WITH
 {
 # Local variables in order of appearance
 $ENERGY PRECISION
@@ -2532,11 +2532,11 @@ $REAL AVIP,     # total energy in the laboratory frame
                 # for inline rotations
 $INTEGER
       ibr
-$DEFINE-VARIABLES-FOR-SELECT-AZIMUTHAL-ANGLE
+$DEFINE_VARIABLES_FOR_SELECT_AZIMUTHAL_ANGLE
 }
 
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-BHABHA} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_BHABHA} WITH
 {
 # Local variables in order of appearance
 $ENERGY PRECISION
@@ -2566,7 +2566,7 @@ $REAL EIP,      # total energy of incident positron
 }
 
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-BREMS} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_BREMS} WITH
 {
 # Local variables in order of appearance
 $ENERGY PRECISION
@@ -2618,7 +2618,7 @@ $INTEGER
 }
 
 
-REPLACE {$DEFINE-VARIABLES-FOR-SET-BREMS-ANGLE} WITH
+REPLACE {$DEFINE_VARIABLES_FOR_SET_BREMS_ANGLE} WITH
 {
 # Local variables for photon angle selection
 $REAL ZTARG,  # ( (1/111)*Zeff**(1/3) )**2
@@ -2640,7 +2640,7 @@ $REAL ZTARG,  # ( (1/111)*Zeff**(1/3) )**2
 }
 
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-COMPT} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_COMPT} WITH
 {
 # Local COMPT variables in order of appearance
 $ENERGY PRECISION
@@ -2685,7 +2685,7 @@ $INTEGER
 }
 
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-COMPT-old} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_COMPT_old} WITH
 {
 # Local COMPT variables in order of appearance
 $ENERGY PRECISION
@@ -2722,7 +2722,7 @@ $INTEGER
 }
 
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-ELECTR} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_ELECTR} WITH
 {
 #  Local ELECTR variables
 $ENERGY PRECISION # ($ENERGY PRECISION means double precision)
@@ -2745,12 +2745,12 @@ $REAL
     p2,         # electron momentum times c, squared
     beta2,      # electron speed in units of c, squared
     de,         # energy loss to dedx
-    save_de,    # de saved before $DE-FLUCTUATION
+    save_de,    # de saved before $DE_FLUCTUATION
     dedx,       # stopping power after density scaling
     dedx0,      # stopping power before density scaling
     dedxmid,    # stopping power at mid-step before density scaling
-    ekei,       # used in $CALCULATE-TSTEP-FROM-DEMFP
-    elkei,      # Log(ekei), used in $CALCULATE-TSTEP-FROM-DEMFP
+    ekei,       # used in $CALCULATE_TSTEP_FROM_DEMFP
+    elkei,      # Log(ekei), used in $CALCULATE_TSTEP_FROM_DEMFP
     aux,        # aux. variable
     ebr1,       # e- branching ratio into brem
     eie,        # energy of incident electron
@@ -2786,7 +2786,7 @@ $REAL
     ztrans,     # final z-axis position after transport
     cphi,sphi# for azimuthal angle selection for annih at rest
 
-$DEFINE-VARIABLES-FOR-SELECT-AZIMUTHAL-ANGLE
+$DEFINE_VARIABLES_FOR_SELECT_AZIMUTHAL_ANGLE
 
 $INTEGER
     iarg,      # calling code for ausgab
@@ -2817,7 +2817,7 @@ $LOGICAL
 }
 
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-HATCH} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_HATCH} WITH
 {
 # Local HATCH variables in alphabetical order
 
@@ -2836,7 +2836,7 @@ $REAL
     DUNITR, # saved value of dunit
     FNSSS , # real form of integer nsinss
     P     , # counter used in the pwr2i(i) = 1/2**(i - 1) construction
-    PZNORM, # used in $INITIALIZE-BREMS-ANGLE
+    PZNORM, # used in $INITIALIZE_BREMS_ANGLE
     RDEV  , # relative deviation in sine-table look-up
     S2C2  , # sinthe**2 + costhe**2, used to test look-up table
     S2C2MN, # min(s2c2)
@@ -2907,7 +2907,7 @@ $INTEGER
 }
 
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-MOLLER} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_MOLLER} WITH
 {
 # Local MOLLER variables in order of their appearance
 
@@ -2938,7 +2938,7 @@ $REAL EIE,    # total energy of incident electron
 }
 
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-PAIR} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_PAIR} WITH
 {
 # Local PAIR variables in order of their appearance
 $ENERGY PRECISION
@@ -2966,7 +2966,7 @@ $INTEGER
 }
 
 
-REPLACE {$DEFINE-VARIABLES-FOR-SET-PAIR-ANGLE} WITH
+REPLACE {$DEFINE_VARIABLES_FOR_SET_PAIR_ANGLE} WITH
 {
 $REAL ESE,   # total energy of one of the 'electrons'
       PSE,   # momentum corresponding to ESE
@@ -2992,7 +2992,7 @@ $INTEGER
 }
 
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-PHOTO} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_PHOTO} WITH
 {
 # Local PHOTO variables in order of their appearance
 
@@ -3021,7 +3021,7 @@ save  n_warning
 }
 
 
-REPLACE {$DEFINE-VARIABLES-FOR-SELECT-PHOTOELECTRON-DIRECTION} WITH
+REPLACE {$DEFINE_VARIABLES_FOR_SELECT_PHOTOELECTRON_DIRECTION} WITH
 {
 # Photo-electron angle selection variables
 $REAL EELEC, # total energy of photo-electron
@@ -3037,7 +3037,7 @@ $REAL EELEC, # total energy of photo-electron
 }
 
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-EDGSET} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_EDGSET} WITH
 {
 # Local EDGSET variables in order of their appearance
 $REAL EALF(100),EBET(100),OMEG(100),PHOTOK(100),PKA(100)
@@ -3046,7 +3046,7 @@ $INTEGER JJ,IZ,IMED,I
 }
 
 
-REPLACE {$DEFINE-LOCAL-VARIABLES-PHOTON} WITH
+REPLACE {$DEFINE_LOCAL_VARIABLES_PHOTON} WITH
 {
 # Local PHOTON variables in order of their appearance
 $ENERGY PRECISION
@@ -3083,14 +3083,14 @@ $INTEGER
 
 
 # Ali:photonuc, 1 block
-REPLACE {$DEFINE-LOCAL-VARIABLES-PHOTONUC} WITH {}
+REPLACE {$DEFINE_LOCAL_VARIABLES_PHOTONUC} WITH {}
 
 
 #  Handling track-ends 
 #  By default, just call AUSGAB and drop energy on the spot
 
-REPLACE {$ELECTRON-TRACK-END} WITH {$AUSCALL(idr)}
-REPLACE {$PHOTON-TRACK-END}   WITH {$AUSCALL(IDR)}
+REPLACE {$ELECTRON_TRACK_END} WITH {$AUSCALL(idr)}
+REPLACE {$PHOTON_TRACK_END}   WITH {$AUSCALL(IDR)}
 
 
 #  Macros for the fictitious method  
@@ -3102,11 +3102,11 @@ REPLACE {$PHOTON-TRACK-END}   WITH {$AUSCALL(IDR)}
 #  The global maximum of this quantity called esig_e (electrons) or 
 #  psig_e (positrons) and is determined in HATCH 
 
-REPLACE {$EVALUATE-SIG0} WITH
+REPLACE {$EVALUATE_SIG0} WITH
 #         ===============
 {
    IF( sig_ismonotone(qel,medium) ) [
-       $EVALUATE-SIGFsig0 = sigf
+       $EVALUATE_SIGFsig0 = sigf
    ]
    ELSE [
        IF( lelec < 0 ) [sig0 = esig_e(medium)]
@@ -3114,7 +3114,7 @@ REPLACE {$EVALUATE-SIG0} WITH
    ]
 }
 
-REPLACE {$EVALUATE-SIGF} WITH
+REPLACE {$EVALUATE_SIGF} WITH
 #         ===============
 {
   IF(lelec < 0)
@@ -3132,20 +3132,20 @@ REPLACE {$EVALUATE-SIGF} WITH
 }
 
 
-REPLACE {$EVALUATE-EBREM-FRACTION} WITH {
+REPLACE {$EVALUATE_EBREM_FRACTION} WITH {
     $EVALUATE ebr1 USING ebr1(elke)
 }
-REPLACE {$EVALUATE-PBREM-FRACTION} WITH {
+REPLACE {$EVALUATE_PBREM_FRACTION} WITH {
     $EVALUATE pbr1 USING pbr1(elke)
 }
-REPLACE {$EVALUATE-BHABHA-FRACTION} WITH {
+REPLACE {$EVALUATE_BHABHA_FRACTION} WITH {
     $EVALUATE pbr2 USING pbr2(elke)
 }
 
 
 #  Because the cross section is interactions per energy loss, no 
 #  rhof-scaling is required 
-REPLACE {$SCALE-SIG0} WITH
+REPLACE {$SCALE_SIG0} WITH
 #         ============
 {
    sig = sig0
@@ -3157,9 +3157,9 @@ REPLACE {$SCALE-SIG0} WITH
 #  calculated. This is done by the macro below. This macro           
 #  assumes the energy at the begining to be eke, the logarithm of it 
 #  elke, lelke - the corresponding interpolation index and makes     
-#  use of $COMPUTE-DRANGE(#,#,#,#,#,#)                               
+#  use of $COMPUTE_DRANGE(#,#,#,#,#,#)                               
 
-REPLACE {$CALCULATE-TSTEP-FROM-DEMFP} WITH
+REPLACE {$CALCULATE_TSTEP_FROM_DEMFP} WITH
 #         ============================
 {
   IF( compute_tstep ) [
@@ -3172,7 +3172,7 @@ REPLACE {$CALCULATE-TSTEP-FROM-DEMFP} WITH
       $SET INTERVAL elkef,eke
       IF( lelkef = lelke )
       [       #  initial and final energy are in the same interpolation bin 
-          $COMPUTE-DRANGE(eke,ekef,lelke,elke,elkef,tstep)
+          $COMPUTE_DRANGE(eke,ekef,lelke,elke,elkef,tstep)
       ]
       ELSE
       [   #  initial and final energy are in different interpolation bins, 
@@ -3180,10 +3180,10 @@ REPLACE {$CALCULATE-TSTEP-FROM-DEMFP} WITH
           #  and add the pre-calculated range from E(lelkef+1) to E(lelke) 
           ekei = E_array(lelke,medium)
           elkei = (lelke - eke0(medium))/eke1(medium)
-          $COMPUTE-DRANGE(eke,ekei,lelke,elke,elkei,tuss)
+          $COMPUTE_DRANGE(eke,ekei,lelke,elke,elkei,tuss)
           ekei = E_array(lelkef+1,medium)
           elkei = (lelkef + 1 - eke0(medium))/eke1(medium)
-          $COMPUTE-DRANGE(ekei,ekef,lelkef,elkei,elkef,tstep)
+          $COMPUTE_DRANGE(ekei,ekef,lelkef,elkei,elkef,tstep)
           tstep=tstep+tuss+
                   range_ep(qel,lelke,medium)-range_ep(qel,lelkef+1,medium)
       ]
@@ -3203,7 +3203,7 @@ REPLACE {$CALCULATE-TSTEP-FROM-DEMFP} WITH
 #  of the ExpIntegralEi function that is the result of the integration.    
 #  The result is returned in {P6}.                                         
 
-REPLACE {$COMPUTE-DRANGE(#,#,#,#,#,#)} WITH
+REPLACE {$COMPUTE_DRANGE(#,#,#,#,#,#)} WITH
 #         =============================
 {
   fedep = 1 - {P2}/{P1}
@@ -3229,29 +3229,29 @@ REPLACE {$COMPUTE-DRANGE(#,#,#,#,#,#)} WITH
 
 
 #  The following macro computes the range to the minimum table energy 
-#  It uses $COMPUTE-DRANGE                                            
+#  It uses $COMPUTE_DRANGE                                            
 #  Note that range_ep array is precomputed in subroutine mscati and   
 #  gives the range from the energy interval end points to AE for each 
 #  medium.
 
-REPLACE {$COMPUTE-RANGE} WITH
+REPLACE {$COMPUTE_RANGE} WITH
 #         ===============
 {
 
   ekei = E_array(lelke,medium)
   elkei = (lelke - eke0(medium))/eke1(medium)
-  $COMPUTE-DRANGE(eke,ekei,lelke,elke,elkei,range)
+  $COMPUTE_DRANGE(eke,ekei,lelke,elke,elkei,range)
   range = (range + range_ep(qel,lelke,medium))/rhof
 }
 
 
 /******* trying to save evaluation of range.
-REPLACE {$COMPUTE-RANGE} WITH {
+REPLACE {$COMPUTE_RANGE} WITH {
 #         ===============
   IF( do_range ) [
       ekei = E_array(lelke,medium)
       elkei = (lelke - eke0(medium))/eke1(medium)
-      $COMPUTE-DRANGE(eke,ekei,lelke,elke,elkei,range)
+      $COMPUTE_DRANGE(eke,ekei,lelke,elke,elkei,range)
       the_range = range + range_ep(qel,lelke,medium)
       do_range = .false.
   ]
@@ -3262,7 +3262,7 @@ REPLACE {$COMPUTE-RANGE} WITH {
 #  The following macro updates demfp. As energy loss is used as the  
 #  'path-length' variable (see above), it just substracts the energy 
 #  loss for the step.                                                
-REPLACE {$UPDATE-DEMFP} WITH
+REPLACE {$UPDATE_DEMFP} WITH
 #         ==============
 {
   demfp = demfp - save_de*sig
@@ -3279,7 +3279,7 @@ REPLACE {$UPDATE-DEMFP} WITH
 #  used in EGSnrc. The result is returned in {P5}. Assumes that      
 #  initial and final energy are in the same interpolation bin.       
 
-REPLACE {$COMPUTE-ELOSS(#,#,#,#,#)} WITH
+REPLACE {$COMPUTE_ELOSS(#,#,#,#,#)} WITH
 #         ==========================
 {
   IF( lelec < 0 ) [
@@ -3295,26 +3295,26 @@ REPLACE {$COMPUTE-ELOSS(#,#,#,#,#)} WITH
   */
   {P5} = dedxmid*{P1}*rhof# IK: rhof scaling bug, June 9 2006
                             # rhof scaling must be done here and NOT in 
-                            # $COMPUTE-ELOSS-G below!
+                            # $COMPUTE_ELOSS_G below!
   fedep = {P5}/{P2}
   {P5} = {P5}*(1-0.5*fedep*aux*(1-0.333333*fedep*(aux-1-
              0.25*fedep*(2-aux*(4-aux)))))
 }
 
 
-#  The following is a generalized version of $COMPUTE-ELOSS.        
+#  The following is a generalized version of $COMPUTE_ELOSS.        
 
-REPLACE {$COMPUTE-ELOSS-G(#,#,#,#,#)} WITH
+REPLACE {$COMPUTE_ELOSS_G(#,#,#,#,#)} WITH
 #         ============================
 {
   tuss = range - range_ep(qel,{P4},medium)/rhof
     #  here tuss is the range between the initial energy and the next lower 
     #  energy on the interpolation grid 
   IF( tuss >= {P1} ) [  #  Final energy is in the same interpolation bin 
-      $COMPUTE-ELOSS({P1},{P2},{P3},{P4},{P5})
+      $COMPUTE_ELOSS({P1},{P2},{P3},{P4},{P5})
       /* {P5} = {P5}*rhof# IK, rhof bug  */
       # IK: rhof scaling bug, June 9 2006. rhof scaling is done in 
-      #     $COMPUTE-ELOSS above!                                  
+      #     $COMPUTE_ELOSS above!                                  
   ]
   ELSE [ #  Must find first the table index where the step ends using 
          #  pre-calculated ranges                                     
@@ -3335,9 +3335,9 @@ REPLACE {$COMPUTE-ELOSS-G(#,#,#,#,#)} WITH
           eketmp = E_array(lelktmp+1,medium)
           # tuss = range_ep(qel,lelktmp+1,medium) - tuss
           # IK: rhof scaling bug, June 9 2006: because of the change in 
-          #     $COMPUTE-ELOSS above, we must scale tuss by rhof        
+          #     $COMPUTE_ELOSS above, we must scale tuss by rhof        
           tuss = (range_ep(qel,lelktmp+1,medium) - tuss)/rhof
-          $COMPUTE-ELOSS(tuss,eketmp,elktmp,lelktmp,{P5})
+          $COMPUTE_ELOSS(tuss,eketmp,elktmp,lelktmp,{P5})
           {P5} = {P5} + {P2} - eketmp
       ]
   ]
@@ -3459,7 +3459,7 @@ REPLACE {COMIN/EGS-VARIANCE-REDUCTION/} WITH {
   $SHORT_INT     i_do_rr
 }
 
-REPLACE {$MAX-RR-WARNING} WITH {50}
+MAX_RR_WARNING: int = 50
 
 # This macro implements Russian Roulette (most useful  with brems splitting)
 # It is more efficient than having the user do it via AUSGAB since it avoids
@@ -3475,7 +3475,7 @@ REPLACE {$PLAYRUSSIANROULETTEWITHELECTRONSFROM#} WITH {
   i_survived_RR = 0# flag all survive
   IF( i_play_RR = 1 ) [
       IF( prob_RR <= 0 ) [
-          IF( n_RR_warning < $MAX-RR-WARNING ) [
+          IF( n_RR_warning < $MAX_RR_WARNING ) [
             n_RR_warning = n_RR_warning + 1
             OUTPUT prob_RR
   ('**** Warning, attempt to play Roussian Roulette with prob_RR<=0! ',g14.6)
@@ -3531,10 +3531,10 @@ REPLACE {$RADC_WARNING} WITH {
     ]
 }
 REPLACE {$RADC_HATCH} WITH {$RADC_WARNING}
-REPLACE {$COMIN-RADC-INIT} WITH {
+REPLACE {$COMIN_RADC_INIT} WITH {
         COMIN/RAD_COMPTON,EGS-IO,COMPTON-DATA,MEDIA,PHOTIN,USEFUL/
 }
-REPLACE {$COMIN-RADC-SAMPLE} WITH {
+REPLACE {$COMIN_RADC_SAMPLE} WITH {
         COMIN/RAD_COMPTON,RANDOM,STACK,USEFUL,EGS-IO/
 }
 
@@ -3627,20 +3627,20 @@ REPLACE {$set_egs_home} WITH {
 #  Initialization of various variables on a region-by-region basis 
 #  This is made a macro so that it can be replaced with a different 
 #  version for the C/C++ interface                                 
-REPLACE {$set-region-by-region-defaults} WITH {
+REPLACE {$set_region_by_region_defaults} WITH {
 DO i=1,$MXREG [
-    ecut(i) = $GLOBAL-ECUTpcut(i) = $GLOBAL-PCUT# cut-off energies
-    ibcmp(i) = $IBCMP-DEFAULT# Compton 
-    iedgfl(i) = $IEDGFL-DEFAULT# Relaxations
-    iphter(i) = $IPHTER-DEFAULT# photo-electron angular distribution
-    smaxir(i) = $MAX-SMAX# maximum step size
+    ecut(i) = $GLOBAL_ECUTpcut(i) = $GLOBAL_PCUT# cut-off energies
+    ibcmp(i) = $IBCMP_DEFAULT# Compton 
+    iedgfl(i) = $IEDGFL_DEFAULT# Relaxations
+    iphter(i) = $IPHTER_DEFAULT# photo-electron angular distribution
+    smaxir(i) = $MAX_SMAX# maximum step size
     i_do_rr(i) = 0# range rejection flag
     e_max_rr(i) = 0# `save' energy for range rejection
     med(i) = 1# default medium
     rhor(i) = 0# default mass density
-    iraylr(i) = $IRAYLR-DEFAULT# Rayleigh flag
+    iraylr(i) = $IRAYLR_DEFAULT# Rayleigh flag
 # Ali:photonuc, 1 line
-    iphotonucr(i) = $IPHOTONUCR-DEFAULT# photonuclear flag per region]
+    iphotonucr(i) = $IPHOTONUCR_DEFAULT# photonuclear flag per region]
 }
 
 #  Make sure ecut and pcut are at least ae/ap and set default densities 
@@ -3729,19 +3729,19 @@ REPLACE {$set_ecutmn} WITH {
 #  default numer of media. 
 default_nmed: int = 1
 
-REPLACE {$GET-PEGSLESS-XSECTIONS} WITH {
+REPLACE {$GET_PEGSLESS_XSECTIONS} WITH {
 $egs_fatal('(a/a)',' Code cannot be run in pegsless mode.',
 ' Compile with required files and try again.')
 
 }
 
-REPLACE {$INIT-PEGS4-VARIABLES} WITH {}
+REPLACE {$INIT_PEGS4_VARIABLES} WITH {}
 
-REPLACE {$DECLARE-PEGS4-COMMON-BLOCKS} WITH {}
+REPLACE {$DECLARE_PEGS4_COMMON_BLOCKS} WITH {}
 
 #  The following macro is defined to fool the Intel Fortran compiler 
 #  version 8.0, which miscompiles init_spin when certain optimizations
 #  are turned on and the code is run on an Athlon CPU. 
-REPLACE {$FOOL-INTEL-OPTIMIZER(#) #} WITH {
+REPLACE {$FOOL_INTEL_OPTIMIZER(#) #} WITH {
     IF( fool_intel_optimizer ) [ write({P1},*) {P2}]
 }

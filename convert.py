@@ -2,6 +2,8 @@ import re
 
 import sys
 
+from typing import List
+
 
 if sys.version_info < (3, 8):
     raise ImportError("Need Python 3.8 or later")
@@ -44,6 +46,21 @@ def replace_subs(code: str) -> str:
     return code
 
 
+def fix_identifiers(code) -> str:
+    """Take invalid (for Python) var names and make them valid"""
+    # Fix leading number, often used for ranges
+    code = re.sub(r"^[^#].*\$(\d)", r"\$from\1", code)
+
+    # Fix dashes to underscore
+    # First, some comment have "---", keep those
+    code = re.sub(r'"(.*)\$(\w*)---', r'"\1$\2 --- ', code)
+    for i in range(8, 1, -1):
+        pattern = r"\$" + "-".join([r"(\w*)"]*i)
+        subst = r"$" + "_".join([rf"\{j}" for j in range(1, i+1)])
+        code = re.sub(pattern, subst, code)
+    return code
+
+
 def transpile_macros(code: str) -> str:
     """Transpile statements in macros file"""
     macro_subs = {
@@ -81,6 +98,7 @@ if __name__ == "__main__":
     with open(in_filename, 'r') as f:
         code = f.read()
 
+    code = fix_identifiers(code)
     code = transpile_macros(code)
 
     with open(out_filename, "w") as f:
