@@ -68,13 +68,17 @@ $start_new_particle
     peie  = e(np) # precise energy of incident electron (double precision)
     eie   = peie # energy incident electron (conversion to single)
 
-    IF(eie <= ecut(irl)) [go to :ECUT-DISCARD:;]
+    if eie <= ecut(irl):
+
+        go to :ECUT-DISCARD:
         # (Ecut is the lower transport threshold.)
 
     # medium = med(irl) # (This renders the above assignment redundant!)
     # The above assignment is unnecessary, IK, June 2003
 
-    IF(WT(NP) = 0.0) [go to :USER-ELECTRON-DISCARD:;] # added May 01
+    if WT(NP) = 0.0:
+
+        go to :USER-ELECTRON-DISCARD: # added May 01
 
     :TSTEP:LOOP
     [
@@ -167,8 +171,10 @@ $start_new_particle
                 ] # end sig if-else
 
                 # calculate stopping power
-                IF(lelec < 0) [$EVALUATE dedx0 USING ededx(elke);] # e-
-                ELSE          [$EVALUATE dedx0 USING pdedx(elke);] # e+
+                if lelec < 0:
+                    $EVALUATE dedx0 USING ededx(elke) # e-
+                else:
+                    $EVALUATE dedx0 USING pdedx(elke); # e+
                 dedx  = rhof*dedx0
 
                 # Determine maximum step-size (Formerly $SET-TUSTEP)
@@ -418,11 +424,17 @@ $start_new_particle
                     ] # end of EM_MACROS_ACTIVE block
                 ] # end of vacuum step
 
-                IF(irnew ~= irold) [ $electron_region_change; ]
+                if irnew ~= irold:
 
-                IF(ustep ~= 0) [$AUSCALL($TRANAUSA);]
-                IF(eie <= ecut(irl)) [go to :ECUT-DISCARD:;]
-                IF(ustep ~= 0 & idisc < 0) [go to :USER-ELECTRON-DISCARD:;]
+                     $electron_region_change; 
+
+                if ustep ~= 0:
+
+                    $AUSCALL($TRANAUSA)
+                if eie <= ecut(irl):
+                    go to :ECUT-DISCARD:
+                if ustep ~= 0 & idisc < 0:
+                    go to :USER-ELECTRON-DISCARD:
                 NEXT :TSTEP:  # (Start again at :TSTEP:)
 
             ] # Go try another big step in (possibly) new medium
@@ -526,8 +538,10 @@ $start_new_particle
                        IF( spin_effects ) [
                          elkems = Log(ekems)
                          $SET INTERVAL elkems,eke
-                         IF(lelec < 0) [$EVALUATE etap USING etae_ms(elkems);]
-                         ELSE          [$EVALUATE etap USING etap_ms(elkems);]
+                         if lelec < 0:
+                             $EVALUATE etap USING etae_ms(elkems)
+                         else:
+                             $EVALUATE etap USING etap_ms(elkems);
                          chia2 = chia2*etap
                        ]
                        call sscat(chia2,elkems,beta2,qel,medium,
@@ -585,7 +599,8 @@ $start_new_particle
                     u_final = u(np); v_final = v(np); w_final = w(np)
                     u(np) = u_tmp; v(np) = v_tmp; w(np) = w_tmp
                 ]
-                ELSE [ u_final = u(np); v_final = v(np); w_final = w(np); ]
+                else:
+                     u_final = u(np); v_final = v(np); w_final = w(np); 
             ]
 
             $AUSCALL($TRANAUSB)
@@ -630,7 +645,9 @@ $start_new_particle
                 $SET INTERVAL elke,eke # Get updated interval
             ]
 
-            IF(irnew ~= irold) [ $electron_region_change; ]
+            if irnew ~= irold:
+
+                 $electron_region_change; 
 
             # After transport call to user scoring routine
             $AUSCALL($TRANAUSA)
@@ -690,7 +707,8 @@ $start_new_particle
             [
                 # Not enough energy for Moller, so
                 # force it to be a bremsstrahlung---provided ok kinematically.
-                IF(ebr1 <= 0) [go to :NEWELECTRON:;]
+                if ebr1 <= 0:
+                    go to :NEWELECTRON:
                     # Brems not allowed either.
                 go to :EBREMS:
             ]
@@ -713,7 +731,8 @@ $start_new_particle
     $EVALUATE-PBREM-FRACTION
        # Default is $EVALUATE pbr1 USING pbr1(elke)
     $RANDOMSET rnno25
-    IF(rnno25 < pbr1) [go to :EBREMS:;] # It was bremsstrahlung
+    if rnno25 < pbr1:
+        go to :EBREMS: # It was bremsstrahlung
     # Decide between bhabha and annihilation
     # pbr2 is (brems + bhabha)/(brems + bhabha + annih)
     $EVALUATE-BHABHA-FRACTION
@@ -783,9 +802,11 @@ ELSE
 IF( medium > 0 ) [
     IF(eie > ae(medium)) [
         idr = $EGSCUTAUS
-        IF(lelec < 0) [edep = e(np) - prm;] ELSE[$POSITRON-ECUT-DISCARD;]
+        if lelec < 0:
+            edep = e(np) - prm ELSE[$POSITRON-ECUT-DISCARD;]
     ]
-    ELSE [ idr = $PEGSCUTAUS; edep = e(np) - prm; ]
+    else:
+         idr = $PEGSCUTAUS; edep = e(np) - prm; 
 ] ELSE [idr = $EGSCUTAUS; edep = e(np) - prm; ]
 
 
@@ -822,8 +843,11 @@ return # i.e., return to shower
 
 idisc = abs(idisc)
 
-IF((lelec < 0) | (idisc = 99))[edep = e(np) - prm;]
-ELSE                          [edep = e(np) + prm;]
+if (lelec < 0) | (idisc = 99):
+
+    edep = e(np) - prm
+else:
+    edep = e(np) + prm;
 
 $AUSCALL($USERDAUS)
 

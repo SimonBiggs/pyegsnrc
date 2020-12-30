@@ -1,11 +1,19 @@
 import re
 
+import sys
+
+
+if sys.version_info < (3, 8):
+    raise ImportError("Need Python 3.8 or later")
+
 # XXX needs to be OrderedDict!!
 subs = {
     r'"(.*?)"': r'# \1',  # comments in quotes
     r'"(.*)': r'# \1',  # comment without end quote
     r";(\s*)$": r"\1",      # semi-colon at end of line
     r";(\s*)(?P<comment>#(.*?))?$": r" \g<comment>",
+    r"^(\s*)IF\((.*)\)\s*\[(.*?)[;]?\](.*)$": r"\1if \2:\n\1    \3\4", # basic IF
+    r"^(\s*)ELSE(.*)\[(.*)\](.*)$": r"\1else:\n\1    \3\4", # basic ELSE
 }
 
 if __name__ == "__main__":
