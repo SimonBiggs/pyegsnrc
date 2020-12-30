@@ -50,9 +50,17 @@ def transpile_macros(code: str) -> str:
         # PARAMETER with comments
         r'PARAMETER\s*\$(\w*)\s*=\s*(\d*);\s*"(.*?)"': r"\1: int = \2  # \3",
         r'PARAMETER\s*\$(\w*)\s*=\s*(\d*\.\d*);\s*"(.*?)"': r"\1: float = \2  # \3",
+
         # PARAMETER without comments
         r'PARAMETER\s*\$(\w*)\s*=\s*(\d*);': r"\1: int = \2",
         r'PARAMETER\s*\$(\w*)\s*=\s*(\d*\.\d*);': r"\1: float = \2",
+
+        # Comments, semicolon
+        r'"(.*?)"': r'# \1',  # comments in quotes
+        r'"(.*)': r'# \1',  # comment without end quote
+        r";(\s*)$": r"\1",      # semi-colon at end of line
+        r";\s*(# .*$)?": r"\1", # '; # comment' -> just comment
+
 
     }
     for pattern, sub in macro_subs.items():
