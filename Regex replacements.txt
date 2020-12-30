@@ -1,0 +1,40 @@
+Regex replacements
+
+Comments with both quotes
+"(.*?)"
+to: # $1
+
+Comments without end quote
+"(.*?)
+to: # $1
+
+Both were good with no wrong conversions AFAICT
+
+End semicolons
+;$
+with nothing
+
+end semicolon with following Comment
+;(\s*)#(.*?)$
+with
+ $1#$2
+(leading space to replace ;)
+
+Replace simple IF:
+^(\s*)IF\((.*)\)\s*\[(.*)\](.*)$
+$1if $2:\n$1    $3$4
+Note $1 keep current indent, then is added to with four more spaces
+
+REPLACE ELSE:
+^(\s*)ELSE(.*)\[(.*)\](.*)$
+$1else:\n$1    $3$4
+
+Other IF with only condition on first line
+^(\s*)IF\((.*)\)(.*)$
+$1if $2:\n$1    $3
+
+REPLACE [ by itself on a line
+^\s*\[\s*$
+(nothing)
+
+REPLACE ] by itself on a line
