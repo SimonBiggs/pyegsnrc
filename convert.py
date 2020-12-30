@@ -14,6 +14,7 @@ subs = {
     r";(\s*)(?P<comment>#(.*?))?$": r" \g<comment>",
     r"^(\s*)IF\((.*)\)\s*\[(.*?)[;]?\](.*)$": r"\1if \2:\n\1    \3\4", # basic IF
     r"^(\s*)ELSE(.*)\[(.*)\](.*)$": r"\1else:\n\1    \3\4", # basic ELSE
+    r"^(\s*)ELSE(\s*)$": r"\1else:",  # bare ELSE line
     r"^(\s*)IF(\s*)?\((.*)\)(.*)$": r"\1if \3:\n\1    \4", # IF on one line
     r"if(.*?)~=": r"if\1!=", # not equals
     r"if(.*?) = ": r"if\1 == ", # = to ==

@@ -142,7 +142,7 @@ $start_new_particle
                     $SET-TUSTEP-EM-FIELD
                     ustep = tustep
             ]
-            ELSE
+            else:
             [
                 # non-vacuum
                 $SET-RHOF # density ratio scaling template
@@ -168,7 +168,7 @@ $start_new_particle
                     tstep = vacdst
                     sig0 = 1.E-15
                 ]
-                ELSE
+                else:
                 [
                     $CALCULATE-TSTEP-FROM-DEMFP
                 ] # end sig if-else
@@ -202,7 +202,7 @@ $start_new_particle
                     $RANDOMSET rnnotu
                     tmxs = rnnotu*min(tmxs,smaxir(irl))
                 ]
-                ELSE
+                else:
                 [
                     tmxs = min(tmxs,smaxir(irl))
                 ]
@@ -300,7 +300,7 @@ $start_new_particle
                         uscat,vscat,wscat,xtrans,ytrans,ztrans,ustep
                       )
                     ]
-                    ELSE
+                    else:
                     [
                       call msdist_pI
                       (
@@ -312,7 +312,7 @@ $start_new_particle
                       )
                     ]
                 ]
-                ELSE
+                else:
                 [
                     # We are within a skindepth from a boundary, invoke
                     # one of the various boundary-crossing algorithms
@@ -359,7 +359,7 @@ $start_new_particle
                         ]
                         ustep = tustep
                     ]
-                    ELSE
+                    else:
                     [
                         # Boundary crossing a la EGS4/PRESTA-I but using
                         # exact PLC
@@ -372,7 +372,7 @@ $start_new_particle
                     [
                         callhowfar = .false.
                     ]
-                    ELSE
+                    else:
                     [
                         callhowfar = .true.
                     ]
@@ -415,7 +415,7 @@ $start_new_particle
                         # (not both at the same time)
                         $EMFieldInVacuum
                     ]
-                    ELSE
+                    else:
                     [
                         # Step in vacuum
                         vstep  = ustep
@@ -474,7 +474,7 @@ $start_new_particle
                         dosingle = .false.
                     ]
                 ]
-                ELSE
+                else:
                 [
                     # callhowfar=.true. and exact_bca=.false.
                     # =>we are doing an approximate CH step
@@ -487,7 +487,7 @@ $start_new_particle
                 # single scattering step.
                 $COMPUTE-ELOSS-G(tvstep,eke,elke,lelke,de)
             ]
-            ELSE
+            else:
             [
                # callhowfar=.false. => step has not been reduced due to
                #                       boundaries
@@ -548,7 +548,7 @@ $start_new_particle
                                spin_effects,findindex,spin_index,
                                costhe,sinthe)
                 ]
-                ELSE
+                else:
                 [
                     if dosingle:
                         
@@ -572,7 +572,7 @@ $start_new_particle
                        call sscat(chia2,elkems,beta2,qel,medium,
                                   spin_effects,costhe,sinthe)
                     ]
-                    ELSE
+                    else:
                     [
                        theta  = 0 # No deflection in single scattering model
                        sinthe = 0
@@ -608,7 +608,7 @@ $start_new_particle
                 y_final = ytrans
                 z_final = ztrans
             ]
-            ELSE
+            else:
             [
                 IF ~($EM_MACROS_ACTIVE)
                 [
@@ -734,7 +734,7 @@ $start_new_particle
             # It was bremsstrahlung
             go to :EBREMS:
         ]
-        ELSE
+        else:
         [
             # It was Moller, but first check the kinematics.
             # However, if EII is on, we should still permit an interaction
@@ -793,7 +793,7 @@ $start_new_particle
         if  iq(np) == 0 :
              return
     ]
-    ELSE
+    else:
     [
         # It is in-flight annihilation
         $AUSCALL($ANNIHFAUSB)
@@ -832,7 +832,7 @@ if iq(np) == 0:
     return
     # i.e., return to shower
 ]
-ELSE
+else:
 [
     # Electron was selected
     go to :NEWELECTRON:
