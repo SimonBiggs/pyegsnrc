@@ -2,7 +2,7 @@ import re
 
 subs = {
     r'"(.*?)"': r'# \1',  # comments in quotes
-    r'"(.*?)$': r'# \1',  # comment without end quote
+    r'"(.*)': r'# \1',  # comment without end quote
 }
 
 if __name__ == "__main__":
