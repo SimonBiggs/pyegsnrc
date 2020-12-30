@@ -1,4 +1,4 @@
-Regex replacements
+Regex replacements - VSCode style
 
 Comments with both quotes
 "(.*?)"
@@ -38,3 +38,7 @@ REPLACE [ by itself on a line
 (nothing)
 
 REPLACE ] by itself on a line
+
+REPLACE PARAMETERs in macros (int)
+PARAMETER\s*\$(\w*)\s*=\s*(\d*);\s*"(.*?)"
+$1: int = $2  # $3

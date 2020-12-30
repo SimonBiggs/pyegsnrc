@@ -11,7 +11,7 @@ subs = {
     r'"(.*?)"': r'# \1',  # comments in quotes
     r'"(.*)': r'# \1',  # comment without end quote
     r";(\s*)$": r"\1",      # semi-colon at end of line
-    r";(\s*)(?P<comment>#(.*?))?$": r" \g<comment>",
+    r";(\s*)(?P<comment>#(.*?))?$": r" \g<comment>", still a semicolon before #
     r"^(\s*)IF\((.*)\)\s*\[(.*?)[;]?\](.*)$": r"\1if \2:\n\1    \3\4", # basic IF
     r"^(\s*)(?:]\s*)?ELSE(.*)\[(.*)\](.*)$": r"\1else:\n\1    \3\4", # basic ELSE
     r"^(\s*)(?:]\s*)?ELSE(\s*)$": r"\1else:",  # bare ELSE line
@@ -31,7 +31,26 @@ subs = {
     r"\$INIT-PEGS4-VARIABLES": "",
     r"\$DECLARE-PEGS4-COMMON-BLOCKS": "",
     r"SUBROUTINE\s*(.*)$": r"def \1:",
+    r"\.true\.": "True",
+    r"\.false\.": "False",
+    r"[iI]f(.*?)(?:=)?=\s*True": r"if\1 is True",
+    r"[iI]f(.*?)(?:=)?=\s*False": r"if\1 is False",
 }
+
+
+def replace_subs(code: str) -> str:
+    for pattern, sub in subs.items():
+        code = re.sub(pattern, sub, code, flags=re.MULTILINE)
+    return code
+
+
+def macros(code: str) -> str:
+    """Transpile statements in macros file"""
+    subs = {
+        #
+        r"PARAMETER\s*\$(\w*)\s*=\s*(\d*);\s*"(.*?)": r"\1: int = \2  # \3",
+        r"PARAMETER\s*\$(\w*)\s*=\s*(\d*\.\d*);\s*"(.*?)": r"$1: float = $2  # $3"
+    }
 
 if __name__ == "__main__":
     in_filename = "electr.mor"
@@ -39,8 +58,7 @@ if __name__ == "__main__":
     with open(in_filename, 'r') as f:
         code = f.read()
 
-    for pattern, sub in subs.items():
-        code = re.sub(pattern, sub, code, flags=re.MULTILINE)
+    replace_subs(code)
 
     with open(out_filename, "w") as f:
         f.write(code)

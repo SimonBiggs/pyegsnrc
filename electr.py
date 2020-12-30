@@ -84,9 +84,9 @@ medium = med(irl)
 
         # Go through this loop each time we recompute distance to an interaction
         /******* trying to save evaluation of range.
-        do_range = .true. # compute the range in $COMPUTE-RANGE below
+        do_range = True # compute the range in $COMPUTE-RANGE below
         ********/
-        compute_tstep = .true. # MFP resampled => calculate distance to the
+        compute_tstep = True # MFP resampled => calculate distance to the
                                 # interaction in the USTEP loop
         eke = eie - rm # moved here so that kinetic energy will be known
                         # to user even for a vacuum step, IK January 2000
@@ -125,7 +125,7 @@ medium = med(irl)
                     # vacuum
                     $EMFIELD_INITIATE_SET_TUSTEP
                     tstep = vacdst; ustep = tstep; tustep = ustep
-                    callhowfar = .true. # Always call HOWFAR for vacuum steps!
+                    callhowfar = True # Always call HOWFAR for vacuum steps!
 
                     # (Important definitions:
                     #  tstep  = total pathlength to the next discrete interaction
@@ -226,58 +226,58 @@ medium = med(irl)
                 # 
                 # There are the following possibilities:
                 # 
-                #    callhowfar = .false.  This indicates that the
+                #    callhowfar = False  This indicates that the
                 #    ====================  intended step is shorter than tperp
                 #                          independent of BCA used
-                #   - domultiple = .false. dosingle = .false. and
-                #                          callmsdist = .true.
+                #   - domultiple = False dosingle = False and
+                #                          callmsdist = True
                 #        ==> everything has been done in msdist
-                #   - domultiple = .true. and dosingle = .false.
-                #        ==> should happen only if exact_bca == .false.
+                #   - domultiple = True and dosingle = False
+                #        ==> should happen only if exact_bca  is False
                 #            indicates that MS remains to be done
-                #   - domultiple = .false. and dosingle = .true.
-                #        ==> should happen only if exact_bca == .true.
+                #   - domultiple = False and dosingle = True
+                #        ==> should happen only if exact_bca  is True
                 #            sampled distance to a single scattering event is
                 #            shorter than tperp ==> do single scattering at the
                 #            end of the step
-                #   - domultiple = .true. and dosingle = .true.
+                #   - domultiple = True and dosingle = True
                 #        ==> error condition, something with the logic is wrong!
                 # 
-                #    callhowfar = .true. This indicates that the intended step
+                #    callhowfar = True This indicates that the intended step
                 #    =================== is longer than tperp and forces a
                 #                        call to hawfar which returns the
                 #                        straight line distance to the boundary
                 #                        in the initial direction of motion
                 #                        (via a modification of ustep)
-                #   - domultiple = .false. and dosingle = .false.
-                #        ==> should happen only of exact_bca=.true.
+                #   - domultiple = False and dosingle = False
+                #        ==> should happen only of exact_bca=True
                 #            simply put the particle on the boundary
-                #   - domultiple = .false. and dosingle = .true.
-                #        ==> should happen only of exact_bca=.true.
+                #   - domultiple = False and dosingle = True
+                #        ==> should happen only of exact_bca=True
                 #            single elastic scattering has to be done
-                #   - domultiple = .true. and dosingle = .false.
-                #        ==> should happen only of exact_bca=.false.
+                #   - domultiple = True and dosingle = False
+                #        ==> should happen only of exact_bca=False
                 #            indicates that MS remains to be done
-                #   - domultiple = .true. and dosingle = .true.
+                #   - domultiple = True and dosingle = True
                 #        ==> error condition, something with the logic is wrong!
 
                 # IF(tustep <= tperp and tustep > skindepth)
                 # This statement changed to be consistent with PRESTA-I
                 count_all_steps = count_all_steps + 1
-                is_ch_step = .false.
+                is_ch_step = False
                 if (tustep <= tperp) and ((~exact_bca) or (tustep > skindepth)):
 
                     # We are further way from a boundary than a skindepth, so
                     # perform a normal condensed-history step
-                    callhowfar = .false. # Do not call HAWFAR
-                    domultiple = .false. # Multiple scattering done here
-                    dosingle   = .false. # MS => no single scattering
-                    callmsdist = .true. # Remember that msdist has been called
+                    callhowfar = False # Do not call HAWFAR
+                    domultiple = False # Multiple scattering done here
+                    dosingle   = False # MS => no single scattering
+                    callmsdist = True # Remember that msdist has been called
 
                     # Fourth order technique for de
                     $COMPUTE-ELOSS-G(tustep,eke,elke,lelke,de)
 
-                    tvstep = tustep; is_ch_step = .true.
+                    tvstep = tustep; is_ch_step = True
 
                     if transport_algorithm == $PRESTA-II:
 
@@ -304,12 +304,12 @@ medium = med(irl)
 
                     # We are within a skindepth from a boundary, invoke
                     # one of the various boundary-crossing algorithms
-                    callmsdist = .false.
+                    callmsdist = False
                          # Remember that msdist has not been called
                     if exact_bca:
 
                         # Cross the boundary in a single scattering mode
-                        domultiple = .false. # Do not do multiple scattering
+                        domultiple = False # Do not do multiple scattering
                         # Sample the distance to a single scattering event
                         $RANDOMSET rnnoss
                         if  rnnoss < 1.e-30 :
@@ -330,10 +330,10 @@ medium = med(irl)
                             if tuss < tustep:
 
                                 tustep = tuss
-                                dosingle = .true.
+                                dosingle = True
 
                             ELSE [
-                                dosingle = .false.
+                                dosingle = False
 
 
                         ELSE [
@@ -341,7 +341,7 @@ medium = med(irl)
                              lambda,lambda_max,' eke dedx: ',eke,dedx,
                              ' ir medium blcc: ',ir(np),medium,blcc(medium),
                              ' position = ',x(np),y(np),z(np))
-                          dosingle = .false.
+                          dosingle = False
                           np=np-1; return
 
                         ustep = tustep
@@ -349,16 +349,16 @@ medium = med(irl)
 
                         # Boundary crossing a la EGS4/PRESTA-I but using
                         # exact PLC
-                        dosingle = .false.
-                        domultiple = .true.
+                        dosingle = False
+                        domultiple = True
                         $SET-USTEP
 
                     if ustep < tperp:
 
-                        callhowfar = .false.
+                        callhowfar = False
                     else:
 
-                        callhowfar = .true.
+                        callhowfar = True
 
 
             ] # end non-vacuum test
@@ -440,17 +440,17 @@ medium = med(irl)
 
                 if exact_bca:
 
-                    # If callhowfar=.true. and exact_bca=.true. we are
+                    # if callhowfar is True and exact_bca=True we are
                     # in a single scattering mode
                     tvstep = vstep
                     if tvstep != tustep:
 
                        # Boundary was crossed. Shut off single scattering
-                        dosingle = .false.
+                        dosingle = False
 
                 else:
 
-                    # callhowfar=.true. and exact_bca=.false.
+                    # callhowfar=True and exact_bca=False
                     # =>we are doing an approximate CH step
                     # calculate the average curved path-length corresponding
                     # to vstep
@@ -462,7 +462,7 @@ medium = med(irl)
                 $COMPUTE-ELOSS-G(tvstep,eke,elke,lelke,de)
             else:
 
-               # callhowfar=.false. => step has not been reduced due to
+               # callhowfar=False => step has not been reduced due to
                #                       boundaries
                tvstep = tustep
                if  ~callmsdist :
@@ -496,15 +496,15 @@ medium = med(irl)
 
             # Now do multiple scattering
             if  ~callmsdist :
-                   # everything done if callmsdist == .true.
+                   # everything done if callmsdist  is True
 
                 if  domultiple :
 
                     # Approximated CH step => do multiple scattering
                     # 
                     # ekems, elkems, beta2 have been set in either $SET-TUSTEP
-                    # or $SET-TVSTEP if spin_effects is .true., they are
-                    # not needed if spin_effects is .false.
+                    # or $SET-TVSTEP if spin_effects is True, they are
+                    # not needed if spin_effects is False
                     # 
                     # chia2,etap,xi,xi_corr are also set in the above macros
                     # 
@@ -513,7 +513,7 @@ medium = med(irl)
                     # 
                     lambda = blccl*tvstep/beta2/etap/(1+chia2)
                     xi = xi/xi_corr
-                    findindex = .true.; spin_index = .true.
+                    findindex = True; spin_index = True
                     call mscat(lambda,chia2,xi,elkems,beta2,qel,medium,
                                spin_effects,findindex,spin_index,
                                costhe,sinthe)
