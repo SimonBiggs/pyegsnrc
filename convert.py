@@ -74,6 +74,7 @@ def transpile_macros(code: str) -> str:
 
         # REPLACE
         r'REPLACE\s*\{\$(\w*)\}\s*WITH\s*\{(\d*)\}': r"\1: int = \2",  # simple int replacement
+        r'REPLACE\s*\{\$(\w*)\}\s*WITH\s*\{(\d\.?\d*)\}': r"\1: float = \2",  # simple float replace
 
         # Comments, semicolon
         r'"(.*?)"': r'# \1',  # comments in quotes
@@ -81,6 +82,8 @@ def transpile_macros(code: str) -> str:
         r";(\s*)$": r"\1",      # semi-colon at end of line
         r";\s*(# .*$)?": r"\1", # '; # comment' -> just comment
 
+        # Compiler directives
+        r"^%(.*?)$": r"# \1",  # Any line starting with %
 
     }
     for pattern, sub in macro_subs.items():

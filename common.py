@@ -1,4 +1,4 @@
-%C80
+# %C80
 # #############################################################################
 #                                                                              
 #   EGSnrc macros                                                              
@@ -54,10 +54,10 @@
 
 # Compiler directives
 # ===================
-%Q1         # Automatically close comments at end of line
+# %Q1         # Automatically close comments at end of line
             # but this DOES NOT apply withing macro definitions!!
-%C80        # Allow 80 columns of source/line (default is 72)
-%L          # Turn on listing
+# %C80        # Allow 80 columns of source/line (default is 72)
+# %L          # Turn on listing
 
 
 # ==================================================================
@@ -350,7 +350,7 @@ MXBREL: int = 100
 MXGAUSS: int = 64
 MXBRES: int = 100
 MXBRXS: int = 50
-REPLACE {$NIST_ENERGY_SCALE} WITH {1.0}
+NIST_ENERGY_SCALE: float = 1.0
 
 REPLACE {$NIST_DATA_UNIT} WITH {i_nist_data}
 
@@ -851,10 +851,10 @@ MAXU_MS: int = 31
 REPLACE {$0_MAXL_MS}  WITH {0:63}
 REPLACE {$0_MAXQ_MS}  WITH {0:7}
 REPLACE {$0_MAXU_MS}  WITH {0:31}
-REPLACE {$LAMBMIN_MS} WITH {1.}
+LAMBMIN_MS: float = 1.
 REPLACE {$LAMBMAX_MS} WITH {1e5}
 REPLACE {$QMIN_MS}    WITH {1e-3}
-REPLACE {$QMAX_MS}    WITH {0.5}
+QMAX_MS: float = 0.5
 
 REPLACE {COMIN/MS-Data/} WITH {
   common/ms_data/
@@ -1391,7 +1391,7 @@ REPLACE {$SET_TVSTEP} WITH
 }
 
 
-REPLACE {$ENEPS} WITH {0.0001}
+ENEPS: float = 0.0001
             # DIFFERENCE BETWEEN ECUT AND END POINT ENERGY FOR
             # RANGE CALCULATION
 
@@ -1965,7 +1965,7 @@ REPLACE {$USER_CONTROLS_TSTEP_RECURSION} WITH {}
 
 # BUFFER FLUSH
 
-%C80
+# %C80
 # ------------------------------------------------------------------
 #   BREMSSTRAHLUNG ANGLE SELECTION MACROS                           
 # ------------------------------------------------------------------
@@ -2043,7 +2043,7 @@ IF(IPRDST.GT.0)[
 # USERS MAY OVERRIDE THIS WITH A HIGHER VALUE BUT A LOWER VALUE WILL   
 # CAUSE NON-PHYSICAL SAMPLING                                          
 #                                                                      
-REPLACE {$BHPAIR} WITH {4.14}
+BHPAIR: float = 4.14
 
 # THIS MACRO ENABLES VERY SMALL ANGLE SAMPLING TO BE     
 # ACCUMULATED. THE LIMIT OF 1.0E-10 BREAKS DOWN AROUND   
@@ -2231,7 +2231,7 @@ REPLACE {$RE_EVALUATE_DEDX(#)} WITH
 # BUFFER FLUSH
 
 
-%E    # egsnrc.macros
+# %E    # egsnrc.macros
 # ******************************************************************
 #                                                                   
 #        transport algorithm related stuff                          
@@ -2258,20 +2258,20 @@ SKIN_DEPTH_FOR_BCA: int = 3
 
 REPLACE {$PRESTA_DEBUG} WITH {.false.}
 
-REPLACE {$EXACT_BCA_XIMAX} WITH {0.5}
+EXACT_BCA_XIMAX: float = 0.5
 
-REPLACE {$INEXACT_BCA_XIMAX} WITH {0.5} # this is not realy neccessary, 
+INEXACT_BCA_XIMAX: float = 0.5 # this is not realy neccessary, 
                                         # it remained from Alex's coding
 
-REPLACE {$MAX_ELOSS} WITH {0.25}
+MAX_ELOSS: float = 0.25
 
 REPLACE {$SUBSTEP_ELOSS_EVALUATION} WITH {.false.}
 
 REPLACE {$MAX_SMAX} WITH {1e10}
 
-REPLACE {$GLOBAL_ECUT} WITH {0.}
+GLOBAL_ECUT: float = 0.
 
-REPLACE {$GLOBAL_PCUT} WITH {0.}
+GLOBAL_PCUT: float = 0.
 
 IBRDST_DEFAULT: int = 1
 
@@ -2333,7 +2333,7 @@ ByDEF: int = 0
 
 BzDEF: int = 0
 
-REPLACE {$EMLMTDEF} WITH {0.02}
+EMLMTDEF: float = 0.02
 
 
             # This macro sets the minimum step size for a condensed
@@ -2405,7 +2405,7 @@ REPLACE {$TURN_OFF_SCATTERING} WITH {}
 # DR April 2012   see corresponding 2 additions to egsnrc,mortran in           
 #                 subroutines sscat and mscat
 
-%E # egsnrc.macros
+# %E # egsnrc.macros
 
 REPLACE {$CALL_HOWFAR_IN_ELECTR} WITH {
   IF(callhowfar | wt(np) <= 0) [ call howfar]
@@ -2469,7 +2469,7 @@ REPLACE {$USE_GET_INPUTS} WITH {.false.}
 
 
 
-%E    # egsnrc.macros
+# %E    # egsnrc.macros
 
 # Macro for azimuthal angle selection
 # using a sampling within a box method
@@ -2502,7 +2502,7 @@ REPLACE {$DEFINE_VARIABLES_FOR_SELECT_AZIMUTHAL_ANGLE} WITH {
   $REAL xphi,xphi2,yphi,yphi2,rhophi2
 }
 
-%E     # egsnrc.macros
+# %E     # egsnrc.macros
 # ************************************************************************
 #                                                                         
 #                  Definitions of local variables                         
@@ -3343,7 +3343,7 @@ REPLACE {$COMPUTE_ELOSS_G(#,#,#,#,#)} WITH
   ]
 }
 
-%E  # egsnrc.macros
+# %E  # egsnrc.macros
 # ============================================================================
 # 
 #    The following is related to use of the NRC auxilliary get_inputs
@@ -3424,7 +3424,7 @@ REPLACE {$AVAILABLE_UNIT(#,#)} WITH {}
 MXDATA: int = 1
 STAT: int = 2
 
-%E  # egsnrc.macros
+# %E  # egsnrc.macros
 # ============================================================================
 #    The following is related to use of the NRC auxilliary
 #    routine xvgrplot which is called from some of the standard
@@ -3436,7 +3436,7 @@ PLTDIM: int = 300# Unique array dimension for XVGRPLOT and PLOTSN
                         # Suppresses warnings from Intel compiler on Windows
                    # when arrays have different dimensions in diff. routines
 
-%E   # egsnrc.macros
+# %E   # egsnrc.macros
 # ***************************************************************************
 #                                                                            
 #          EGSnrc internal Variance Reduction Macros                         
