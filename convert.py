@@ -55,6 +55,9 @@ def transpile_macros(code: str) -> str:
         r'PARAMETER\s*\$(\w*)\s*=\s*(\d*);': r"\1: int = \2",
         r'PARAMETER\s*\$(\w*)\s*=\s*(\d*\.\d*);': r"\1: float = \2",
 
+        # REPLACE
+        r'REPLACE\s*\{\$(\w*)\}\s*WITH\s*\{(\d*)\}': r"\1: int = \2",  # simple int replacement
+
         # Comments, semicolon
         r'"(.*?)"': r'# \1',  # comments in quotes
         r'"(.*)': r'# \1',  # comment without end quote

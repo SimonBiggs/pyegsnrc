@@ -81,7 +81,7 @@ REPLACE {$IMPLICIT-NONE} WITH {implicit none}
 
 # ==================================================================
 # SELECT THE FORTRAN STANDARD TO BE USED (1966 OR 1977)             
-REPLACE {$FORTVER} WITH {1977}
+FORTVER: int = 1977
 # ==================================================================
 
 # ******************************************************************
@@ -269,7 +269,7 @@ MXRNTHI: int = 1
 # THE LATTER OF THE TWO WILL BE IN EFFECT
 REPLACE {$ENERGYPRECISION} WITH {REAL }# SINGLE PRECISION
 REPLACE {$ENERGYPRECISION} WITH {DOUBLE PRECISION }
-REPLACE {$MAX_INT} WITH {2147483647} # 2^31-1
+MAX_INT: int = 2147483647 # 2^31-1
 # ^--- limits number of particles and hence phase space file size
 # ---------- BUFFER FLUSH SEMICOLON ----------
 
@@ -344,12 +344,12 @@ REPLACE {COMIN/BOUNDS/} WITH
 # ------------------------------------------------------------------
 
 
-REPLACE {$MXBREN} WITH {57}
-REPLACE {$MXBRXX} WITH {54}
-REPLACE {$MXBREL} WITH {100}
-REPLACE {$MXGAUSS} WITH {64}
-REPLACE {$MXBRES} WITH {100}
-REPLACE {$MXBRXS} WITH {50}
+MXBREN: int = 57
+MXBRXX: int = 54
+MXBREL: int = 100
+MXGAUSS: int = 64
+MXBRES: int = 100
+MXBRXS: int = 50
 REPLACE {$NIST-ENERGY-SCALE} WITH {1.0}
 
 REPLACE {$NIST-DATA-UNIT} WITH {i_nist_data}
@@ -426,7 +426,7 @@ REPLACE {COMIN/NRC-PAIR-DATA/} WITH {
 # ------------------------------------------------------------------------
 # *** TRIPLET DATA                                                        
 # ------------------------------------------------------------------------
-REPLACE {$MAX_TRIPLET} WITH {250}
+MAX_TRIPLET: int = 250
 REPLACE {COMIN/TRIPLET-DATA/} WITH {
         common/triplet_data/ a_triplet($MAX_TRIPLET,$MXMED),
                              b_triplet($MAX_TRIPLET,$MXMED),
@@ -438,8 +438,8 @@ REPLACE {COMIN/TRIPLET-DATA/} WITH {
 # ------------------------------------------------------------------------
 # *** COMPTON-DATA -- Incoherent scattering data                          
 # ------------------------------------------------------------------------
-REPLACE {$MXTOTSH}   WITH {1538} # Total number of shells for Z=1..100    
-REPLACE {$MXMDSH}    WITH {200}   # Max. number of shells per medium       
+MXTOTSH: int = 1538 # Total number of shells for Z=1..100    
+MXMDSH: int = 200   # Max. number of shells per medium       
 REPLACE {$INCOHUNIT} WITH {i_incoh}   # Unit number for compton data           
 
 REPLACE {COMIN/COMPTON-DATA/} WITH
@@ -484,12 +484,12 @@ REPLACE {COMIN/COMPTON-DATA/} WITH
 #              cross sections needed to sample the element the photon
 #              is interacting with.
 # ------------------------------------------------------------------ 
-REPLACE {$MXELEMENT} WITH {100}  #  Number of elements               
-REPLACE {$MXSHXSEC}  WITH {30}   #  Number of shells available       
-REPLACE {$MXSHELL}   WITH {6}    #  Number of shells treated         
-REPLACE {$MXINTER}   WITH {5}    #  $MXSHELL-1                       
-REPLACE {$MXTRANS}   WITH {39}   #  Number of possible transitions   
-REPLACE {$MXEDGE}    WITH {16}   #  max. number of edges above 1 keV 
+MXELEMENT: int = 100  #  Number of elements               
+MXSHXSEC: int = 30   #  Number of shells available       
+MXSHELL: int = 6    #  Number of shells treated         
+MXINTER: int = 5    #  $MXSHELL-1                       
+MXTRANS: int = 39   #  Number of possible transitions   
+MXEDGE: int = 16   #  max. number of edges above 1 keV 
 REPLACE {$PHOTOUNIT} WITH {i_photo_relax} #  unit number for photo_relax.data 
 REPLACE {$PHOCSUNIT} WITH {i_photo_cs}   #  unit number for photo_cs.data    
 
@@ -590,9 +590,9 @@ REPLACE {COMIN/ELECIN/} WITH
 #                                                                            
 # ****************************************************************************
 
-REPLACE {$MAX_EII_SHELLS} WITH {40}# Maximum number of shells participating
+MAX_EII_SHELLS: int = 40# Maximum number of shells participating
                                       # in EII in a simulation                
-REPLACE {$N_EII_BINS} WITH {250}# Number of bins for EII x-section      
+N_EII_BINS: int = 250# Number of bins for EII x-section      
                                       # interpolations                        
 REPLACE {$MAX_EII_BINS} WITH {{COMPUTE $N_EII_BINS*$MAX_EII_SHELLS}}
 # We store the EII x-section interpolation coefficients in 1D arrays  
@@ -671,11 +671,11 @@ REPLACE {COMIN/RELAX-USER/} WITH {
 # the i'th shell of element Z in the long shell list.                       
 # ***************************************************************************
 
-REPLACE {$MXESHLL} WITH {30}     # max. number of shells for an element
-REPLACE {$MAXSHELL} WITH {3000}  # max. number of shells
-REPLACE {$MAXRELAX} WITH {10000} # max. number of relaxations channels
-REPLACE {$MAXVAC} WITH {100}     # max. number of vacancies
-REPLACE {$MAXTRANS} WITH {300}   # max. number of transitions per element
+MXESHLL: int = 30     # max. number of shells for an element
+MAXSHELL: int = 3000  # max. number of shells
+MAXRELAX: int = 10000 # max. number of relaxations channels
+MAXVAC: int = 100     # max. number of vacancies
+MAXTRANS: int = 300   # max. number of transitions per element
 # ============================================================
 #  Set input key 'Atomic relaxations' to 'simple' to recover original
 #  implementation which allows photoelectric interactions with <M> and
@@ -772,8 +772,8 @@ X-OPTIONS/
 # ***************************************************************************
 # ============================================================
 REPLACE {$RELAX-CUTOFF} WITH {0.001# threshold energy for outer shells}
-REPLACE {$MXPESHELL} WITH {16} # K,L1..L3,M1..M5,N1..N7 + outer shell
-REPLACE {$MXNE} WITH {500}     # number of energy points per shell 
+MXPESHELL: int = 16 # K,L1..L3,M1..M5,N1..N7 + outer shell
+MXNE: int = 500     # number of energy points per shell 
 # ============================================================
 REPLACE {COMIN/PE-SHELL-DATA/} WITH {
 
@@ -845,9 +845,9 @@ REPLACE {COMIN/ET-Control/} WITH  # ET stands for Electron Transport
 
 #  Screened Rutherford MS data 
 
-REPLACE {$MAXL_MS}    WITH {63}
-REPLACE {$MAXQ_MS}    WITH {7}
-REPLACE {$MAXU_MS}    WITH {31}
+MAXL_MS: int = 63
+MAXQ_MS: int = 7
+MAXU_MS: int = 31
 REPLACE {$0-MAXL_MS}  WITH {0:63}
 REPLACE {$0-MAXQ_MS}  WITH {0:7}
 REPLACE {$0-MAXU_MS}  WITH {0:31}
@@ -871,10 +871,10 @@ REPLACE {COMIN/MS-Data/} WITH {
 
 #  spin effect data used in an additional rejection loop 
 
-REPLACE {$MAXE_SPIN}   WITH {15}
+MAXE_SPIN: int = 15
 REPLACE {$MAXE_SPI1}   WITH {{COMPUTE 2*$MAXE_SPIN+1}}
-REPLACE {$MAXQ_SPIN}   WITH {15}
-REPLACE {$MAXU_SPIN}   WITH {31}
+MAXQ_SPIN: int = 15
+MAXU_SPIN: int = 31
 REPLACE {$0-MAXE_SPI1} WITH {0:$MAXE_SPI1}
 REPLACE {$0-MAXQ_SPIN} WITH {0:$MAXQ_SPIN}
 REPLACE {$0-MAXU_SPIN} WITH {0:$MAXU_SPIN}
@@ -2243,7 +2243,7 @@ REPLACE {$RE-EVALUATE-DEDX(#)} WITH
 # Note that the distributed version of EGSnrc does not include the VMC option
 REPLACE {$PRESTA-II} WITH {0}
 REPLACE {$PRESTA--I} WITH {1}
-REPLACE {$VMC}       WITH {2}
+VMC: int = 2
 
 REPLACE {$CALL-USER-ELECTRON} WITH {}
 
@@ -2321,17 +2321,17 @@ REPLACE {$IPHOTONUCR-DEFAULT} WITH {0}
 REPLACE {$PHOTONUC-XDATA-DEFAULT} WITH {'default'}
 
 # EMH:emf, 7 lines
-REPLACE {$ExDEF} WITH {0}
+ExDEF: int = 0
 
-REPLACE {$EyDEF} WITH {0}
+EyDEF: int = 0
 
-REPLACE {$EzDEF} WITH {0}
+EzDEF: int = 0
 
-REPLACE {$BxDEF} WITH {0}
+BxDEF: int = 0
 
-REPLACE {$ByDEF} WITH {0}
+ByDEF: int = 0
 
-REPLACE {$BzDEF} WITH {0}
+BzDEF: int = 0
 
 REPLACE {$EMLMTDEF} WITH {0.02}
 
@@ -3361,13 +3361,13 @@ REPLACE {$COMPUTE-ELOSS-G(#,#,#,#,#)} WITH
 #  explosion (e.g. 8 MB for CAVRZ vs. 0.8 MB without get_inputs()!)           
 #  IK, Dec. 1998                                                              
 
-REPLACE {$NMAX} WITH {100}
-REPLACE {$NVALUE} WITH {100}
-REPLACE {$STRING80} WITH {80}
-REPLACE {$STRING32} WITH {64}
-REPLACE {$STRING40} WITH {40}
-REPLACE {$STRING256} WITH {256}
-REPLACE {$MXALINP} WITH {5}
+NMAX: int = 100
+NVALUE: int = 100
+STRING80: int = 80
+STRING32: int = 64
+STRING40: int = 40
+STRING256: int = 256
+MXALINP: int = 5
 
 REPLACE {COMIN/GetInput/} WITH
 #         ================
@@ -3421,8 +3421,8 @@ REPLACE {$AVAILABLE_UNIT(#,#)} WITH {}
 #  If the NRC statistics routine  SIGMA is to be used these must have realistic
 #  definitions in the user-code.
 
-REPLACE {$MXDATA} WITH {1}
-REPLACE {$STAT} WITH {2}
+MXDATA: int = 1
+STAT: int = 2
 
 %E  # egsnrc.macros
 # ============================================================================
@@ -3432,7 +3432,7 @@ REPLACE {$STAT} WITH {2}
 # 
 #    It is not an essential part of EGSnrc but is most easily defined here.
 # ============================================================================
-REPLACE{$PLTDIM} WITH {300}# Unique array dimension for XVGRPLOT and PLOTSN
+PLTDIM: int = 300# Unique array dimension for XVGRPLOT and PLOTSN
                         # Suppresses warnings from Intel compiler on Windows
                    # when arrays have different dimensions in diff. routines
 
@@ -3544,7 +3544,7 @@ REPLACE {$COMIN-RADC-SAMPLE} WITH {
 # *********************************************************************
 
 # how many chunks do we want to split the parallel run into
-REPLACE {$N_CHUNKS} WITH {10}
+N_CHUNKS: int = 10
 
 #  String manipulations, error messages, etc. 
 REPLACE {$cstring(#)} WITH {{P1}(:lnblnk1({P1}))}
@@ -3575,8 +3575,8 @@ REPLACE {$declare_write_buffer} WITH {}
 
 
 #  Common block containing various directories, file names, etc. 
-REPLACE {$mx_units} WITH {20}
-REPLACE {$max_extension_length} WITH {10}
+mx_units: int = 20
+max_extension_length: int = 10
 REPLACE {COMIN/EGS-IO/} WITH {
   common /egs_io/ file_extensions($mx_units),
                   file_units($mx_units),
@@ -3727,7 +3727,7 @@ REPLACE {$set_ecutmn} WITH {
 }
 
 #  default numer of media. 
-REPLACE {$default_nmed} WITH {1}
+default_nmed: int = 1
 
 REPLACE {$GET-PEGSLESS-XSECTIONS} WITH {
 $egs_fatal('(a/a)',' Code cannot be run in pegsless mode.',
