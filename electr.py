@@ -1,10 +1,16 @@
-
-
 def start_new_particle():
     medium = med[irl]
 
 
+def call_user_electron():
+    pass
 
+
+def select_electron_mfp():
+    RNNE1 = randomset()
+    if RNNE1 == 0.0):
+        RNNE1 = 1.E-30
+    DEMFP = max([-log(RNNE1), EPSEMFP])
 
 def AUSGAB(IARG):
     pass
@@ -27,7 +33,7 @@ def ELECTR(IRCODE):
 
 IRCODE: int
 
-$COMIN-ELECTR # default replacement produces the following:
+$COMIN_ELECTR # default replacement produces the following:
                # COMIN/DEBUG,BOUNDS,EGS-VARIANCE-REDUCTION, ELECIN,EPCONT,
                         # ET-Control,MEDIA,MISC,STACK,THRESH,UPHIIN,
                         # UPHIOT,USEFUL,USER,RANDOM/
@@ -40,17 +46,17 @@ v_tmp: float
 w_tmp: float
 random_tustep: bool
 
-$DEFINE-LOCAL-VARIABLES-ELECTR
-/******* trying to save evaluation of range.
+# $DEFINE_LOCAL_VARIABLES_ELECTR XXX do we need to type these?
+# /******* trying to save evaluation of range.
 do_range: bool
 the_range: float
-*/
+# */
 
-data ierust/0/ # To count negative ustep's
+# data ierust/0/ # To count negative ustep's
 
-save ierust
+# save ierust
 
-$CALL-USER-ELECTRON
+call_user_electron()
 
 ircode = 1 # Set up normal return-which means there is a photon
             # with less available energy than the lowest energy electron,
@@ -100,7 +106,7 @@ start_new_particle()
 
         # Go through this loop each time we recompute distance to an interaction
         /******* trying to save evaluation of range.
-        do_range = True # compute the range in $COMPUTE-RANGE below
+        do_range = True # compute the range in $COMPUTE_RANGE below
         ********/
         compute_tstep = True # MFP resampled => calculate distance to the
                                 # interaction in the USTEP loop
@@ -110,8 +116,8 @@ start_new_particle()
 
             # Not vacuum. Must sample to see how far to next interaction.
 
-            $SELECT-ELECTRON-MFP
-                #  Default FOR $SELECT-ELECTRON-MFP; is: $RANDOMSET rnne1
+            select_electron_mfp()
+                #  Default FOR select_electron_mfp(); is: $RANDOMSET rnne1
                 #                                        demfp = -log(rnne1)
                 # ($RANDOMSET is a macro'ed random number generator)
                 # (demfp = differential electron mean free path)
@@ -120,7 +126,7 @@ start_new_particle()
             # (eke = kinetic energy, rm = rest mass, all in units of MeV)
             $SET INTERVAL elke,eke # Prepare to approximate cross section
 
-            $EVALUATE-SIG0
+            $EVALUATE_SIG0
                # The fix up of the fictitious method uses cross section per
                # energy loss. Therefore, demfp/sig is sub-threshold energy loss
                # until the next discrete interaction occures (see below)
@@ -153,16 +159,16 @@ start_new_particle()
                     #  The above provide defaults.)
 
                     #  EM field step size restriction in vacuum
-                    $SET-TUSTEP-EM-FIELD
+                    $SET_TUSTEP_EM_FIELD
                     ustep = tustep
             else:
 
                 # non-vacuum
-                $SET-RHOF # density ratio scaling template
+                $SET_RHOF # density ratio scaling template
                               # EGS allows the density to vary
                               # continuously (user option)
 
-                $SCALE-SIG0
+                $SCALE_SIG0
                 if sig <= 0:
 
                     # This can happen if the threshold for brems,
@@ -181,7 +187,7 @@ start_new_particle()
                     sig0 = 1.E-15
                 else:
 
-                    $CALCULATE-TSTEP-FROM-DEMFP
+                    $CALCULATE_TSTEP_FROM_DEMFP
                 ] # end sig if-else
 
                 # calculate stopping power
@@ -191,7 +197,7 @@ start_new_particle()
                     $EVALUATE dedx0 USING pdedx(elke); # e+
                 dedx  = rhof*dedx0
 
-                # Determine maximum step-size (Formerly $SET-TUSTEP)
+                # Determine maximum step-size (Formerly $SET_TUSTEP)
                 $EVALUATE tmxs USING tmxs(elke)
                 tmxs = tmxs/rhof
 
@@ -200,32 +206,32 @@ start_new_particle()
                 # Don't replace this macro and don't override range, because
                 # the energy loss evaluation below relies on the accurate
                 # (and self-consistent) evaluation of range!
-                $COMPUTE-RANGE
+                $COMPUTE_RANGE
 
                 # The RANDOMIZE-TUSTEP option as coded by AFB forced the
                 # electrons to approach discrete events (Moller,brems etc.)
                 # only in a single scattering mode => waste of CPU time.
                 # Moved here and changed by IK Oct 22 1997
-                random_tustep = $RANDOMIZE-TUSTEP
+                random_tustep = $RANDOMIZE_TUSTEP
                 if random_tustep:
 
-                    $RANDOMSET rnnotu
+                 rnnotu = randomset()
                     tmxs = rnnotu*min(tmxs,smaxir(irl))
                 else:
 
                     tmxs = min(tmxs,smaxir(irl))
 
                 tustep = min(tstep,tmxs,range)
-                $SET-TUSTEP-EM-FIELD # optional tustep restriction in EM field
+                $SET_TUSTEP_EM_FIELD # optional tustep restriction in EM field
 
-                $CALL-HOWNEAR(tperp)
+                $CALL_HOWNEAR(tperp)
                 dnear(np) = tperp
-                $RANGE-DISCARD # optional regional range rejection for
+                $RANGE_DISCARD # optional regional range rejection for
                                       # particles below e_max_rr if i_do_rr set
 
-                $USER-RANGE-DISCARD # default is ;, but user may implement
+                $USER_RANGE_DISCARD # default is ;, but user may implement
 
-                $SET-SKINDEPTH(eke,elke)
+                $SET_SKINDEPTH(eke,elke)
                   # This macro sets the minimum step size for a condensed
                   # history (CH) step. When the exact BCA is used, the minimum
                   # CH step is determined by efficiency considerations only
@@ -291,11 +297,11 @@ start_new_particle()
                     callmsdist = True # Remember that msdist has been called
 
                     # Fourth order technique for de
-                    $COMPUTE-ELOSS-G(tustep,eke,elke,lelke,de)
+                    $COMPUTE_ELOSS_G(tustep,eke,elke,lelke,de)
 
                     tvstep = tustep; is_ch_step = True
 
-                    if transport_algorithm == $PRESTA-II:
+                    if transport_algorithm == $PRESTA_II:
 
                       call msdist_pII
                       (
@@ -327,7 +333,7 @@ start_new_particle()
                         # Cross the boundary in a single scattering mode
                         domultiple = False # Do not do multiple scattering
                         # Sample the distance to a single scattering event
-                        $RANDOMSET rnnoss
+                     rnnoss = randomset()
                         if  rnnoss < 1.e-30 :
 
                             rnnoss = 1.e-30
@@ -367,7 +373,7 @@ start_new_particle()
                         # exact PLC
                         dosingle = False
                         domultiple = True
-                        $SET-USTEP
+                        $SET_USTEP
 
                     if ustep < tperp:
 
@@ -379,15 +385,15 @@ start_new_particle()
 
             ] # end non-vacuum test
 
-            $SET-USTEP-EM-FIELD # additional ustep restriction in em field
-                                  # default for $SET-USTEP-EM-FIELD; is ;(null)
+            $SET_USTEP_EM_FIELD # additional ustep restriction in em field
+                                  # default for $SET_USTEP_EM_FIELD; is ;(null)
             irold  = ir(np) # save current region
             irnew  = ir(np) # default new region is current region
             idisc  = 0 # default is no discard (this flag is initialized here)
             ustep0 = ustep # Save the intended ustep.
 
             # IF(callhowfar) [ call howfar; ]
-            $CALL-HOWFAR-IN-ELECTR # The above is the default replacement
+            $CALL_HOWFAR_IN_ELECTR # The above is the default replacement
 
             # Now see if user requested discard
             if idisc > 0) # (idisc is returned by howfar:
@@ -395,7 +401,7 @@ start_new_particle()
                 # User requested immediate discard
                 go to :USER-ELECTRON-DISCARD:
 
-            $CHECK-NEGATIVE-USTEP
+            $CHECK_NEGATIVE_USTEP
 
             if ustep == 0 or medium = 0:
 
@@ -417,7 +423,7 @@ start_new_particle()
                         # ( vstep is ustep truncated (possibly) by howfar
                         #  tvstep is the total curved path associated with vstep)
                         edep = pzero # no energy loss in vacuum
-                        $VACUUM-ADD-WORK-EM-FIELD
+                        $VACUUM_ADD_WORK_EM_FIELD
                             # additional vacuum transport in em field
                         e_range = vacdst
                         IARG = $TRANAUSB
@@ -431,8 +437,8 @@ start_new_particle()
                             # (dnear is distance to the nearest boundary
                             #  that goes along with particle stack and
                             #  which the user's howfar can supply (option)
-                        $SET-ANGLES-EM-FIELD
-                            # default for $SET-ANGLES-EM-FIELD; is ; (null)
+                        $SET_ANGLES_EM_FIELD
+                            # default for $SET_ANGLES_EM_FIELD; is ; (null)
                              # (allows for EM field deflection
                     ] # end of EM_MACROS_ACTIVE block
                 ] # end of vacuum step
@@ -474,12 +480,12 @@ start_new_particle()
                     # =>we are doing an approximate CH step
                     # calculate the average curved path-length corresponding
                     # to vstep
-                    $SET-TVSTEP
+                    $SET_TVSTEP
 
                 # Fourth order technique for dedx
                 # Must be done for an approx. CH step or a
                 # single scattering step.
-                $COMPUTE-ELOSS-G(tvstep,eke,elke,lelke,de)
+                $COMPUTE_ELOSS_G(tvstep,eke,elke,lelke,de)
             else:
 
                # callhowfar=False => step has not been reduced due to
@@ -489,27 +495,27 @@ start_new_particle()
 
                   # Second order technique for dedx
                   # Already done in a normal CH step with call to msdist
-                  $COMPUTE-ELOSS-G(tvstep,eke,elke,lelke,de)
+                  $COMPUTE_ELOSS_G(tvstep,eke,elke,lelke,de)
 
 
-            $SET-TVSTEP-EM-FIELD # additional path length correction in em field
+            $SET_TVSTEP_EM_FIELD # additional path length correction in em field
                 # ( Calculates tvstep given vstep
-                #  default for $SET-TVSTEP-EM-FIELD; is ; (null)
+                #  default for $SET_TVSTEP_EM_FIELD; is ; (null)
 
             save_de = de # the energy loss is used to calculate the number
                               # of MFP gone up to now. If energy loss
                               # fluctuations are implemented, de will be
-                              # changed in $DE-FLUCTUATION; => save
+                              # changed in $DE_FLUCTUATION; => save
 
             # The following macro template allows the user to change the
             # ionization loss.
             # (Provides a user hook for Landau/Vavilov processes)
-            $DE-FLUCTUATION
-                # default for $DE-FLUCTUATION; is ; (null)
+            $DE_FLUCTUATION
+                # default for $DE_FLUCTUATION; is ; (null)
             edep = de # energy deposition variable for user
-            $ADD-WORK-EM-FIELD # e-loss or gain in em field
+            $ADD_WORK_EM_FIELD # e-loss or gain in em field
             $ADD_WORK_EM_FIELD # EEMF implementation
-                # Default for $ADD-WORK-EM-FIELD; is ; (null)
+                # Default for $ADD_WORK_EM_FIELD; is ; (null)
             ekef = eke - de # (final kinetic energy)
             eold = eie # save old value
             enew = eold - de # energy at end of transport
@@ -522,8 +528,8 @@ start_new_particle()
 
                     # Approximated CH step => do multiple scattering
                     # 
-                    # ekems, elkems, beta2 have been set in either $SET-TUSTEP
-                    # or $SET-TVSTEP if spin_effects is True, they are
+                    # ekems, elkems, beta2 have been set in either $SET_TUSTEP
+                    # or $SET_TVSTEP if spin_effects is True, they are
                     # not needed if spin_effects is False
                     # 
                     # chia2,etap,xi,xi_corr are also set in the above macros
@@ -622,8 +628,8 @@ start_new_particle()
 
             dnear(np) = dnear(np) - vstep
             irold = ir(np) # save previous region
-            $SET-ANGLES-EM-FIELD
-            # Default for $SET-ANGLES-EM-FIELD; is ; (null)
+            $SET_ANGLES_EM_FIELD
+            # Default for $SET_ANGLES_EM_FIELD; is ; (null)
 
 
             # Now done with multiple scattering,
@@ -680,7 +686,7 @@ start_new_particle()
             $USER_CONTROLS_TSTEP_RECURSION
                 # NRCC update 87/12/08--default is null
 
-            $UPDATE-DEMFP
+            $UPDATE_DEMFP
 
         ] UNTIL(demfp < $EPSEMFP) # end ustep loop
 
@@ -688,11 +694,11 @@ start_new_particle()
         # this will take the energy variation of the sigma into
         # account using the fictitious sigma method.
 
-        $EVALUATE-SIGF
+        $EVALUATE_SIGF
 
         sigratio = sigf/sig0
 
-        $RANDOMSET rfict
+     rfict = randomset()
 
     ] UNTIL (rfict <= sigratio)  # end tstep loop
 
@@ -701,9 +707,9 @@ start_new_particle()
     if lelec < 0:
 
         # e-,check branching ratio
-        $EVALUATE-EBREM-FRACTION
+        $EVALUATE_EBREM_FRACTION
           # Default is $EVALUATE ebr1 USING ebr1(elke)
-        $RANDOMSET rnno24
+     rnno24 = randomset()
         if rnno24 <= ebr1:
 
             # It was bremsstrahlung
@@ -732,9 +738,9 @@ start_new_particle()
             # The following macro template allows the user to change the
             # particle selection scheme (e.g., adding importance sampling
             # such as splitting, leading particle selection, etc.).
-            # (Default macro is template '$PARTICLE-SELECTION-ELECTR'
+            # (Default macro is template '$PARTICLE_SELECTION_ELECTR'
             # which in turn has the 'null' replacement ';')
-            $PARTICLE-SELECTION-MOLLER
+            $PARTICLE_SELECTION_MOLLER
             IARG = $MOLLAUSA
             if IAUSFL[IARG + 1] != 0:
                 AUSGAB(IARG)
@@ -744,14 +750,14 @@ start_new_particle()
         go to :NEWELECTRON: # Electron is lowest energy-follow it
 
     # e+ interaction. pbr1 = brems/(brems + bhabha + annih
-    $EVALUATE-PBREM-FRACTION
+    $EVALUATE_PBREM_FRACTION
        # Default is $EVALUATE pbr1 USING pbr1(elke)
-    $RANDOMSET rnno25
+ rnno25 = randomset()
     if rnno25 < pbr1:
         go to :EBREMS: # It was bremsstrahlung
     # Decide between bhabha and annihilation
     # pbr2 is (brems + bhabha)/(brems + bhabha + annih)
-    $EVALUATE-BHABHA-FRACTION
+    $EVALUATE_BHABHA_FRACTION
        # Default is $EVALUATE pbr2 USING pbr2(elke)
     if rnno25 < pbr2:
 
@@ -763,9 +769,9 @@ start_new_particle()
         # The following macro template allows the user to change the
         # particle selection scheme (e.g., adding importance sampling
         # such as splitting, leading particle selection, etc.).  (default
-        # macro is template '$PARTICLE-SELECTION-ELECTR' which in turn
+        # macro is template '$PARTICLE_SELECTION_ELECTR' which in turn
         # has the 'null' replacement ';')
-        $PARTICLE-SELECTION-BHABHA
+        $PARTICLE_SELECTION_BHABHA
         IARG = $BHABAUSA
         if IAUSFL[IARG + 1] != 0:
             AUSGAB(IARG)
@@ -781,9 +787,9 @@ start_new_particle()
         # The following macro template allows the user to change the
         # particle selection scheme (e.g., adding importance sampling
         # such as splitting, leading particle selection, etc.).  (default
-        # macro is template '$PARTICLE-SELECTION-ELECTR' which in turn
+        # macro is template '$PARTICLE_SELECTION_ELECTR' which in turn
         # has the 'null' replacement ';')
-        $PARTICLE-SELECTION-ANNIH
+        $PARTICLE_SELECTION_ANNIH
         IARG = $ANNIHFAUSA
         if IAUSFL[IARG + 1] != 0:
             AUSGAB(IARG)
@@ -806,8 +812,8 @@ call brems
 # The following macro template allows the user to change the particle
 # selection scheme (e.g., adding importance sampling such as splitting,
 # leading particle selection, etc.).  (default macro is template
-# '$PARTICLE-SELECTION-ELECTR' which in turn has the 'null' replacement ';')
-$PARTICLE-SELECTION-BREMS
+# '$PARTICLE_SELECTION_ELECTR' which in turn has the 'null' replacement ';')
+$PARTICLE_SELECTION_BREMS
 IARG = $BREMAUSA
 if IAUSFL[IARG + 1] != 0:
     AUSGAB(IARG)
@@ -831,14 +837,14 @@ if  medium > 0 :
 
         idr = $EGSCUTAUS
         if lelec < 0:
-            edep = e(np) - prm ELSE[$POSITRON-ECUT-DISCARD;]
+            edep = e(np) - prm ELSE[$POSITRON_ECUT_DISCARD;]
     else:
          idr = $PEGSCUTAUS; edep = e(np) - prm; 
 else:
     idr = $EGSCUTAUS; edep = e(np) - prm; 
 
 
-$ELECTRON-TRACK-END # The default replacement for this macros is 
+$ELECTRON_TRACK_END # The default replacement for this macros is 
                      #           $AUSCALL(idr)                   
                      # Use this macro if you wish to modify the   
                      # treatment of track ends                    
@@ -854,7 +860,7 @@ if lelec > 0:
         if IAUSFL[IARG + 1] != 0:
             AUSGAB(IARG)
         call annih_at_rest
-        $PARTICLE-SELECTION-ANNIHREST
+        $PARTICLE_SELECTION_ANNIHREST
         IARG = $ANNIHRAUSA
         if IAUSFL[IARG + 1] != 0:
             AUSGAB(IARG)

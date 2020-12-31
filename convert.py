@@ -9,7 +9,7 @@ if sys.version_info < (3, 8):
     raise ImportError("Need Python 3.8 or later")
 
 # XXX needs to be OrderedDict!!
-subs = {
+main_subs = {
     r'"(.*?)"': r'# \1',  # comments in quotes
     r'"(.*)': r'# \1',  # comment without end quote
     r";(\s*)$": r"\1",      # semi-colon at end of line
@@ -26,7 +26,6 @@ subs = {
     r" \& ": r" and ",
     r"^\s*\[\s*$": r"",  # line with only [
     r"^\s*\]\s*$": r"",  # line with only ]
-    r"\$start_new_particle": r"start_new_particle()", # paired with added function
     r"\$electron_region_change|\$photon_region_change": r"ir(np) = irnew; irl = irnew; medium = med(irl)",
     r"\$declare_max_medium": r"",
     r"\$default_nmed": "1",
@@ -38,10 +37,37 @@ subs = {
     r"[iI]f(.*?)(?:=)?=\s*True": r"if\1 is True",
     r"[iI]f(.*?)(?:=)?=\s*False": r"if\1 is False",
     r"\$IMPLICIT-NONE": r"",
+    r"\$DEFINE-LOCAL-VARIABLES-ELECTR": r"# $DEFINE-LOCAL-VARIABLES-ELECTR XXX do we need to type these?",
+
+
+}
+
+call_subs= {
+    # paired with added funcs
+    r"\$start_new_particle": r"start_new_particle()",
+    r"\$CALL_USER_ELECTRON": r"call_user_electron()",
+    r"\$SELECT_ELECTRON_MFP": r"select_electron_mfp()",
+    r"   \$RANDOMSET (\w*)": r"\1 = randomset()",
 }
 
 
-def replace_subs(code: str) -> str:
+def add_new_funcs(code: str) -> str:
+    fakes = [
+        "def start_new_particle():\n    medium = med[irl]\n\n",
+        "def call_user_electron():\n    pass\n\n",
+        "def select_electron_mfp():\n    RNNE1 = randomset()\n    if RNNE1 == 0.0):\n        RNNE1 = 1.E-30\n    DEMFP = max([-log(RNNE1), EPSEMFP])",
+    ]
+    return "\n".join(fakes) + code
+
+commenting_lines = [
+    "/******* trying to save evaluation of range.",
+    "*/",
+    "data ierust/0/ # To count negative ustep's",
+    "save ierust",
+
+]
+
+def replace_subs(code: str, subs: dict) -> str:
     for pattern, sub in subs.items():
         code = re.sub(pattern, sub, code, flags=re.MULTILINE)
     return code
@@ -70,6 +96,12 @@ def replace_var_decl(code: str) -> str:
 
     return "\n".join(out_lines)
 
+def comment_out_lines(code: str, lines_to_comment: list) -> str:
+    all_lines = code.splitlines()
+    for i, line in enumerate(all_lines):
+        if line in lines_to_comment:
+            all_lines[i] = "# " + line
+    return "\n".join(all_lines)
 
 
 def fix_identifiers(code) -> str:
@@ -139,11 +171,7 @@ def replace_auscall(code: str) -> str:
 
     return fake_ausgab + code
 
-def add_new_funcs(code: str) -> str:
-    fake_start_new_particle = (
-        "\n\ndef start_new_particle():\n    medium = med[irl]\n\n\n"
-    )
-    return fake_start_new_particle + code
+
 
 def arrays_to_square_bracket(code: str) -> str:
     """Replace arrays with () in Mortran to [] in Python"""
@@ -160,12 +188,14 @@ if __name__ == "__main__":
     with open(in_filename, 'r') as f:
         code = f.read()
 
-    code = replace_subs(code)
-    # code = fix_identifiers(code)
+    code = replace_subs(code, main_subs)
+    code = fix_identifiers(code)
     # code = transpile_macros(code)
     code = replace_auscall(code)
     code = add_new_funcs(code)
+    code = replace_subs(code, call_subs)
     code = replace_var_decl(code)
+    code = comment_out_lines(code, commenting_lines)
 
     with open(out_filename, "w") as f:
         f.write(code)
