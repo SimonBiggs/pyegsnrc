@@ -1,3 +1,9 @@
+
+
+def AUSGAB(IARG):
+    pass
+
+
 # ******************************************************************
 #                                NATIONAL RESEARCH COUNCIL OF CANADA
 def ELECTR(IRCODE):
@@ -404,7 +410,9 @@ medium = med(irl)
                         $VACUUM-ADD-WORK-EM-FIELD
                             # additional vacuum transport in em field
                         e_range = vacdst
-                        $AUSCALL($TRANAUSB)
+                        IARG = $TRANAUSB
+                        if IAUSFL[IARG + 1] != 0:
+                            AUSGAB(IARG)
                         # Transport the particle
                         x(np) = x(np) + u(np)*vstep
                         y(np) = y(np) + v(np)*vstep
@@ -425,7 +433,9 @@ medium = med(irl)
 
                 if ustep != 0:
 
-                    $AUSCALL($TRANAUSA)
+                    IARG = $TRANAUSA
+                    if IAUSFL[IARG + 1] != 0:
+                        AUSGAB(IARG)
                 if eie <= ecut(irl):
                     go to :ECUT-DISCARD:
                 if ustep != 0 and idisc < 0:
@@ -591,7 +601,9 @@ medium = med(irl)
                 else:
                      u_final = u(np); v_final = v(np); w_final = w(np); 
 
-            $AUSCALL($TRANAUSB)
+            IARG = $TRANAUSB
+            if IAUSFL[IARG + 1] != 0:
+                AUSGAB(IARG)
 
             # Transport the particle
 
@@ -637,7 +649,9 @@ medium = med(irl)
                  ir(np) = irnew; irl = irnew; medium = med(irl); 
 
             # After transport call to user scoring routine
-            $AUSCALL($TRANAUSA)
+            IARG = $TRANAUSA
+            if IAUSFL[IARG + 1] != 0:
+                AUSGAB(IARG)
 
             if eie <= ecut(irl):
 
@@ -701,7 +715,9 @@ medium = med(irl)
                     # Brems not allowed either.
                 go to :EBREMS:
 
-            $AUSCALL($MOLLAUSB)
+            IARG = $MOLLAUSB
+            if IAUSFL[IARG + 1] != 0:
+                AUSGAB(IARG)
             call moller
             # The following macro template allows the user to change the
             # particle selection scheme (e.g., adding importance sampling
@@ -709,7 +725,9 @@ medium = med(irl)
             # (Default macro is template '$PARTICLE-SELECTION-ELECTR'
             # which in turn has the 'null' replacement ';')
             $PARTICLE-SELECTION-MOLLER
-            $AUSCALL($MOLLAUSA)
+            IARG = $MOLLAUSA
+            if IAUSFL[IARG + 1] != 0:
+                AUSGAB(IARG)
             if  iq(np) == 0 :
                  return
 
@@ -728,7 +746,9 @@ medium = med(irl)
     if rnno25 < pbr2:
 
         # It is bhabha
-        $AUSCALL($BHABAUSB)
+        IARG = $BHABAUSB
+        if IAUSFL[IARG + 1] != 0:
+            AUSGAB(IARG)
         call bhabha
         # The following macro template allows the user to change the
         # particle selection scheme (e.g., adding importance sampling
@@ -736,13 +756,17 @@ medium = med(irl)
         # macro is template '$PARTICLE-SELECTION-ELECTR' which in turn
         # has the 'null' replacement ';')
         $PARTICLE-SELECTION-BHABHA
-        $AUSCALL($BHABAUSA)
+        IARG = $BHABAUSA
+        if IAUSFL[IARG + 1] != 0:
+            AUSGAB(IARG)
         if  iq(np) == 0 :
              return
     else:
 
         # It is in-flight annihilation
-        $AUSCALL($ANNIHFAUSB)
+        IARG = $ANNIHFAUSB
+        if IAUSFL[IARG + 1] != 0:
+            AUSGAB(IARG)
         call annih
         # The following macro template allows the user to change the
         # particle selection scheme (e.g., adding importance sampling
@@ -750,7 +774,9 @@ medium = med(irl)
         # macro is template '$PARTICLE-SELECTION-ELECTR' which in turn
         # has the 'null' replacement ';')
         $PARTICLE-SELECTION-ANNIH
-        $AUSCALL($ANNIHFAUSA)
+        IARG = $ANNIHFAUSA
+        if IAUSFL[IARG + 1] != 0:
+            AUSGAB(IARG)
         EXIT :NEWELECTRON: # i.e., in order to return to shower
         # After annihilation the gammas are bound to be the lowest energy
         # particles, so return and follow them.
@@ -763,14 +789,18 @@ return # i.e., return to shower
 # Bremsstrahlung-call section
 # ---------------------------------------------
 :EBREMS:
-$AUSCALL($BREMAUSB)
+IARG = $BREMAUSB
+if IAUSFL[IARG + 1] != 0:
+    AUSGAB(IARG)
 call brems
 # The following macro template allows the user to change the particle
 # selection scheme (e.g., adding importance sampling such as splitting,
 # leading particle selection, etc.).  (default macro is template
 # '$PARTICLE-SELECTION-ELECTR' which in turn has the 'null' replacement ';')
 $PARTICLE-SELECTION-BREMS
-$AUSCALL($BREMAUSA)
+IARG = $BREMAUSA
+if IAUSFL[IARG + 1] != 0:
+    AUSGAB(IARG)
 if iq(np) == 0:
 
     # Photon was selected.
@@ -810,10 +840,14 @@ if lelec > 0:
     # It's a positron. Produce annihilation gammas if edep < peie
     if edep < peie:
 
-        $AUSCALL($ANNIHRAUSB)
+        IARG = $ANNIHRAUSB
+        if IAUSFL[IARG + 1] != 0:
+            AUSGAB(IARG)
         call annih_at_rest
         $PARTICLE-SELECTION-ANNIHREST
-        $AUSCALL($ANNIHRAUSA)
+        IARG = $ANNIHRAUSA
+        if IAUSFL[IARG + 1] != 0:
+            AUSGAB(IARG)
         # Now discard the positron and take normal return to follow
         # the annihilation gammas.
         return # i.e., return to shower
@@ -839,7 +873,9 @@ if (lelec < 0) or (idisc == 99):
 else:
     edep = e(np) + prm;
 
-$AUSCALL($USERDAUS)
+IARG = $USERDAUS
+if IAUSFL[IARG + 1] != 0:
+    AUSGAB(IARG)
 
 if idisc == 99:
 

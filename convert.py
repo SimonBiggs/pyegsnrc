@@ -83,7 +83,7 @@ def transpile_macros(code: str) -> str:
         r";\s*(# .*$)?": r"\1", # '; # comment' -> just comment
 
         # Compiler directives
-        r"^%(.*?)$": r"# \1",  # Any line starting with %
+        r"^%(.*?)$": r"# %\1",  # Any line starting with %
 
     }
     for pattern, sub in macro_subs.items():
@@ -91,18 +91,43 @@ def transpile_macros(code: str) -> str:
 
     return code
 
-if __name__ == "__main__":
-    # in_filename = "electr.mor"
-    # out_filename = "electr.py"
 
-    in_filename = "egsnrc_macros.mor"
-    out_filename = "common.py"
+def replace_auscall(code: str) -> str:
+    """Return list of strings, indented properly
+
+    XXX ASSUMES
+    - AUSGAB is first on line, other than whitespace
+    - no comments are anything else on line
+
+    """
+    # pattern = r"^(?P<indent>\s*)\$AUSCALL\((?P<arg>.*?)\)\s*?;?.*?$"
+    pattern = r"^( *?)\$AUSCALL\((.*)\)"
+    subst = (
+        r"\1IARG = \2\n"
+        r"\1if IAUSFL[IARG + 1] != 0:\n"
+        r"\1    AUSGAB(IARG)"
+    )
+    # subst = "XXXXYYYY"
+    code = re.sub(pattern, subst, code, flags=re.MULTILINE)
+    fake_ausgab = """\n\ndef AUSGAB(IARG):\n    pass\n\n\n"""
+
+    return fake_ausgab + code
+
+
+if __name__ == "__main__":
+    in_filename = "electr.mor"
+    out_filename = "electr.py"
+
+    # in_filename = "egsnrc_macros.mor"
+    # out_filename = "common.py"
 
     with open(in_filename, 'r') as f:
         code = f.read()
 
-    code = fix_identifiers(code)
-    code = transpile_macros(code)
+    code = replace_subs(code)
+    # code = fix_identifiers(code)
+    # code = transpile_macros(code)
+    code = replace_auscall(code)
 
     with open(out_filename, "w") as f:
         f.write(code)
