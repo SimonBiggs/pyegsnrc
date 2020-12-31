@@ -26,7 +26,7 @@ subs = {
     r" \& ": r" and ",
     r"^\s*\[\s*$": r"",  # line with only [
     r"^\s*\]\s*$": r"",  # line with only ]
-    r"\$start_new_particle": r"medium = med(irl)",
+    r"\$start_new_particle": r"start_new_particle()", # paired with added function
     r"\$electron_region_change|\$photon_region_change": r"ir(np) = irnew; irl = irnew; medium = med(irl)",
     r"\$declare_max_medium": r"",
     r"\$default_nmed": "1",
@@ -37,6 +37,7 @@ subs = {
     r"\.false\.": "False",
     r"[iI]f(.*?)(?:=)?=\s*True": r"if\1 is True",
     r"[iI]f(.*?)(?:=)?=\s*False": r"if\1 is False",
+    r"\$IMPLICIT-NONE": r"",
 }
 
 
@@ -44,6 +45,31 @@ def replace_subs(code: str) -> str:
     for pattern, sub in subs.items():
         code = re.sub(pattern, sub, code, flags=re.MULTILINE)
     return code
+
+
+def replace_var_decl(code: str) -> str:
+    mapping = {
+        "$INTEGER": "int",
+        "$REAL": "float",
+        "$LOGICAL": "bool",
+        "LOGICAL": "bool",
+    }
+
+    out_lines = []
+    for line in code.splitlines():
+        matched = False
+        for typ in ["$INTEGER", "$REAL", "$LOGICAL", "LOGICAL"]:
+            if line.startswith(typ):
+                vars = line.replace(typ, "").split(",")
+                for var in vars:
+                    out_lines.append(f"{var.strip()}: {mapping[typ]}")
+                matched = True
+                break # out of inner loop
+        if not matched:
+            out_lines.append(line)
+
+    return "\n".join(out_lines)
+
 
 
 def fix_identifiers(code) -> str:
@@ -113,6 +139,16 @@ def replace_auscall(code: str) -> str:
 
     return fake_ausgab + code
 
+def add_new_funcs(code: str) -> str:
+    fake_start_new_particle = (
+        "\n\ndef start_new_particle():\n    medium = med[irl]\n\n\n"
+    )
+    return fake_start_new_particle + code
+
+def arrays_to_square_bracket(code: str) -> str:
+    """Replace arrays with () in Mortran to [] in Python"""
+    array_names = ["ir med ecut WT iq e"]
+
 
 if __name__ == "__main__":
     in_filename = "electr.mor"
@@ -128,6 +164,8 @@ if __name__ == "__main__":
     # code = fix_identifiers(code)
     # code = transpile_macros(code)
     code = replace_auscall(code)
+    code = add_new_funcs(code)
+    code = replace_var_decl(code)
 
     with open(out_filename, "w") as f:
         f.write(code)

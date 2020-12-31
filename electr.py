@@ -1,5 +1,11 @@
 
 
+def start_new_particle():
+    medium = med[irl]
+
+
+
+
 def AUSGAB(IARG):
     pass
 
@@ -17,9 +23,9 @@ def ELECTR(IRCODE):
 #                                      for low energy transport     
 # ******************************************************************
 
-$IMPLICIT-NONE
 
-$INTEGER IRCODE
+
+IRCODE: int
 
 $COMIN-ELECTR # default replacement produces the following:
                # COMIN/DEBUG,BOUNDS,EGS-VARIANCE-REDUCTION, ELECIN,EPCONT,
@@ -27,13 +33,17 @@ $COMIN-ELECTR # default replacement produces the following:
                         # UPHIOT,USEFUL,USER,RANDOM/
 ;COMIN/EII-DATA/
 ;COMIN/EM/
-$REAL lambda_max, sigratio, u_tmp, v_tmp, w_tmp
-LOGICAL random_tustep
+lambda_max: float
+sigratio: float
+u_tmp: float
+v_tmp: float
+w_tmp: float
+random_tustep: bool
 
 $DEFINE-LOCAL-VARIABLES-ELECTR
 /******* trying to save evaluation of range.
-$LOGICAL  do_range
-$REAL     the_range
+do_range: bool
+the_range: float
 */
 
 data ierust/0/ # To count negative ustep's
@@ -58,7 +68,7 @@ irold = ir(np) # Initialize previous region
 irl    = irold # region number in local variable
 
 
-medium = med(irl)
+start_new_particle()
 #  Default replacement for the above is medium = med(irl) 
 #  This is made a macro so that it can be replaced with a call to a 
 #  user provided function start_new_particle(); for the C/C++ interface 
