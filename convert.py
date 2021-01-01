@@ -18,8 +18,8 @@ main_subs = {
 
     # IF/ELSE
     r"^(\s*)IF\((.*)\)\s*\[(.*?)[;]?\](.*)$": r"\1if \2:\n\1    \3\4", # basic IF
-    r"^(\s*)(?:]\s*)?ELSE(.*)\[(.*)\](.*)$": r"\1else:\n\1    \3\4", # basic ELSE
-    r"^(\s*)(?:]\s*)?ELSE(\s*)$": r"\1else:",  # bare ELSE line
+    r"^(\s*)(?:]\s*)?ELSE(.*)\[(.*)\](.*)$": r"\1else:\n\1    \3\4", # basic ELSE [ ]
+    r"^(\s*)(?:]\s*)?ELSE(\s*)\[?.*?$": r"\1else:",  # bare ELSE line or ELSE [
     r"^(\s*)IF(\s*)?\((.*)\)(.*)$": r"\1if \3:\n\1    \4", # IF on one line
 
     # LOOPs

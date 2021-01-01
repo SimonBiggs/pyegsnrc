@@ -162,7 +162,6 @@ while True:  # :NEWELECTRON: LOOP
                     $SET_TUSTEP_EM_FIELD
                     ustep = tustep
             else:
-
                 # non-vacuum
                 $SET_RHOF # density ratio scaling template
                               # EGS allows the density to vary
@@ -186,7 +185,6 @@ while True:  # :NEWELECTRON: LOOP
                     tstep = vacdst
                     sig0 = 1.E-15
                 else:
-
                     $CALCULATE_TSTEP_FROM_DEMFP
                 ] # end sig if-else
 
@@ -218,7 +216,6 @@ while True:  # :NEWELECTRON: LOOP
                  rnnotu = randomset()
                     tmxs = rnnotu*min(tmxs,smaxir(irl))
                 else:
-
                     tmxs = min(tmxs,smaxir(irl))
 
                 tustep = min(tstep,tmxs,range)
@@ -312,7 +309,6 @@ while True:  # :NEWELECTRON: LOOP
                         uscat,vscat,wscat,xtrans,ytrans,ztrans,ustep
                       )
                     else:
-
                       call msdist_pI
                       (
                         # Inputs
@@ -323,7 +319,6 @@ while True:  # :NEWELECTRON: LOOP
                       )
 
                 else:
-
                     # We are within a skindepth from a boundary, invoke
                     # one of the various boundary-crossing algorithms
                     callmsdist = False
@@ -345,20 +340,17 @@ while True:  # :NEWELECTRON: LOOP
                             if  lambda < lambda_max :
 
                                 tuss=lambda*ssmfp*(1-0.5*lambda/lambda_max)
-
-                            ELSE [
+                            else:
                               tuss = 0.5 * lambda * ssmfp
 
                             if tuss < tustep:
 
                                 tustep = tuss
                                 dosingle = True
-
-                            ELSE [
+                            else:
                                 dosingle = False
 
-
-                        ELSE [
+                        else:
                           $egs_warning(*,' lambda > lambda_max: ',
                              lambda,lambda_max,' eke dedx: ',eke,dedx,
                              ' ir medium blcc: ',ir[np],medium,blcc(medium),
@@ -368,7 +360,6 @@ while True:  # :NEWELECTRON: LOOP
 
                         ustep = tustep
                     else:
-
                         # Boundary crossing a la EGS4/PRESTA-I but using
                         # exact PLC
                         dosingle = False
@@ -379,7 +370,6 @@ while True:  # :NEWELECTRON: LOOP
 
                         callhowfar = False
                     else:
-
                         callhowfar = True
 
 
@@ -416,7 +406,6 @@ while True:  # :NEWELECTRON: LOOP
                         # (not both at the same time)
                         $EMFieldInVacuum
                     else:
-
                         # Step in vacuum
                         vstep  = ustep
                         tvstep = vstep
@@ -475,7 +464,6 @@ while True:  # :NEWELECTRON: LOOP
                         dosingle = False
 
                 else:
-
                     # callhowfar=True and exact_bca=False
                     # =>we are doing an approximate CH step
                     # calculate the average curved path-length corresponding
@@ -487,7 +475,6 @@ while True:  # :NEWELECTRON: LOOP
                 # single scattering step.
                 $COMPUTE_ELOSS_G(tvstep,eke,elke,lelke,de)
             else:
-
                # callhowfar=False => step has not been reduced due to
                #                       boundaries
                tvstep = tustep
@@ -544,7 +531,6 @@ while True:  # :NEWELECTRON: LOOP
                                spin_effects,findindex,spin_index,
                                costhe,sinthe)
                 else:
-
                     if dosingle:
 
                        # Single scattering
@@ -566,7 +552,6 @@ while True:  # :NEWELECTRON: LOOP
                        call sscat(chia2,elkems,beta2,qel,medium,
                                   spin_effects,costhe,sinthe)
                     else:
-
                        theta  = 0 # No deflection in single scattering model
                        sinthe = 0
                        costhe = 1
@@ -600,7 +585,6 @@ while True:  # :NEWELECTRON: LOOP
                 y_final = ytrans
                 z_final = ztrans
             else:
-
                 IF ~($EM_MACROS_ACTIVE)
 
                     x_final = x[np] + u[np]*vstep
@@ -719,7 +703,6 @@ while True:  # :NEWELECTRON: LOOP
             # It was bremsstrahlung
             go to :EBREMS:
         else:
-
             # It was Moller, but first check the kinematics.
             # However, if EII is on, we should still permit an interaction
             # even if E<moller threshold as EII interactions go down to
@@ -782,7 +765,6 @@ while True:  # :NEWELECTRON: LOOP
         if  iq[np] == 0 :
              return
     else:
-
         # It is in-flight annihilation
         IARG = $ANNIHFAUSB
         if IAUSFL[IARG + 1] != 0:
@@ -827,7 +809,6 @@ if iq[np] == 0:
     return
     # i.e., return to shower
 else:
-
     # Electron was selected
     go to :NEWELECTRON:
 
