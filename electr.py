@@ -79,7 +79,7 @@ start_new_particle()
 #  This is made a macro so that it can be replaced with a call to a 
 #  user provided function start_new_particle(); for the C/C++ interface 
 
-:NEWELECTRON:LOOP
+while True:  # :NEWELECTRON: LOOP
 
     # Go once through this loop for each 'new' electron whose charge and
     # energy has not been checked
@@ -102,7 +102,7 @@ start_new_particle()
 
         go to :USER-ELECTRON-DISCARD: # added May 01
 
-    :TSTEP:LOOP
+    while True:  # :TSTEP: LOOP
 
         # Go through this loop each time we recompute distance to an interaction
         /******* trying to save evaluation of range.
@@ -137,7 +137,7 @@ start_new_particle()
 
         ] # end non-vacuum test
 
-        :USTEP:LOOP
+        while True:  # :USTEP: LOOP
 
             # Here for each check with user geometry.
             # Compute size of maximum acceptable step, which is limited
