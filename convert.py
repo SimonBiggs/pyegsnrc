@@ -10,22 +10,38 @@ if sys.version_info < (3, 8):
 
 # XXX needs to be OrderedDict!!
 main_subs = {
+    # Comments / semicolons
     r'"(.*?)"': r'# \1',  # comments in quotes
     r'"(.*)': r'# \1',  # comment without end quote
     r";(\s*)$": r"\1",      # semi-colon at end of line
     r";(\s*)(?P<comment>#(.*?))?$": r" \g<comment>", # still a semicolon before #
+
+    # IF/ELSE
     r"^(\s*)IF\((.*)\)\s*\[(.*?)[;]?\](.*)$": r"\1if \2:\n\1    \3\4", # basic IF
     r"^(\s*)(?:]\s*)?ELSE(.*)\[(.*)\](.*)$": r"\1else:\n\1    \3\4", # basic ELSE
     r"^(\s*)(?:]\s*)?ELSE(\s*)$": r"\1else:",  # bare ELSE line
     r"^(\s*)IF(\s*)?\((.*)\)(.*)$": r"\1if \3:\n\1    \4", # IF on one line
+
+    # LOOPs
+    r"^(\s*):(\w*):LOOP": r"\1while True:  # :\2: LOOP",
+    r"^(\s*)\]\s*UNTIL\s*\((.*?)\)(\s*?# .*$)?": r"\1if \2:\n\1    break \3",
+
+
+    # Math operators
     r"if(.*?)~=": r"if\1!=", # not equals
     r"if(.*?) = ": r"if\1 == ", # = to ==
     r"if(.*?) = ": r"if\1 == ", # = to == again if there multiple times
     r"if(.*?) = ": r"if\1 == ", # = to == again
+
+    # Booleans
     r" \| ": r" or ",
     r" \& ": r" and ",
+
+    # Leftover brackets
     r"^\s*\[\s*$": r"",  # line with only [
     r"^\s*\]\s*$": r"",  # line with only ]
+
+
     r"\$electron_region_change|\$photon_region_change": r"ir(np) = irnew; irl = irnew; medium = med(irl)",
     r"\$declare_max_medium": r"",
     r"\$default_nmed": "1",
@@ -175,14 +191,18 @@ def replace_auscall(code: str) -> str:
 
 def arrays_to_square_bracket(code: str) -> str:
     """Replace arrays with () in Mortran to [] in Python"""
-    array_names = ["ir med ecut WT iq e"]
-
+    array_names = "ir med ecut WT iq e x y z u v w".split()
+    for name in array_names:
+        pattern = rf"([^\w]){name}\((.*?)\)"
+        subst = rf"\1{name}[\2]"
+        code = re.sub(pattern, subst, code)
+    return code
 
 if __name__ == "__main__":
-    in_filename = "electr.mor"
+    in_filename = "electr.mortran"
     out_filename = "electr.py"
 
-    # in_filename = "egsnrc_macros.mor"
+    # in_filename = "egsnrc.macros"
     # out_filename = "common.py"
 
     with open(in_filename, 'r') as f:
@@ -196,6 +216,7 @@ if __name__ == "__main__":
     code = replace_subs(code, call_subs)
     code = replace_var_decl(code)
     code = comment_out_lines(code, commenting_lines)
+    code = arrays_to_square_bracket(code)
 
     with open(out_filename, "w") as f:
         f.write(code)
