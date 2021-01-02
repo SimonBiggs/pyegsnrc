@@ -3,6 +3,8 @@ import re
 import sys
 
 from typing import List
+from macros import constant_macros, called_macros
+from textwrap import dedent
 
 
 if sys.version_info < (3, 8):
@@ -42,27 +44,27 @@ main_subs = {
     r"^\s*\]\s*$": r"",  # line with only ]
 
 
-    r"\$electron_region_change|\$photon_region_change": r"ir(np) = irnew; irl = irnew; medium = med(irl)",
-    r"\$declare_max_medium": r"",
+    # r"\$electron_region_change|\$photon_region_change": r"ir(np) = irnew; irl = irnew; medium = med(irl)",
+    # r"\$declare_max_medium": r"",
     r"\$default_nmed": "1",
-    r"\$INIT-PEGS4-VARIABLES": "",
-    r"\$DECLARE-PEGS4-COMMON-BLOCKS": "",
+    # r"\$INIT-PEGS4-VARIABLES": "",
+    # r"\$DECLARE-PEGS4-COMMON-BLOCKS": "",
     r"SUBROUTINE\s*(.*)$": r"def \1:",
     r"\.true\.": "True",
     r"\.false\.": "False",
     r"[iI]f(.*?)(?:=)?=\s*True": r"if\1 is True",
     r"[iI]f(.*?)(?:=)?=\s*False": r"if\1 is False",
-    r"\$IMPLICIT-NONE": r"",
-    r"\$DEFINE-LOCAL-VARIABLES-ELECTR": r"# $DEFINE-LOCAL-VARIABLES-ELECTR XXX do we need to type these?",
+    r"\$IMPLICIT_NONE": r"",
+    r"\$DEFINE_LOCAL_VARIABLES_ELECTR": r"# $DEFINE_LOCAL_VARIABLES_ELECTR XXX do we need to type these?",
 
 
 }
 
 call_subs= {
     # paired with added funcs
-    r"\$start_new_particle": r"start_new_particle()",
-    r"\$CALL_USER_ELECTRON": r"call_user_electron()",
-    r"\$SELECT_ELECTRON_MFP": r"select_electron_mfp()",
+    # r"\$start_new_particle": r"start_new_particle()",
+    # r"\$CALL_USER_ELECTRON": r"call_user_electron()",
+    # r"\$SELECT_ELECTRON_MFP": r"select_electron_mfp()",
     r"   \$RANDOMSET (\w*)": r"\1 = randomset()",
 }
 
@@ -90,6 +92,8 @@ def replace_subs(code: str, subs: dict) -> str:
 
 
 def replace_var_decl(code: str) -> str:
+    # XXX maybe go to numpy types here, e.g.
+    #    floatvar: np.float32 = np.dtype('float32').type(4.5)
     mapping = {
         "$INTEGER": "int",
         "$REAL": "float",
@@ -126,9 +130,9 @@ def fix_identifiers(code) -> str:
     code = re.sub(r"^[^#].*\$(\d)", r"\$from\1", code)
 
     # Fix dashes to underscore
-    # First, some comment have "---", keep those
+    # First, some comment have "---", keep those by enclosing in spaces
     code = re.sub(r'"(.*)\$(\w*)---', r'"\1$\2 --- ', code)
-    for i in range(8, 1, -1):
+    for i in range(8, 1, -1):  # up to 7 dashes
         pattern = r"\$" + "-".join([r"(\w*)"]*i)
         subst = r"$" + "_".join([rf"\{j}" for j in range(1, i+1)])
         code = re.sub(pattern, subst, code)
@@ -198,18 +202,37 @@ def arrays_to_square_bracket(code: str) -> str:
         code = re.sub(pattern, subst, code)
     return code
 
+
+def replace_macro_callables(code: str) -> str:
+    """Macros that are callable replaced with (may be optional) call"""
+
+    subst = dedent(r"""
+        \1if \2:
+        \1    \2(\3)"""
+    )
+
+    for macro in called_macros:
+        # Note, next line assumes `fix_identifiers` has already been run
+        macro_str = macro.replace("-", "_").replace("$", "")
+        pattern = rf'^( *)\$({macro_str})\s*?(?:\((.*)\))?;' # \s*(\".*?)$ comment
+        # match = re.search(pattern, code, flags=re.MULTILINE)
+        # if match:
+        #     print(f"Matched {pattern}")
+        code = re.sub(pattern, subst, code, flags=re.MULTILINE)
+    return code
+
 if __name__ == "__main__":
-    in_filename = "electr.mortran"
     out_filename = "electr.py"
 
     # in_filename = "egsnrc.macros"
     # out_filename = "common.py"
 
-    with open(in_filename, 'r') as f:
+    with open("electr.mortran", 'r') as f:
         code = f.read()
 
-    code = replace_subs(code, main_subs)
     code = fix_identifiers(code)
+    code = replace_macro_callables(code)
+    code = replace_subs(code, main_subs)
     # code = transpile_macros(code)
     code = replace_auscall(code)
     code = add_new_funcs(code)
@@ -218,6 +241,9 @@ if __name__ == "__main__":
     code = comment_out_lines(code, commenting_lines)
     code = arrays_to_square_bracket(code)
 
+    # code = "$AUSCALL($SPHOTONA);"
+    # code = replace_macro_callables(code)
+    # print(code)
     with open(out_filename, "w") as f:
         f.write(code)
 
