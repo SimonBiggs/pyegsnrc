@@ -69,8 +69,8 @@ ircode = 1 # Set up normal return-which means there is a photon
             #  as long as there are electrons to process. That's why this
             #  apparently convoluted scheme of STACK contro is effected.)
 
-irold = ir[np] # Initialize previous region
-                   # (ir[] is an integer that is attached to the particle's
+irold = p.ir # Initialize previous region
+                   # (ir() is an integer that is attached to the particle's
                    #  phase space. It contains the region
                    #  number that the current particle is in.
                    #  Np is the stack pointer, it points to where on the
@@ -81,7 +81,7 @@ irl    = irold # region number in local variable
 
 if start_new_particle:
     start_new_particle()
-#  Default replacement for the above is medium = med[irl] 
+#  Default replacement for the above is medium = med(irl) 
 #  This is made a macro so that it can be replaced with a call to a 
 #  user provided function start_new_particle(); for the C/C++ interface 
 
@@ -90,21 +90,21 @@ while True:  # :NEWELECTRON: LOOP
     # Go once through this loop for each 'new' electron whose charge and
     # energy has not been checked
 
-    lelec = iq[np] # Save charge in local variable
+    lelec = p.iq # Save charge in local variable
                     # (iq = -1 for electrons, 0 for photons and 1 for positrons)
     qel   = (1+lelec)/2 #  = 0 for electrons, = 1 for positrons 
-    peie  = e[np] # precise energy of incident electron (double precision)
+    peie  = p.e # precise energy of incident electron (double precision)
     eie   = peie # energy incident electron (conversion to single)
 
-    if eie <= ecut[irl]:
+    if eie <= ecut(irl):
 
         go to :ECUT-DISCARD:
         # (Ecut is the lower transport threshold.)
 
-    # medium = med[irl] # (This renders the above assignment redundant!)
+    # medium = med(irl) # (This renders the above assignment redundant!)
     # The above assignment is unnecessary, IK, June 2003
 
-    if WT[NP] == 0.0:
+    if p.wt == 0.0:
 
         go to :USER-ELECTRON-DISCARD: # added May 01
 
@@ -250,7 +250,7 @@ while True:  # :NEWELECTRON: LOOP
 
                 if CALL_HOWNEAR:
                     CALL_HOWNEAR(tperp)
-                dnear(np) = tperp
+                p.dnear = tperp
 
                 if RANGE_DISCARD:
                     RANGE_DISCARD()       # optional regional range rejection for
@@ -342,7 +342,7 @@ while True:  # :NEWELECTRON: LOOP
                       (
                         # Inputs
                         eke,de,tustep,rhof,medium,qel,spin_effects,
-                        u[np],v[np],w[np],x[np],y[np],z[np],
+                        p.u,p.v,p.w,p.x,p.y,p.z,
                         # Outputs
                         uscat,vscat,wscat,xtrans,ytrans,ztrans,ustep
                       )
@@ -352,7 +352,7 @@ while True:  # :NEWELECTRON: LOOP
                       (
                         # Inputs
                         eke,de,tustep,rhof,medium,qel,spin_effects,
-                        u[np],v[np],w[np],x[np],y[np],z[np],
+                        p.u,p.v,p.w,p.x,p.y,p.z,
                         # Outputs
                         uscat,vscat,wscat,xtrans,ytrans,ztrans,ustep
                       )
@@ -393,10 +393,10 @@ while True:  # :NEWELECTRON: LOOP
                         else:
                           $egs_warning(*,' lambda > lambda_max: ',
                              lambda,lambda_max,' eke dedx: ',eke,dedx,
-                             ' ir medium blcc: ',ir[np],medium,blcc(medium),
-                             ' position = ',x[np],y[np],z[np])
+                             ' ir medium blcc: ',p.ir,medium,blcc(medium),
+                             ' position = ',p.x,p.y,p.z)
                           dosingle = False
-                          np=np-1; return
+                          p.exists = False return
 
                         ustep = tustep
                     else:
@@ -423,8 +423,8 @@ while True:  # :NEWELECTRON: LOOP
             if SET_USTEP_EM_FIELD:
                 SET_USTEP_EM_FIELD()  # additional ustep restriction in em field
                                   # default for $SET_USTEP_EM_FIELD; is ;(null)
-            irold  = ir[np] # save current region
-            irnew  = ir[np] # default new region is current region
+            irold  = p.ir # save current region
+            irnew  = p.ir # default new region is current region
             idisc  = 0 # default is no discard (this flag is initialized here)
             ustep0 = ustep # Save the intended ustep.
 
@@ -473,10 +473,10 @@ while True:  # :NEWELECTRON: LOOP
                         if AUSCALL:
                             AUSCALL($TRANAUSB)
                         # Transport the particle
-                        x[np] = x[np] + u[np]*vstep
-                        y[np] = y[np] + v[np]*vstep
-                        z[np] = z[np] + w[np]*vstep
-                        dnear(np) = dnear(np) - vstep
+                        p.x = p.x + p.u*vstep
+                        p.y = p.y + p.v*vstep
+                        p.z = p.z + p.w*vstep
+                        p.dnear = p.dnear - vstep
                             # (dnear is distance to the nearest boundary
                             #  that goes along with particle stack and
                             #  which the user's howfar can supply (option)
@@ -497,7 +497,7 @@ while True:  # :NEWELECTRON: LOOP
                     IARG = $TRANAUSA
                     if IAUSFL[IARG + 1] != 0:
                         AUSGAB(IARG)
-                if eie <= ecut[irl]:
+                if eie <= ecut(irl):
                     go to :ECUT-DISCARD:
                 if ustep != 0 and idisc < 0:
                     go to :USER-ELECTRON-DISCARD:
@@ -609,7 +609,7 @@ while True:  # :NEWELECTRON: LOOP
 
                        # Single scattering
 
-                       ekems = Max(ekef,ecut[irl]-rm)
+                       ekems = Max(ekef,ecut(irl)-rm)
                        p2 = ekems*(ekems + rmt2)
                        beta2 = p2/(p2 + rmsq)
                        chia2 = xcc(medium)/(4*blcc(medium)*p2)
@@ -663,30 +663,30 @@ while True:  # :NEWELECTRON: LOOP
 
                 IF ~($EM_MACROS_ACTIVE)
 
-                    x_final = x[np] + u[np]*vstep
-                    y_final = y[np] + v[np]*vstep
-                    z_final = z[np] + w[np]*vstep
+                    x_final = p.x + p.u*vstep
+                    y_final = p.y + p.v*vstep
+                    z_final = p.z + p.w*vstep
 
                 if  domultiple or dosingle :
 
-                    u_tmp = u[np]; v_tmp = v[np]; w_tmp = w[np]
+                    u_tmp = p.u; v_tmp = p.v; w_tmp = p.w
                     call uphi(2,1) # Apply the deflection, save call to uphi if
                                     # no deflection in a single scattering mode
-                    u_final = u[np]; v_final = v[np]; w_final = w[np]
-                    u[np] = u_tmp; v[np] = v_tmp; w[np] = w_tmp
+                    u_final = p.u; v_final = p.v; w_final = p.w
+                    p.u = u_tmp; p.v = v_tmp; p.w = w_tmp
                 else:
-                     u_final = u[np]; v_final = v[np]; w_final = w[np]; 
+                     u_final = p.u; v_final = p.v; w_final = p.w; 
 
             if AUSCALL:
                 AUSCALL($TRANAUSB)
 
             # Transport the particle
 
-            x[np] = x_final; y[np] = y_final; z[np] = z_final
-            u[np] = u_final; v[np] = v_final; w[np] = w_final
+            p.x = x_final; p.y = y_final; p.z = z_final
+            p.u = u_final; p.v = v_final; p.w = w_final
 
-            dnear(np) = dnear(np) - vstep
-            irold = ir[np] # save previous region
+            p.dnear = p.dnear - vstep
+            irold = p.ir # save previous region
 
             if SET_ANGLES_EM_FIELD:
                 SET_ANGLES_EM_FIELD()
@@ -700,9 +700,9 @@ while True:  # :NEWELECTRON: LOOP
             # below subtracts energy deposited + work due to E field
             # peie = peie - de
             eie   = peie
-            e[np] = peie
+            p.e = peie
 
-            # IF( irnew ~= irl and eie <= ecut[irl]) [
+            # IF( irnew ~= irl and eie <= ecut(irl)) [
             # IK: the above is clearly a bug. If the particle energy falls 
             #     below ecut, but the particle is actually entering a new 
             #     region, the discard will happen in the current region 
@@ -710,7 +710,7 @@ while True:  # :NEWELECTRON: LOOP
             #     resulting annihilation photons will have the new position 
             #     but the old region => confusion in the geometry routine 
             #     is very likely.      Jan 27 2004 
-            if  irnew == irl and eie <= ecut[irl]:
+            if  irnew == irl and eie <= ecut(irl):
 
                go to :ECUT-DISCARD:
 
@@ -730,7 +730,7 @@ while True:  # :NEWELECTRON: LOOP
             if AUSCALL:
                 AUSCALL($TRANAUSA)
 
-            if eie <= ecut[irl]:
+            if eie <= ecut(irl):
 
                go to :ECUT-DISCARD:
 
@@ -793,7 +793,7 @@ while True:  # :NEWELECTRON: LOOP
             # However, if EII is on, we should still permit an interaction
             # even if E<moller threshold as EII interactions go down to
             # the ionization threshold which may be less than thmoll.
-            if e[np] <= thmoll(medium) and eii_flag == 0:
+            if p.e <= thmoll(medium) and eii_flag == 0:
                 
                  # (thmoll = lower Moller threshold)
 
@@ -818,7 +818,7 @@ while True:  # :NEWELECTRON: LOOP
 
             if AUSCALL:
                 AUSCALL($MOLLAUSA)
-            if  iq[np] == 0 :
+            if  p.iq == 0 :
                  return
 
         go to :NEWELECTRON: # Electron is lowest energy-follow it
@@ -855,7 +855,7 @@ while True:  # :NEWELECTRON: LOOP
 
         if AUSCALL:
             AUSCALL($BHABAUSA)
-        if  iq[np] == 0 :
+        if  p.iq == 0 :
              return
     else:
 
@@ -901,7 +901,7 @@ if PARTICLE_SELECTION_BREMS:
 
 if AUSCALL:
     AUSCALL($BREMAUSA)
-if iq[np] == 0:
+if p.iq == 0:
 
     # Photon was selected.
     return
@@ -921,11 +921,11 @@ if  medium > 0 :
 
         idr = $EGSCUTAUS
         if lelec < 0:
-            edep = e[np] - prm ELSE[$POSITRON_ECUT_DISCARD;]
+            edep = p.e - prm ELSE[$POSITRON_ECUT_DISCARD;]
     else:
-         idr = $PEGSCUTAUS; edep = e[np] - prm; 
+         idr = $PEGSCUTAUS; edep = p.e - prm; 
 else:
-    idr = $EGSCUTAUS; edep = e[np] - prm; 
+    idr = $EGSCUTAUS; edep = p.e - prm; 
 
 
 
@@ -972,9 +972,9 @@ idisc = abs(idisc)
 
 if (lelec < 0) or (idisc == 99):
 
-    edep = e[np] - prm
+    edep = p.e - prm
 else:
-    edep = e[np] + prm;
+    edep = p.e + prm;
 
 
 if AUSCALL:
@@ -984,7 +984,7 @@ if idisc == 99:
 
      goto :POSITRON-ANNIHILATION:
 
-np = np - 1; ircode = 2
+p.exists = False ircode = 2
 
 return # i.e., return to shower
 end # End of subroutine electr

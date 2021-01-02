@@ -7,6 +7,13 @@ from macros import constant_macros, called_macros
 from textwrap import dedent
 
 
+# Type conversions
+REAL = "float"
+ENERGY_PRECISION = "float"
+INTEGER = "int"
+LOGICAL = "bool"
+
+
 if sys.version_info < (3, 8):
     raise ImportError("Need Python 3.8 or later")
 
@@ -95,10 +102,10 @@ def replace_var_decl(code: str) -> str:
     # XXX maybe go to numpy types here, e.g.
     #    floatvar: np.float32 = np.dtype('float32').type(4.5)
     mapping = {
-        "$INTEGER": "int",
-        "$REAL": "float",
-        "$LOGICAL": "bool",
-        "LOGICAL": "bool",
+        "$INTEGER": INTEGER,
+        "$REAL": REAL,
+        "$LOGICAL": LOGICAL,
+        "LOGICAL": LOGICAL,
     }
 
     out_lines = []
@@ -192,15 +199,69 @@ def replace_auscall(code: str) -> str:
     return fake_ausgab + code
 
 
+def particle_vars_and_types():
+    """All the variables relating to a specific particle
 
-def arrays_to_square_bracket(code: str) -> str:
-    """Replace arrays with () in Mortran to [] in Python"""
-    array_names = "ir med ecut WT iq e x y z u v w".split()
-    for name in array_names:
-        pattern = rf"([^\w]){name}\((.*?)\)"
-        subst = rf"\1{name}[\2]"
-        code = re.sub(pattern, subst, code)
+    From:
+    COMMON/STACK/
+       $LGN(E,X,Y,Z,U,V,W,DNEAR,WT,IQ,IR,LATCH($MXSTACK)),
+       LATCHI,NP,NPold;
+   $ENERGY PRECISION
+       E;     "total particle energy"
+   $REAL
+       X,Y,Z, "particle co-ordinates"
+       U,V,W, "particle direction cosines"
+       DNEAR, "perpendicular distance to nearest boundary"
+       WT;    "particle weight"
+   $INTEGER
+       IQ,    "charge, -1 for electrons, 0 for photons, 1 for positrons"
+       IR,    "current region"
+       LATCH, "extra phase space variable"
+
+       # Note these are not array-based, just single value; XXX ignore for now
+       LATCHI,"needed because shower does not pass latch-BLOCK DATA sets 0"
+       NP,    "stack pointer"
+       NPold; "stack pointer before an interaction"
+    """
+
+    # Just a fixed list now, but may later generate from parsing code
+    vars = "e x y z u v w dnear wt iq ir latch".split()
+    var_types = [ENERGY_PRECISION] + [REAL]*8 + [INTEGER]*3
+    return vars, var_types
+
+
+def replace_particle_vars(code: str) -> str:
+    """Replace arrays with <var>(np) in Mortran to p.<var> in Python"""
+    vars, _ = particle_vars_and_types()
+    particle_var = "p"
+    for var in vars:
+        # XXX note below assumes np not changed in code
+        pattern = rf"([^\w]){var}\(np\)"  # e.g. "wt(np)" or "WT(np)"
+        subst = rf"\1{particle_var}.{var}"
+        code = re.sub(pattern, subst, code, flags=re.IGNORECASE)
+
+    # Also indicate when particle has been cut:
+    pattern = r"np\s*?=\s*?np\s*?-\s*?1\s*?;"  # np = np - 1;
+    subst = r"p.exists = False"
+    code = re.sub(pattern, subst, code, flags=re.IGNORECASE)
+
     return code
+
+
+def build_particle_class(filename) -> None:
+    """Build the Particle class and save to Python file"""
+    vars, var_types = particle_vars_and_types()
+    imports = ""
+    variables = "\n    ".join(
+        f"{var}: {var_type}"
+        for var, var_type in zip(vars, var_types)
+    )
+
+    with open("templates/particle_tmpl.py", 'r') as f:
+        str_out = f.read().format(imports=imports, variables=variables)
+
+    with open(filename, 'w') as f:
+        f.write(str_out)
 
 
 def replace_macro_callables(code: str) -> str:
@@ -244,7 +305,8 @@ if __name__ == "__main__":
     code = replace_subs(code, call_subs)
     code = replace_var_decl(code)
     code = comment_out_lines(code, commenting_lines)
-    code = arrays_to_square_bracket(code)
+    code = replace_particle_vars(code)
+    build_particle_class("build/particle.py")
 
     # code = "$AUSCALL($SPHOTONA);"
     # code = replace_macro_callables(code)
