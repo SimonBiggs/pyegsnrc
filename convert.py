@@ -221,13 +221,18 @@ def replace_macro_callables(code: str) -> str:
         code = re.sub(pattern, subst, code, flags=re.MULTILINE)
     return code
 
+
+def replace_constants(code, ):
+    pass
+
+
 if __name__ == "__main__":
-    out_filename = "electr.py"
+    out_filename = "build/electr.py"
 
-    # in_filename = "egsnrc.macros"
-    # out_filename = "common.py"
+    # in_filename = "mortran/egsnrc.macros"
+    # out_filename = "build/common.py"
 
-    with open("electr.mortran", 'r') as f:
+    with open("mortran/electr.mortran", 'r') as f:
         code = f.read()
 
     code = fix_identifiers(code)
