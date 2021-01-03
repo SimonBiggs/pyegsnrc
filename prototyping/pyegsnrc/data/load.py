@@ -3,7 +3,7 @@ import pathlib
 import jax.numpy as jnp
 
 import pandas as pd
-import scipy.interpolate
+from .. import interpolation
 
 HERE = pathlib.Path(__file__).parent.resolve()
 
@@ -25,10 +25,9 @@ def get_bremsstrahlung_interpolator():
     z = jnp.arange(100) + 1
 
     data = jnp.array(raw_data)
-    print(n_t.shape)
-    print(n_k.shape)
-    print(z.shape)
-    print(data.shape)
+    interpolator = interpolation.create_interpolator((z, n_k, n_t), data)
+
+    return interpolator
 
 
 def _load_all_bremsstrahlung_data():
