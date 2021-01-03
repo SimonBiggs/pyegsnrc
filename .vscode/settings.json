@@ -5,6 +5,8 @@
         "argnums",
         "nbstripout",
         "numpy",
-        "pyplot"
+        "pyplot",
+        "typer",
+        "zfill"
     ]
 }

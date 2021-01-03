@@ -1,14 +1,20 @@
+import typer
+
 import matplotlib.pyplot as plt
 
 from jax import random
 import jax.numpy as jnp
 
-from . import particles, timer, randomwalk
+from . import particles, timer, randomwalk, lookuptable
 
 random_walk = timer.timer(randomwalk.random_walk)
 
+app = typer.Typer()
+main = app
 
-def main():
+
+@app.command()
+def walk():
     seed = 0
     prng_key = random.PRNGKey(seed)
     num_electrons = int(1e6)
@@ -35,3 +41,8 @@ def main():
     )
     plt.axis("equal")
     plt.show()
+
+
+@app.command()
+def lookup():
+    lookuptable.main()

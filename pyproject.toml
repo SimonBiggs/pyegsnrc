@@ -12,6 +12,7 @@ jax = "*"
 jaxlib = "*"
 matplotlib = "*"
 pandas = "*"
+typer = "*"
 
 [tool.poetry.dev-dependencies]
 black = "^19.3b0"
