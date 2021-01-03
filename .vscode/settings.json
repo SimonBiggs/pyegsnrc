@@ -5,6 +5,7 @@
         "arange",
         "argnums",
         "interpolator",
+        "itertools",
         "nbstripout",
         "numpy",
         "pyplot",

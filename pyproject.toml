@@ -22,6 +22,7 @@ rope = "*"
 pylint = "*"
 pytest = "*"
 pre-commit = "*"
+ipykernel = "*"
 
 [tool.poetry.scripts]
 pyegsnrc = "pyegsnrc.__main__:main"
