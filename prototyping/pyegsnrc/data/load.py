@@ -1,5 +1,6 @@
 import pathlib
 
+from jax import ops, jit
 import jax.numpy as jnp
 
 import pandas as pd
@@ -16,6 +17,8 @@ HERE = pathlib.Path(__file__).parent.resolve()
 
 # For now, just name variables according to header, n_t, n_k, and z.
 
+PACKED_N_K_BOUNDS = 100
+
 
 def get_bremsstrahlung_interpolator():
     raw_data = _load_all_bremsstrahlung_data()
@@ -25,9 +28,64 @@ def get_bremsstrahlung_interpolator():
     z = jnp.arange(100) + 1
 
     data = jnp.array(raw_data)
-    interpolator = interpolation.create_interpolator((z, n_k, n_t), data)
+
+    packed_n_k = _pack_n_k_for_interp(n_k)
+    packed_n_t = _pack_n_t_for_interp(n_t)
+
+    _interpolator = interpolation.create_interpolator((z, packed_n_k, packed_n_t), data)
+
+    def interpolator(xi):
+        xi = jnp.array(xi)
+        n_k_slice = ops.index[:, 1]
+        n_t_slice = ops.index[:, 2]
+
+        packed_n_k = _pack_n_k_for_interp(xi[n_k_slice])
+        packed_n_t = _pack_n_t_for_interp(xi[n_t_slice])
+
+        xi = ops.index_update(xi, n_k_slice, packed_n_k)
+        xi = ops.index_update(xi, n_t_slice, packed_n_t)
+
+        return _interpolator(xi)
 
     return interpolator
+
+
+def _pack_n_k_for_interp(n_k):
+    packed_n_k = jnp.log(n_k / (1 - n_k))
+    packed_n_k = ops.index_update(
+        packed_n_k, ops.index[packed_n_k < -PACKED_N_K_BOUNDS], -PACKED_N_K_BOUNDS
+    )
+    packed_n_k = ops.index_update(
+        packed_n_k, ops.index[packed_n_k > PACKED_N_K_BOUNDS], PACKED_N_K_BOUNDS
+    )
+    return packed_n_k
+
+
+def _unpack_n_k(packed_n_k):
+    n_k = jnp.exp(packed_n_k) / (1 + jnp.exp(packed_n_k))
+    return n_k
+
+
+def _pack_n_t_for_interp(n_t):
+    packed_n_t = jnp.log(n_t)
+    return packed_n_t
+
+
+def _unpack_n_t(packed_n_t):
+    n_t = jnp.exp(packed_n_t)
+    return n_t
+
+
+def get_raw_bremsstrahlung_data():
+    raw_data = _load_all_bremsstrahlung_data()
+
+    n_t = jnp.array(raw_data[0].columns.values, dtype=float)
+    n_k = jnp.array(raw_data[0].index.values, dtype=float)
+    z = jnp.arange(100) + 1
+
+    data = jnp.array(raw_data)
+
+    return (z, n_k, n_t), data
 
 
 def _load_all_bremsstrahlung_data():
