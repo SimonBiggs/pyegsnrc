@@ -34,16 +34,11 @@ def get_bremsstrahlung_interpolator():
 
     _interpolator = interpolation.create_interpolator((z, packed_n_k, packed_n_t), data)
 
-    def interpolator(xi):
-        xi = jnp.array(xi)
-        n_k_slice = ops.index[:, 1]
-        n_t_slice = ops.index[:, 2]
+    def interpolator(z, n_k, n_t):
+        packed_n_k = _pack_n_k_for_interp(n_k)
+        packed_n_t = _pack_n_t_for_interp(n_t)
 
-        packed_n_k = _pack_n_k_for_interp(xi[n_k_slice])
-        packed_n_t = _pack_n_t_for_interp(xi[n_t_slice])
-
-        xi = ops.index_update(xi, n_k_slice, packed_n_k)
-        xi = ops.index_update(xi, n_t_slice, packed_n_t)
+        xi = jnp.vstack([z, packed_n_k, packed_n_t]).T
 
         return _interpolator(xi)
 
@@ -61,7 +56,7 @@ def _pack_n_k_for_interp(n_k):
     return packed_n_k
 
 
-def _unpack_n_k(packed_n_k):
+def unpack_n_k(packed_n_k):
     n_k = jnp.exp(packed_n_k) / (1 + jnp.exp(packed_n_k))
     return n_k
 
@@ -71,7 +66,7 @@ def _pack_n_t_for_interp(n_t):
     return packed_n_t
 
 
-def _unpack_n_t(packed_n_t):
+def unpack_n_t(packed_n_t):
     n_t = jnp.exp(packed_n_t)
     return n_t
 
