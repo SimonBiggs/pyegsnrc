@@ -20,4 +20,4 @@ pylint = "*"
 pytest = "*"
 
 [tool.poetry.scripts]
-pymedphys = "pyegsnrc.__main__:main"
+pyegsnrc = "pyegsnrc.__main__:main"
