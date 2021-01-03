@@ -3,6 +3,7 @@
         "Colaboratory",
         "PRNG",
         "argnums",
+        "nbstripout",
         "numpy",
         "pyplot"
     ]

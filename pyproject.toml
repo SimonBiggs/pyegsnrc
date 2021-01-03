@@ -6,11 +6,12 @@ authors = []
 packages = [{ include = "pyegsnrc", from = "prototyping" }]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6.2"
 typing-extensions = "*"
 jax = "*"
 jaxlib = "*"
 matplotlib = "*"
+pandas = "*"
 
 [tool.poetry.dev-dependencies]
 black = "^19.3b0"
@@ -18,6 +19,7 @@ mypy = "*"
 rope = "*"
 pylint = "*"
 pytest = "*"
+pre-commit = "*"
 
 [tool.poetry.scripts]
 pyegsnrc = "pyegsnrc.__main__:main"
