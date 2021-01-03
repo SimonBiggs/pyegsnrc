@@ -2,4 +2,4 @@ from .data import load
 
 
 def main():
-    load.load_bremsstrahlung(6)
+    load.get_bremsstrahlung_interpolator()
