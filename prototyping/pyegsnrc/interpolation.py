@@ -4,6 +4,7 @@
 
 import itertools
 
+from jax import jit
 import jax.numpy as jnp
 from jax.ops import index, index_update
 
@@ -75,7 +76,7 @@ class RegularGridInterpolator(object):
             raise ValueError("Method '%s' is not defined" % method)
 
         ndim = len(self.grid)
-        xi = _ndim_coords_from_arrays(xi, ndim=ndim)
+        xi = _ndim_coords_from_arrays(xi, ndim)
         if xi.shape[-1] != len(self.grid):
             raise ValueError(
                 "The requested sample points xi have dimension "
@@ -147,7 +148,7 @@ class RegularGridInterpolator(object):
         return indices, norm_distances, out_of_bounds
 
 
-def _ndim_coords_from_arrays(points, ndim=None):
+def _ndim_coords_from_arrays(points, ndim):
     """
     Convert a tuple of coordinate arrays to a (..., ndim)-shaped array.
     """
@@ -171,3 +172,6 @@ def _ndim_coords_from_arrays(points, ndim=None):
             else:
                 points = points.reshape(-1, ndim)
     return points
+
+
+_ndim_coords_from_arrays = jit(_ndim_coords_from_arrays, static_argnums=(1,))
