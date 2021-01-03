@@ -5,7 +5,7 @@
 import itertools
 from functools import partial
 
-from jax import jit, ops
+from jax import jit
 import jax.numpy as jnp
 
 
@@ -27,10 +27,10 @@ def create_interpolator(points, values):
     for i, p in enumerate(points):
         if not jnp.all(jnp.diff(p) > 0.0):
             raise ValueError(
-                "The points in dimension %d must be strictly " "ascending" % i
+                "The points in dimension %d must be strictly ascending" % i
             )
         if not jnp.asarray(p).ndim == 1:
-            raise ValueError("The points in dimension %d must be " "1-dimensional" % i)
+            raise ValueError("The points in dimension %d must be 1-dimensional" % i)
         if not values.shape[i] == len(p):
             raise ValueError(
                 "There are %d points and %d values in "
