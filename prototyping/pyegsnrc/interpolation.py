@@ -9,12 +9,7 @@ import jax.numpy as jnp
 from jax.ops import index, index_update
 
 
-def create_interpolator(
-    points, values, method="linear", bounds_error=True, fill_value=jnp.nan
-):
-    if method not in ["linear", "nearest"]:
-        raise ValueError("Method '%s' is not defined" % method)
-
+def create_interpolator(points, values):
     if not hasattr(values, "ndim"):
         # allow reasonable duck-typed values
         values = jnp.asarray(values)
@@ -28,16 +23,6 @@ def create_interpolator(
     if hasattr(values, "dtype") and hasattr(values, "astype"):
         if not jnp.issubdtype(values.dtype, jnp.inexact):
             values = values.astype(float)
-
-    if fill_value is not None:
-        fill_value_dtype = jnp.asarray(fill_value).dtype
-        if hasattr(values, "dtype") and not jnp.can_cast(
-            fill_value_dtype, values.dtype, casting="same_kind"
-        ):
-            raise ValueError(
-                "fill_value must be either 'None' or "
-                "of a type compatible with values"
-            )
 
     for i, p in enumerate(points):
         if not jnp.all(jnp.diff(p) > 0.0):
@@ -53,20 +38,7 @@ def create_interpolator(
             )
     grid = tuple([jnp.asarray(p) for p in points])
 
-    default_method = method
-
-    def interpolator(xi, method=None):
-        """
-        Interpolation at coordinates
-        Parameters
-        ----------
-        xi : ndarray of shape (..., ndim)
-            The coordinates to sample the gridded data at
-        method : str
-            The method of interpolation to perform. Supported are "linear" and
-            "nearest".
-        """
-        method = default_method if method is None else method
+    def interpolator(xi, method="linear", bounds_error=True, fill_value=jnp.nan):
         if method not in ["linear", "nearest"]:
             raise ValueError("Method '%s' is not defined" % method)
 
@@ -92,22 +64,29 @@ def create_interpolator(
                         "in dimension %d" % i
                     )
 
-        indices, norm_distances, out_of_bounds = _find_indices(grid, bounds_error, xi.T)
+        indices, norm_distances, out_of_bounds = _find_indices(xi.T, grid, bounds_error)
         if method == "linear":
-            result = _evaluate_linear(values, indices, norm_distances, out_of_bounds)
+            result = _evaluate_linear(values, indices, norm_distances)
         elif method == "nearest":
-            result = _evaluate_nearest(values, indices, norm_distances, out_of_bounds)
+            result = _evaluate_nearest(values, indices, norm_distances)
         if not bounds_error and fill_value is not None:
+            fill_value_dtype = jnp.asarray(fill_value).dtype
+            if hasattr(values, "dtype") and not jnp.can_cast(
+                fill_value_dtype, values.dtype, casting="same_kind"
+            ):
+                raise ValueError(
+                    "fill_value must be either 'None' or "
+                    "of a type compatible with values"
+                )
             result[out_of_bounds] = fill_value
 
         return result.reshape(xi_shape[:-1] + values.shape[ndim:])
 
-    # interpolator = jit(interpolator, static_argnums=(1,))
-
     return interpolator
 
 
-def _evaluate_linear(values, indices, norm_distances, out_of_bounds):
+@jit
+def _evaluate_linear(values, indices, norm_distances):
     # slice for broadcasting over trailing dimensions in self.values
     vslice = (slice(None),) + (None,) * (values.ndim - len(indices))
 
@@ -123,12 +102,13 @@ def _evaluate_linear(values, indices, norm_distances, out_of_bounds):
     return collated_values
 
 
-def _evaluate_nearest(values, indices, norm_distances, out_of_bounds):
+@jit
+def _evaluate_nearest(values, indices, norm_distances):
     idx_res = [jnp.where(yi <= 0.5, i, i + 1) for i, yi in zip(indices, norm_distances)]
     return values[tuple(idx_res)]
 
 
-def _find_indices(grid, bounds_error, xi):
+def _find_indices(xi, grid, bounds_error):
     # find relevant edges between which xi are situated
     indices = []
     # compute distance to lower edge in unity units
@@ -146,6 +126,9 @@ def _find_indices(grid, bounds_error, xi):
             out_of_bounds += x < grid[0]
             out_of_bounds += x > grid[-1]
     return indices, norm_distances, out_of_bounds
+
+
+# _find_indices = jit(_find_indices, static_argnums=(1, 2))
 
 
 def _ndim_coords_from_arrays(points, ndim):
@@ -174,4 +157,4 @@ def _ndim_coords_from_arrays(points, ndim):
     return points
 
 
-# _ndim_coords_from_arrays = jit(_ndim_coords_from_arrays, static_argnums=(1,))
+_ndim_coords_from_arrays = jit(_ndim_coords_from_arrays, static_argnums=(1,))
