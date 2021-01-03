@@ -4,10 +4,10 @@ from typing_extensions import Literal
 import jax.numpy as jnp
 
 ParticleKeys = Literal["position", "direction", "energy"]
-T = Dict[ParticleKeys, jnp.DeviceArray]
+Type = Dict[ParticleKeys, jnp.DeviceArray]
 
 
-def zeros(num_particles: int) -> T:
+def zeros(num_particles: int) -> Type:
     return {
         "position": jnp.zeros((3, num_particles)),
         "direction": jnp.zeros((3, num_particles)),

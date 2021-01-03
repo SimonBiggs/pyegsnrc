@@ -7,8 +7,8 @@ from . import particles
 
 
 def random_walk(
-    prng_key: jnp.DeviceArray, electrons: particles.T, iterations: int,
-) -> Tuple[jnp.DeviceArray, particles.T]:
+    prng_key: jnp.DeviceArray, electrons: particles.Type, iterations: int,
+) -> Tuple[jnp.DeviceArray, particles.Type]:
     num_electrons = electrons["position"].shape[-1]
 
     for _ in range(iterations):
