@@ -3,7 +3,6 @@ name = "pyegsnrc"
 version = "0.1.0-dev2"
 description = ""
 authors = []
-packages = [{ include = "pyegsnrc", from = "prototyping" }]
 
 [tool.poetry.dependencies]
 python = "^3.6.2"

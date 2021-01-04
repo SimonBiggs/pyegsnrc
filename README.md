@@ -1,3 +1,4 @@
-# egsnrc2py
+# PyEGSnrc
 
-Early attempt to look at transpiling EGSnrc code to Python
+Early work fleshing out key potential pain points in using JAX as the framework
+within which to build a Python EGSnrc port.
