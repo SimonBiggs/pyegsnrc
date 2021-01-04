@@ -1,13 +1,13 @@
 from typing import Tuple
 
-from jax import random, jit
 import jax.numpy as jnp
+from jax import jit, random
 
 from . import particles
 
 
 def random_walk(
-    prng_key: jnp.DeviceArray, electrons: particles.Type, iterations: int,
+    prng_key: jnp.DeviceArray, electrons: particles.Type, iterations: int
 ) -> Tuple[jnp.DeviceArray, particles.Type]:
     num_electrons = electrons["position"].shape[-1]
 

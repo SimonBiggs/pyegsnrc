@@ -1,9 +1,9 @@
 import pathlib
 
-from jax import ops, jit
 import jax.numpy as jnp
-
 import pandas as pd
+from jax import jit, ops
+
 from .. import interpolation
 
 HERE = pathlib.Path(__file__).parent.resolve()

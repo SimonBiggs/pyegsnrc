@@ -1,8 +1,8 @@
-from jax import random
 import jax.numpy as jnp
+from jax import random
 
-from .data import load
 from . import timer
+from .data import load
 
 
 def main():

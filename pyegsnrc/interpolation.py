@@ -5,8 +5,8 @@
 import itertools
 from functools import partial
 
-from jax import jit
 import jax.numpy as jnp
+from jax import jit
 
 
 def create_interpolator(points, values):

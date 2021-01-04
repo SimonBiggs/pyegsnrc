@@ -1,11 +1,9 @@
-import typer
-
-import matplotlib.pyplot as plt
-
-from jax import random
 import jax.numpy as jnp
+import matplotlib.pyplot as plt
+import typer
+from jax import random
 
-from . import particles, timer, randomwalk, lookuptable
+from . import lookuptable, particles, randomwalk, timer
 
 random_walk = timer.timer(randomwalk.random_walk)
 

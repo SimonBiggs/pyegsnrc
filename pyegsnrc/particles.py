@@ -1,7 +1,7 @@
 from typing import Dict
-from typing_extensions import Literal
 
 import jax.numpy as jnp
+from typing_extensions import Literal
 
 ParticleKeys = Literal["position", "direction", "energy"]
 Type = Dict[ParticleKeys, jnp.DeviceArray]
