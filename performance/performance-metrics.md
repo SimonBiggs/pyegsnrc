@@ -615,7 +615,7 @@ The situation is quite different in python and other higher-level languages, whe
 
 The interest in a python implementation of EGSnrc has been renewed because of the JAX library, which is apparently able to vectorize the code to run on GPU (with some restrictions on the data types), and with decent performance on CPU, from one and the same source code. We therefore want to study the performance of our baseline test in python.
 
-Below is the `py-plain.py` and `perf` profile of the baseline source code, which relies on numpy (plain python is much slower, as expected). This implementation uses flat numpy arrays the deafult numpy random number generator, which is the same as in the C++ implementation, and one of the best generators available today (Mersenne Twister). We have verified that the timer decorator function does not incur a significant time cost.
+Below is the `py-plain.py` and `perf` profile of the baseline source code, which relies on numpy (plain python is much slower, as expected). This implementation uses flat numpy arrays the default numpy random number generator, which is the same as in the C++ implementation, and one of the best generators available today (Mersenne Twister). We have verified that the timer decorator function does not incur a significant time cost.
 
 ```python
 #!/usr/bin/env python
