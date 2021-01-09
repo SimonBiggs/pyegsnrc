@@ -603,7 +603,7 @@ $ perf report --stdio
 
 Hence we see that about 93% of the time is spent generating random numbers, which for this dummy code is what we want, so that it is spending as little time as possible on memory operations to simply shuffle data around. Note that there is aggressive optimization by the compiler here. Without the `-O3` flag, the code runs more than 10 times slower!
 
-There is not much we can do to improve this simplistic C++ for performance (short of multithreading). We _could_ write a plain C version (or an assembler version for that matter, but we are envisaging a plain C rewrite of EGSnrc. Hence, this constitutes our baseline performance (for 1e5 particles, 100 random updates, and 10 runs, on a 6-core 12-threads Intel(R) Xeon(R) CPU E5-1650 v3 @ 3.50GHz, tallied with `perf --repeat 10`):
+There is not much we can do to improve this simplistic C++ for performance (short of multithreading). We _could_ write a plain C version (or an assembler version for that matter, but we are not envisaging a plain C rewrite of EGSnrc. Hence, this constitutes our baseline performance (for 1e5 particles, 100 random updates, and 10 runs, on a 6-core 12-threads Intel(R) Xeon(R) CPU E5-1650 v3 @ 3.50GHz, tallied with `perf --repeat 10`):
 
 ```
 6,637.89 msec task-clock:u              #    1.000 CPUs utilized            ( +-  0.18% )
