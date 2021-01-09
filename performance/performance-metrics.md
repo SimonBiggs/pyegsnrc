@@ -1160,7 +1160,7 @@ run 9: 661.401 ms
        5.373824000 seconds sys
 ```
 
-Interestingly, there is now a huge latency cost, the reason of which is unclear: presumably to setup and initialize `jit`, perhaps a costly operation when there is no GPU available? Note however that after the first run, the timing is only about 30% worse than the C++ reference for each run. At any rate we will need to be able to compile specifically for the CPU _or_ the GPU But this is easily achieved by importing the appropriate libaries depending on the context, for example in `py-jaxornot.py` shown below. This can be made much more elegant than a tasteless conditional on the `USE_JAX` global, of course, but the point is that it is possible to maintain a single source to compile for CPU wiht near C++ performance and jit compilation for GPU.
+Interestingly, there is now a huge latency cost, the reason of which is unclear: presumably to setup and initialize `jit`, perhaps a costly operation when there is no GPU available? Note however that after the first run, the timing is only about 30% worse than the C++ reference for each run. At any rate we will need to be able to compile specifically for the CPU _or_ the GPU But this is easily achieved by importing the appropriate libaries depending on the context, for example in `py-jaxornot.py` shown below. The conditional on a `USE_JAX` global is inelegant, of course, but the point is that it seems possible, from a single source code, to select a CPU `numpy` run with near C++ performance, or jit compilation for a GPU target.
 
 ```python
 #!/usr/bin/env python
