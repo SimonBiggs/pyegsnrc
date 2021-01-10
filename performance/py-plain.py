@@ -2,8 +2,9 @@
 
 # py-plain.py: plain python/numpy implementation with flat arrays
 
-import numpy
 import time
+
+import numpy
 
 # defines
 NUM_PARTICLES = int(1e5)
@@ -21,10 +22,12 @@ def timer(f):
         start = time.time()
         ret = f(*args, **kwargs)
         stop = time.time()
-        duration = (stop-start)*1000.0
-        print('run {}: {:.3f} ms'.format(run, duration))
+        duration = (stop - start) * 1000.0
+        print("run {}: {:.3f} ms".format(run, duration))
         return ret
+
     return wrap
+
 
 # runIterations
 def runIterations(x, y, z, u, v, w, E):
@@ -44,6 +47,7 @@ def runIterations(x, y, z, u, v, w, E):
         random_normal = numpy.random.rand(NUM_PARTICLES)
         E += random_normal
 
+
 # timed version of runIterations
 runIterations = timer(runIterations)
 
@@ -61,6 +65,7 @@ def main(run):
     E = numpy.zeros(NUM_PARTICLES)
 
     runIterations(x, y, z, u, v, w, E)
+
 
 # call main function
 for run in range(RUNS):
