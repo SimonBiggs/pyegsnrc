@@ -12,12 +12,9 @@ main = app
 
 
 @app.command()
-def walk():
+def walk(num_electrons: int, iterations: int, runs: int):
     seed = 0
     prng_key = random.PRNGKey(seed)
-    num_electrons = int(1e6)
-    iterations = 10
-    runs = 10
     num_electrons_to_plot = 100
 
     electrons = particles.zeros(num_electrons)

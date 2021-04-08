@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyegsnrc"
-version = "0.1.0-dev2"
+version = "0.2.0"
 description = ""
 authors = []
 
